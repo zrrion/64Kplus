@@ -1,0 +1,27 @@
+class skp_Skull : Actor 
+{
+	int User_Type;
+	Default
+	{
+	//$Category Gore
+	}
+	Override void PostBeginPlay()
+	{
+		bSPRITEFLIP = Random(0,1);
+		Super.PostBeginPlay();
+	}
+	States
+	{
+	Spawn:
+		SKLP A -1 Nodelay
+		{
+			if(User_Type > 0)
+				frame = User_Type-1;
+			else
+				frame = Random(0,2);
+		}
+	Death:
+		SKLP ABC 0;//this is just ehre to put these sprites in the index
+		Stop;
+	}
+}

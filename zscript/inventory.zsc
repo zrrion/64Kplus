@@ -1,0 +1,89 @@
+class CustomCustomInventory : CustomInventory//Actor
+{
+	string PickupMsg;
+	
+	override string PickupMessage()
+    {
+		if(false)
+		{
+			return PickupMessage();
+		}
+		else
+		{
+			return PickupMsg;
+		}
+    }
+	
+	action void A_SetPickupMessage(string Message)
+    {
+		invoker.PickupMsg = Message;
+    }
+}
+
+class PickupMsgHandler : Inventory
+{
+	default
+	{
+		+INVENTORY.UNDROPPABLE;
+		+INVENTORY.PERSISTENTPOWER;
+		+INVENTORY.KEEPDEPLETED;
+		+INVENTORY.UNTOSSABLE;
+	}
+
+	override void Tick()
+	{
+		super.Tick();
+		if(!owner)
+			return;
+		if(inv)//this should force this to be at the end of the inventory list
+		{
+			array<inventory> Crime;
+			/*for (inventory item = owner.Inv; item != null; item = item.Inv)
+			{
+				
+			}*/
+		}
+	}
+
+	/*override bool HandlePickup(Inventory item)
+	{
+		if(item && !PickupMsgFaker(Item))
+			PickupMessager(item);
+		return super.HandlePickup(item);
+	}*/
+	void PickupMessager(Inventory item)
+	{
+		if(item)
+		{
+			int PrintAmnt;
+			if(Health(item) || Ammo(item) && item.amount)
+				PrintAmnt = item.amount;
+			if(BasicArmorBonus(item))
+				PrintAmnt = BasicArmorBonus(item).SaveAmount;
+			if(BasicArmorPickup(item))
+				PrintAmnt = BasicArmorPickup(item).SaveAmount;
+			if(Weapon(item))
+				PrintAmnt = Weapon(item).AmmoGive1;
+			if(PrintAmnt)
+			{
+				item.bQUIET = true;
+				let PMF = PickupMsgFaker(spawn("PickupMsgFaker"));
+				if(PMF)
+				{
+					PMF.PickupSound = item.PickupSound;
+					PMF.FakeMsg = String.Format("%s (+%d)", item.PickupMessage(), PrintAmnt);
+					PMF.Touch(owner);
+				}
+			}
+		}
+	}
+}
+
+class PickupMsgFaker : Inventory
+{
+	string FakeMsg;
+	override string PickupMessage()
+    {
+		return FakeMsg;
+	}
+}

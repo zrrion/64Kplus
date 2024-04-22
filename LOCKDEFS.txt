@@ -1,0 +1,15 @@
+Lock 7
+{
+	PurpleCard
+	Message "You need a purple card to open this door"
+	RemoteMessage "You need a purple card to activate this object"
+	Mapcolor 255 0 255
+}
+
+Lock 8
+{
+	skp_GreenSkull
+	Message "You need a green skull to open this door"
+	RemoteMessage "You need a green skull to activate this object"
+	Mapcolor 91 191 79
+}

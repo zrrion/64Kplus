@@ -1,0 +1,23 @@
+class skp_Berserk : Berserk replaces Berserk//make this heal to max health, instead of healing by 100
+{
+	Default
+	{
+		Inventory.PickupFlash "skp_PickupFlash";
+	}
+	States
+	{
+	Spawn:
+		PSTR A 12;
+		PSTR B 14 Bright;
+		loop;
+	Pickup:
+		TNT1 A 0 A_GiveInventory("PowerStrength");
+		TNT1 A 0 A_GiveInventory("SKP_SawFuel",5);
+		TNT1 A 0 HealThing(100, 0);
+		Stop;
+	}
+	Override void Tick()
+	{
+		Super.Tick();
+	}
+}

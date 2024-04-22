@@ -1,0 +1,14 @@
+class SKP_Paper : SKP_DebrisBase
+{
+	Default
+	{
+		//$Catagory Debris
+	}
+	States
+	{
+		Spawn:
+			PAPR A -1 nodelay SKP_FrameSet(8); //A-I
+			Stop;
+			
+	}
+}  

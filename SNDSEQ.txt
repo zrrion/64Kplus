@@ -1,0 +1,6 @@
+:PolyObjectSLide
+	door 11
+	playuntildone doors/dr1_open
+	playrepeat	plats/pt1_mid
+	stopsound	plats/pt1_stop
+end

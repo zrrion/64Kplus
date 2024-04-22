@@ -1,0 +1,60 @@
+//MDBRA0.png
+class SKP_DukeTweezers : SKP_DebrisBase
+{
+	Default
+	{
+		//$Category Duke_Stuff
+	}
+	States
+	{
+		Spawn:
+			MDBR A -1 nodelay SKP_FrameSet(0);
+			Stop;
+			
+	}
+}
+
+class SKP_DukeNeedle : SKP_DebrisBase
+{
+	Default
+	{
+		//$Category Duke_Stuff
+	}
+	States
+	{
+		Spawn:
+			MDBR B -1 nodelay SKP_FrameSet(0);
+			Stop;
+			
+	}
+}
+
+class SKP_DukeMisc : SKP_DebrisBase
+{
+	Default
+	{
+		//$Category Duke_Stuff
+	}
+	States
+	{
+		Spawn:
+			MDBR C -1 nodelay SKP_FrameSet(0);
+			Stop;
+			
+	}
+}
+
+class SKP_DukeTray : SKP_DebrisBase
+{
+	Default
+	{
+		//$Category Duke_Stuff
+	}
+	States
+	{
+		Spawn:
+			MDBR D -1;
+			Stop;
+			
+	}
+}

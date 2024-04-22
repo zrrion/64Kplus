@@ -1,0 +1,31 @@
+class SwitchButton : SwitchBase
+{
+	//$Category Switches
+	//$bool user_NoRepeat;
+	//$int user_MarkerType;
+	Default
+	{
+		//$Category Switches
+	}
+	Override void PostBeginPlay()
+	{
+		A_SetSize(16,22,FALSE);
+		super.PostBeginPlay();
+	}
+	States
+	{
+	InactiveB:
+		WLLS B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	InactiveA:
+	Spawn:
+		WLLS A 1;
+		wait;
+	NoFlip:
+		WLLS B -1;
+		Stop;
+	}
+}

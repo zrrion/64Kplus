@@ -1,0 +1,46 @@
+class HereticSkull : Actor
+{
+	bool user_ExplicitLength;
+	int user_HeightAdj;
+	Default
+	{
+		//$Category Heretic
+		+SPAWNCEILING
+		+NOGRAVITY
+		radius 5;
+		height 32;
+	}
+	States
+	{
+		Spawn:
+			HSKL A -1;
+			Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = random(TRUE, FALSE);
+		if(!user_ExplicitLength)
+		{
+			user_HeightAdj = frandom(0 , self.height * 1.25)*.25;
+			user_HeightAdj *= 4;
+		}
+		if(self.frame < 5)
+			self.frame = random (0,4);
+		A_SpriteOffset(0,-1 * user_HeightAdj);
+		super.PostBeginPlay();
+	}
+}
+
+class HereticSkullBrain : HereticSkull
+{
+	Default
+	{
+	//$Category Heretic
+	}
+	States
+	{
+		Spawn:
+			HSKL F -1;
+			Stop;
+	}
+}

@@ -1,0 +1,92 @@
+class skp_Cyberdemon : Cyberdemon replaces Cyberdemon
+{
+	mixin BerserkDroper;
+	
+	int RocketCounter;
+	Default
+	{
+		//Damagefactor "Unmaker", 0.5;
+	}
+	States
+	{
+	Missile:
+		CYBR E 6 A_FaceTarget;
+		CYBR F 6 Bright A_CyberAttack;
+		SMCS E 6 Bright A_FaceTarget;
+		CYBR E 6 A_FaceTarget;
+	Refire:
+		TNT1 A 0
+		{
+			if(RocketCounter < 3)
+			{
+				SetStateLabel("Missile");
+			}
+			else if(CallACS("CVarCheck",4) && Random(0,2) == 0)
+			{
+				RocketCounter = 0;
+				SetStateLabel("Missile");
+			}
+			else
+			{
+				RocketCounter = 0;
+				SetStateLabel("See");//is this cool?
+			}
+		}
+		Goto See;
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",3, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",3, Abs(self.painchance-256));
+				}
+		}
+	Death:
+		TNT1 A 0
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				A_SpawnItemEx("skp_BloodMist",random(0,self.radius), 0, self.height/2 + random (8,-8), 0, 0, 0, random(0,360), SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+			}
+		}
+		CYBR HH 5 BRIGHT A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+		CYBR I 5 BRIGHT
+		{
+			if (CallACS("CVarCheck",6))
+				{
+					A_DropItem("RocketLauncher");
+				}
+			A_Scream();
+			A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+		}
+		CYBR IJJKKLL 5 BRIGHT A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+		CYBR M 5 BRIGHT
+			{
+				A_NoBlocking();
+				A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+			}
+		CYBR MNNOO 5 BRIGHT A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+		CYBR P 10 A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
+		CYBR P -1 A_BossDeath;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		RocketCounter = 0;
+	}
+}
+
+extend class skp_Cyberdemon
+{
+	void A_CyberAttack()
+	{
+		self.RocketCounter++;
+		super.A_CyberAttack();
+	}
+	void A_Pain()
+	{
+		self.RocketCounter = 0;//if you interrupt the attack it should get reset to 0 so that the next attack is a group of 3
+		super.A_Pain();
+	}
+}

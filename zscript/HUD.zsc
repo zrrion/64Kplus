@@ -1,0 +1,25 @@
+protected void Draw_Meatspace_Compass()
+{
+	string CompassUnwrapped = "N........:........|........:........E........:........|........:........S........:........|........:........W........:........|........:........";
+	int CompassDisplaySize = (CompassUnwrapped.CodePointCount()/4) + 5;//roughly sizes the display based on the size of the compass string
+	int CompassDisplayHalf = (CompassDisplaySize - (CompassDisplaySize % 2))/2;
+	
+	double SDeg = double(CompassUnwrapped.CodePointCount())/360.0;
+	string CompassWrapped;
+	//takes the player's angle and converts it to a unit where every "degree" represents one character of the CompassUnwrapped string, then offsets the angle by half a degree for alignment reasons
+	double CompassAngle = CPlayer.mo.angle;	CompassAngle %= 360;	if(CompassAngle <0) CompassAngle += 360;	CompassAngle *= SDeg;	CompassAngle += 0.5; 	CompassAngle %= CompassUnwrapped.CodePointCount();
+	
+	//shifts the CompassUnwrapped string so that the character that represents the player's direction is centered when the string is drawn later
+	CompassUnwrapped.AppendFormat("%s",CompassUnwrapped);
+	CompassUnwrapped.Remove(0,(CompassUnwrapped.CodePointCount()/2) - CompassDisplayHalf);
+	CompassUnwrapped.Remove((CompassUnwrapped.CodePointCount() - CompassDisplayHalf), CompassDisplayHalf);
+	//if the string needed to be offset the other direction you'd use the following code
+	//CompassUnwrapped.AppendFormat("%s",CompassUnwrapped.Mid(0,CompassDisplayHalf));
+	//CompassUnwrapped.Remove(0,CompassDisplayHalf);
+
+	//generates the string that gets displayed on the HUD
+	While(CompassWrapped.CodePointCount() < CompassDisplaySize)
+		CompassWrapped.AppendFormat("%s",CompassUnwrapped.Mid((int(CompassAngle) + CompassWrapped.CodePointCount()) % CompassUnwrapped.CodePointCount(),1));
+
+	DrawString(HSmallfont, string.format("%s", CompassWrapped), (0, -7), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+}

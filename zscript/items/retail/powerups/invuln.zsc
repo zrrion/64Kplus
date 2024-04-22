@@ -1,0 +1,31 @@
+class skp_InvulnerabilitySphere : InvulnerabilitySphere replaces InvulnerabilitySphere
+{
+	Default
+	{
+		Inventory.PickupFlash "skp_PickupFlash";
+		Powerup.Color "GreenMap";
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(level.time % 1 == 0)
+		{
+			int V = random (-32,0);
+			int R = 95 + V;
+			int G = 207 + V;
+			int B = 87 + V;
+			string Colour;
+			Colour = Colour.Format("%02X%02X%02X",R, G, B);
+			for(int i = 0; i < 3; i++)
+				A_SpawnParticle(Colour, SPF_FULLBRIGHT|SPF_RELPOS,Random(25,35),Random(1,3),frandom(0,360),frandom(0,12), 0, 12 + random(0,24),0,0,fRandom(0.125,1),0,0,0,fRandom(0.75,0.25));
+		}
+		Super.Tick();
+	}
+	States
+	{
+	Spawn:
+		PINV ABCDCB 4 Bright;
+		Loop;
+	}
+}	

@@ -1,0 +1,34 @@
+class SKPBlueArmor : BlueArmor replaces BlueArmor
+{
+	States
+	{
+	Spawn:
+		BARM A 6;
+		BARM B 7 bright;
+		loop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+	/*Override String PickupMessage()
+	{
+		return string.Format("%s (+%i)", StringTable.Localize(super.PickupMessage()), SaveAmount);
+	}*/
+}

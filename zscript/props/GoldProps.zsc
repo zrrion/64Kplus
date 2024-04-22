@@ -1,0 +1,191 @@
+class SKP_KeyGizmo : Candelabra
+{
+int User_Type;
+int User_Colour;
+	Default
+	{
+		//$Category Gold props
+	}
+	States
+	{
+	Spawn:
+		GLDB A -1 Nodelay
+		{
+			if(User_Type)
+				Frame = 1; //B
+			else
+				Frame = 0; //A
+				
+			Switch (User_Colour)
+			{
+				Default:
+				Case (0)://Blue
+					Sprite = GetSpriteIndex("GLDB");
+				Break;
+				Case (1)://Green
+					Sprite = GetSpriteIndex("GLDG");
+				Break;
+				Case (2)://Red
+					Sprite = GetSpriteIndex("GLDR");
+				Break;
+				Case (3)://Yellow
+					Sprite = GetSpriteIndex("GLDY");
+				Break;
+				
+			}
+		}
+	Death:
+		GLDB AB 0;//this is just ehre to put these sprites in the index
+		GLDG AB 0;
+		GLDR AB 0;
+		GLDY AB 0;
+		Stop;
+	}
+}
+
+class SKP_GoldCandle_1 : Candelabra
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;
+	}
+	States
+	{
+	Spawn:
+		GLDC A -1;
+		Stop;
+	}
+}
+
+class SKP_GoldCandle_2 : Candelabra
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;
+	}
+	States
+	{
+	Spawn:
+		GLDC B -1;
+		Stop;
+	}
+}
+
+class SKP_GoldCandle_3 : Candlestick
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;
+	}
+	States
+	{
+	Spawn:
+		GLDC C -1;
+		Stop;
+	}
+}
+
+class SKP_GoldHeart : Candlestick
+{
+	Default
+	{
+		//$Category Gold props
+	}
+	States
+	{
+	Spawn:
+		GLDH AB 14;
+		Loop;
+	}
+}
+
+class SKP_GoldLamp : Candelabra
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;
+	}
+	States
+	{
+	Spawn:
+		GLDL A -1;
+		Stop;
+	}
+}
+
+class SKP_GoldHangingLamp : Candlestick
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;	+NOGRAVITY;	+SPAWNCEILING;
+		Height 34;
+	}
+	States
+	{
+	Spawn:
+		GLDL B -1;
+		Stop;
+	}
+}
+
+class SKP_GoldTorch_Blue : Candelabra
+{
+	Default
+	{
+		//$Category Gold props
+		+BRIGHT;
+	}
+	States
+	{
+	Spawn:
+		GLTB ABCDEF 6;
+		Loop;
+	}
+}
+
+class SKP_GoldTorch_Green : SKP_GoldTorch_Blue
+{
+	Default
+	{
+		//$Category Gold props
+	}
+	States
+	{
+	Spawn:
+		GLTG ABCDEF 6;
+		Loop;
+	}
+}
+
+class SKP_GoldTorch_Red : SKP_GoldTorch_Blue
+{
+	Default
+	{
+		//$Category Gold props
+	}
+	States
+	{
+	Spawn:
+		GLTR ABCDEF 6;
+		Loop;
+	}
+}
+
+class SKP_GoldTorch_Purple : SKP_GoldTorch_Blue
+{
+	Default
+	{
+		//$Category Gold props
+	}
+	States
+	{
+	Spawn:
+		GLTP ABCDEF 6;
+		Loop;
+	}
+}

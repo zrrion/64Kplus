@@ -1,0 +1,207 @@
+class skp_Blood : Blood replaces Blood
+{
+	default
+	{
+		+LOWGRAVITY
+		+FORCEXYBILLBOARD
+		+ROLLSPRITE
+		+ROLLCENTER
+		-ALLOWPARTICLES
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;//this is silly
+		BLUD C 5;
+		BLUD B 4 A_SetGravity(1);
+		BLUD A 3;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(CallACS("CVarCheck",2))
+			A_SetRoll(Random(0,359));
+		for(int i = 0; i < 3; i++)
+		{
+			A_SpawnItemEx("skp_BloodSpurt",0,0,0,0.2*random(-10,10),0.2*random(-10,10),0.3*random(5,15),0, SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE,192);
+		}
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_BloodSpurt : actor
+{
+	default
+	{
+		Radius  3;
+		Height  6;
+		Speed   0.1;
+		Gravity 0.5;
+		Scale   0.5;
+		Mass    0;
+		BounceType "Doom";
+		+FLOORCLIP
+		+DONTSPLASH
+		+NOTELEPORT
+		+NOBLOCKMAP 
+		+THRUACTORS
+		+FORCEXYBILLBOARD
+	}
+States
+	{
+	Spawn:
+		BLUD CDEFCDEFCDEF 1 A_SpawnItemEx("skp_BloodTrail",0.05*random(-10,10),0.05*random(-10,10),0.05*random(-10,10),0,0,0,0, SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERTRANSLATION | SXF_CLIENTSIDE,0);
+		BLUD BBAA 1 A_SpawnItemEx("skp_BloodTrail",0.05*random(-10,10),0.05*random(-10,10),0.05*random(-10,10),0,0,0,0, SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERTRANSLATION | SXF_CLIENTSIDE,0);
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(CallACS("CVarCheck",2))
+			A_SetRoll(Random(0,359));
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_BloodTrail : skp_BloodSpurt
+{
+	default
+	{
+		Gravity 0.25;
+	}
+	States
+	{
+	Spawn:
+		BTRL ABCD 2;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(CallACS("CVarCheck",2))
+			A_SetRoll(Random(0,359));
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_BloodSplatter : skp_Blood replaces BloodSplatter
+{
+	Override void PostBeginPlay()
+	{
+		A_Stop();
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_BloodMist : actor
+{
+	default
+	{
+		+FORCEXYBILLBOARD
+		+ROLLSPRITE
+		+ROLLCENTER
+		+NOBLOCKMAP
+		+NOTELEPORT
+		Mass 5;
+		renderstyle "translucent";
+		alpha 0.25;
+		scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		XDBS AAA 1 NODELAY
+		{
+			if(alpha < 0.75)
+				alpha += 0.125;
+			scale.x += 0.125;
+			scale.y = scale.x;
+		}
+		XDBS BCD 3 A_SpawnItemEx("skp_BloodSpurt",0,0,0,0.2*random(-10,10),0.2*random(-10,10),0.3*random(5,15),0, SXF_TRANSFERTRANSLATION | SXF_CLIENTSIDE,192);
+		XDBS EFGH 3;
+		XDBS I 1 A_Fadeout();
+		wait;
+	}
+	Override void PostBeginPlay()
+	{
+		if(CallACS("CVarCheck",2))
+			A_SetRoll(Random(0,359));
+
+		//scale.x = frandom(0.5, 0.75);
+		//scale.y = scale.x;
+		bXFLIP = random(true,false);
+		bYFLIP = random(true,false);
+		
+		for(int i = 0; i < 15; i++)
+			{
+				A_SpawnItemEx("Blood",random(0,16), 0, 32 + random(8,-8), 0, 0, 0, random(0,360), SXF_TRANSFERTRANSLATION|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+			}
+		for(int i = 0; i < 5; i++)
+			{
+				A_SpawnItemEx("skp_XdeathGib",0,0,45,frandom(-6,6),frandom(-6,6),frandom(3,6),random(0,360),SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEVELOCITY|SXF_TRANSFERRENDERSTYLE);
+			}
+		
+		
+		Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(CallACS("CVarCheck",2))
+			self.roll += bXFLIP ? -1 : 1;
+		super.Tick();
+	}
+}
+
+class skp_XdeathGib : DemonChunk
+{
+	int FloorclipStart;
+	float SinkSpeed;
+	Default
+	{
+		+THRUACTORS
+		+MOVEWITHSECTOR
+		radius 4;
+	}
+	States
+	{
+		Spawn:
+			XDGP "#" 1;
+			Loop;
+		Death:
+			XDGP "#" 256
+			{
+				A_SpawnItemEx("skp_BloodSpurt",0,0,0,0.2*random(-10,10),0.2*random(-10,10),0.3*random(5,15),0, SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE,192);
+				tics += random(0,tics);
+			}
+			XDGP "#" 2 A_SinkGib;
+			wait;
+	}
+	Override Void PostBeginPlay()
+	{
+		FLoorclipStart = 2 * self.height;//this ensures that they sink into the ground far enough, we store the value ot height at spawn here in case any future changes to the actor effect the heaght when it enters the death state, multiplied by 2 just to be safe as sometimes it will look weird on stairs where the sprite can be seen after it sinks into the floor
+		SinkSpeed = frandom(0.125,0.5);
+		Frame = Random(0,17);
+		bXFLIP = Random(true,false);
+		Super.PostBeginPlay();
+	}
+	void A_SinkGib()
+	{
+		Floorclip += SinkSpeed;
+		if(Floorclip >= FloorclipStart)
+			A_FadeOut();
+	}
+}
+
+class skp_PlacedXdeathGib : skp_XdeathGib
+{
+	Default
+	{
+	//$Category Gore
+	radius 16;
+	}
+	States
+	{
+		Death:
+			XDGP A 0;
+			XDGP "#" -1;
+			stop;
+	}
+}

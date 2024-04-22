@@ -1,0 +1,34 @@
+class WolfChair : Actor
+{
+	Default
+	{
+		//$Category Wolfendoom
+		radius 16;
+		height 10;
+	}
+	States
+	{
+		Spawn:
+			WCHR A -1;
+			Stop;
+	}
+	Override void PostBeginPlay()
+	{
+	super.PostBeginPlay();
+	bXFLIP = random(true,false);
+	}
+}
+
+class WolfFallenChair : WolfChair
+{
+	Default
+	{
+		//$Category Wolfendoom
+	}
+	States
+	{
+		Spawn:
+			WCHR B -1;
+			Stop;
+	}
+}

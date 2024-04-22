@@ -1,0 +1,132 @@
+class SKP_WoodandIronPillar_Short : Column
+{
+	Default
+	{
+		//$Category Iron and wood
+		Radius 13;
+		Height 37;
+	}
+	States
+	{
+	Spawn:
+		WIPL A -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_Bloody : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL B -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_BeatingHeart : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL CD 14;
+		Loop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_BloodyMess : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL E -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	Default
+	{
+		Radius 17;
+		Height 56;
+	}
+	States
+	{
+	Spawn:
+		WIPL F -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_RedBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL G -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_BlackBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL H -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_BlueBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL I -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_PurpleBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+	//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL J -1;
+		Stop;
+	}
+}

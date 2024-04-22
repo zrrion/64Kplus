@@ -1,0 +1,14 @@
+class SKP_FireEye : EvilEye
+{
+	Default
+	{
+		//$Category Light sources
+		+BRIGHT
+	}
+	States
+	{
+	Spawn:
+		FEYE ABCB 6 BRIGHT;
+		Loop;
+	}
+}

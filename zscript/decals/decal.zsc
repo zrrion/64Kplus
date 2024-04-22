@@ -1,0 +1,14 @@
+class SignDecal : actor
+{	
+	string user_DecalName;
+	default
+	{
+		+NOGRAVITY
+	}
+	states
+	{
+		spawn:
+			DSGN A 1;
+			wait;
+	}
+}

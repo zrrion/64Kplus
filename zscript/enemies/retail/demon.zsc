@@ -1,0 +1,57 @@
+class skp_Demon : Demon  replaces Demon 
+{
+	mixin BerserkDroper;
+	
+	Default
+	{
+
+	}
+	States
+	{
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",1, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",1, Abs(self.painchance-256));
+				}
+		}
+	Xdeath:
+		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+	Death:
+		SARG I 8;
+		SARG J 8 A_Scream;
+		SARG K 4;
+		SARG L 4 A_NoBlocking;
+		SARG M 4;
+	Death.Prop:
+		SARG N -1;
+		Stop;
+	}
+}
+
+class skp_Spectre : skp_Demon replaces Spectre
+{
+	Default
+	{
+		+SHADOW
+		RenderStyle "Fuzzy";
+		SeeSound "spectre/sight";
+		AttackSound "spectre/melee";
+		PainSound "spectre/pain";
+		DeathSound "spectre/death";
+		ActiveSound "spectre/active";
+		Obituary "$OB_SPECTREHIT";
+		Tag "$FN_SPECTRE";
+		BloodType "skp_SpectreBlood";
+	}
+}
+
+class skp_SpectreBlood : skp_blood
+{
+	default
+	{
+		RenderStyle "Fuzzy";
+	}
+}

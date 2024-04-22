@@ -1,0 +1,14 @@
+class ThriftyMiniStimpack : ThriftyHealth//I know it isn't retail but it is needed by the retail stuff so whatever
+{
+	Default
+	{
+		Inventory.Amount 5;
+		ThriftyHealth.PickupMsg "You picked up a small stimpack.";
+	}
+	States
+	{
+	Spawn:
+		ZTIM A -1;
+		Stop;
+	}
+}

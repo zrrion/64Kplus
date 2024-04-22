@@ -1,0 +1,20 @@
+class skp_RadSuit : RadSuit replaces RadSuit
+{
+	Default
+	{
+		Inventory.PickupFlash "skp_PickupFlash";
+		Inventory.RespawnTics 2450;//respawns 10 sec or so after the boots run out
+		+INVENTORY.ALWAYSRESPAWN;
+	}
+	States
+	{
+	Spawn:
+		SUIT A 12;
+		SUIT B 14 Bright;
+		loop;
+	}
+	Override void Tick()
+	{
+		Super.Tick();
+	}
+}

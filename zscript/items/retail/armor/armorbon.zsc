@@ -1,0 +1,63 @@
+ class SKPArmorBonus : ArmorBonus replaces ArmorBonus
+{
+	
+	mixin BerserkHoover;
+	
+	States
+	{
+	Spawn:
+		BON2 ABCD 6;
+		loop;
+	}
+//====
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		Hoover();
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+	
+	Override bool TryPickup (in out Actor toucher)
+	{
+		let T = skp_DoomPlayer(toucher);
+		let Armor = BasicArmor(T.FindInventory("BasicArmor"));
+		int ToucherAmount = Armor.Amount;
+		int ToucherMax = Armor.MaxAmount;;
+		int ToucherFuel = Toucher.CountInv("SKP_SawFuel");
+		bool result = super.TryPickup(toucher);
+		
+		if(ToucherFuel < 5  && result)
+		{
+			if(ToucherAmount >= ToucherMax)
+				T.FuelRegen += 2;
+			else
+				T.FuelRegen += 1;
+			if(T.FuelRegen >= 25)
+			{
+				Toucher.A_GiveInventory("SKP_SawFuel",1);
+				T.FuelRegen %= 25;
+			}
+		}
+		Return result;
+	}
+	/*Override String PickupMessage()
+	{
+		return string.Format("%s (+%i)", StringTable.Localize(super.PickupMessage()), amount);
+	}*/
+}

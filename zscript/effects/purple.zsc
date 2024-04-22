@@ -1,0 +1,65 @@
+class SKP_PurpleBubbleSpawner : actor
+{
+	Default
+	{
+		//$Category Effects
+		+NOINTERACTION;	+NOGRAVITY;	+NOBLOCKMAP;
+		radius 64;
+		height 8;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1 NODELAY
+		{
+			A_SetTics(random(8,32));
+			A_SpawnItemEx("SKP_PurpleBubble",random(-1*(Radius),(Radius)),random(-1*(Radius),(Radius)));
+		}
+		Loop;
+	}
+}
+
+class SKP_PurpleBubble : actor
+{
+	int FrameTime;
+	Default
+	{
+		+NOINTERACTION;	+NOGRAVITY;	+NOBLOCKMAP;
+	}
+	Override void PostBeginPlay()
+	{
+		FrameTime = random(8,16);
+		A_SetScale(frandom(0.9,1.0));
+		Super.PostBeginPlay();
+	}
+	action bool A_CheckPurp(Actor mo)//if your purp isn't checked you already know what happens
+	{
+		string texture = "PRP_";
+		int t = texture.length();
+		string tex = Texman.GetName(mo.floorpic);
+		tex.Truncate(t);
+		return texture ~== tex;
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 1 NODELAY
+		{
+			if(A_CheckPurp(self) && self.pos.z == floorz)
+				A_SetTics(random(0,2));
+			else
+				return ResolveState("null");
+			return ResolveState(null);
+		}
+		PRPB ABC 6 A_SetTics(FrameTime);
+		PRPB D 6
+		{
+			A_SetTics(FrameTime);
+			frame = random(3,4);//picks D or E
+		}
+		PRPB F 1 A_SetTics(random(12,32));
+		PRPB GHI 6;
+		Stop;
+	}
+}

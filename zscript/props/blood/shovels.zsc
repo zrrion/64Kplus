@@ -1,0 +1,39 @@
+class skp_BloodShovel : Actor
+{
+
+	Default
+	{
+		//$Category Blood_Stuff
+		+WALLSPRITE
+		+ROLLSPRITE
+		scale 0.8;
+	}
+	States
+	{
+	Spawn:
+		BLDP A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		let i = frandom(-10,10);
+		self.angle += i;
+		self.roll += i;
+		super.PostBeginPlay();
+	}
+}
+
+class skp_BloodSpade : skp_BloodShovel
+{
+
+	Default
+	{
+		//$Category Blood_Stuff
+	}
+	States
+	{
+	Spawn:
+		BLDP B -1;
+		Stop;
+	}
+}

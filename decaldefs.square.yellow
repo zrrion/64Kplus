@@ -1,0 +1,226 @@
+// all decal numbers are formated like this: 1SCDD
+// 1 is there to pad out the number
+// S is the series
+// C is the colour
+// DD is the decal within the series
+// for S:
+//			0		1
+//			caution	square
+// for C:
+//			0		1		2		3		4		5		6
+//			shadow	yellow	green	red		blue	purple	orange
+// for S0; DD:
+//			0			1		2			3			4			5			6			7			8			9			10			11			12			13			14			15			16			17			18
+//			csy_null	csy_bio	csy_cold	csy_crsh	csy_easy	csy_exit	csy_expl	csy_fire	csy_hard	csy_hot		csy_lsr		csy_mark	csy_obey	csy_psn		csy_rad		csy_rat		csy_rgnt	csy_unfr	csy_vltg
+// for S1; DD:
+//			0		1		2		3		4		5		6		7		8		9		10		11		12		13		14		15		16		17		18		19		20		21		22		23		24		25
+//			s*_null	s*_aid	s*_bayd	s*_bayl	s*_bayr	s*_bayu	s*_comp	s*_depd	s*_depl	s*_depr s*_depu	s*_exit	s*_hand	s*_idk	s*_labd	s*_labl	s*_labr	s*_labu	s*_meal	s*_plte	s*_rstr	s*_swch	s*_wh1d	s*_wh1l	s*_wh1r	s*_wh1u
+// shadow ignores DD and for those it should always be left 00
+
+decal SquareYellowNull 11100
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_null
+}
+
+decal SquareYellowAid 11101
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_aid
+}
+
+decal SquareYellowBayDown 11102
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_bayd
+}
+
+decal SquareYellowBayLeft 11103
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_bayl
+}
+
+decal SquareYellowBayRight 11104
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_bayr
+}
+
+decal SquareYellowBayUp 11105
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_bayu
+}
+
+decal SquareYellowComputer 11106
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_comp
+}
+
+decal SquareYellowDepartmentDown 11107
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_depd
+}
+
+decal SquareYellowDepartmentLeft 11108
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_depl
+}
+
+decal SquareYellowDepartmentRight 11109
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_depr
+}
+
+decal SquareYellowDepartmentUp 11110
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_depu
+}
+
+decal SquareYellowExit 11111
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_exit
+}
+
+decal SquareYellowHand 11112
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_Hand
+}
+
+decal SquareYellowIDK 11113
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_idk
+}
+
+decal SquareYellowLabDown 11114
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_labd
+}
+
+decal SquareYellowLabLeft 11115
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_labl
+}
+
+decal SquareYellowLabRight 11116
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_labr
+}
+
+decal SquareYellowLabUp 11117
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_unfr
+}
+
+decal SquareYellowMeal 11118
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_meal
+}
+
+decal SquareYellowPressurePlate 11119
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_plte
+}
+
+decal SquareYellowRestricted 11120
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_rstr
+}
+
+decal SquareYellowSwitch 11121
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_swch
+}
+
+decal SquareYellowWarehouse1Down 11122
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_wh1d
+}
+
+decal SquareYellowWarehouse1Left 11123
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_wh1l
+}
+
+decal SquareYellowWarehouse1Right 11124
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_wh1r
+}
+
+decal SquareYellowWarehouse1Up 11125
+{
+
+	lowerdecal SquareShadow
+	
+	pic sy_wh1u
+}

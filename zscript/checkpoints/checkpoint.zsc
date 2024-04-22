@@ -1,0 +1,125 @@
+class skp_CheckpointBase : switchabledecoration
+{
+int user_TPDestTID;
+bool Flip;
+	Default
+	{
+		//$Category Savepoints
+		+USESPECIAL
+		+SOLID
+		Activation THINGSPEC_Switch;
+		radius 16;
+		height 50;
+	}
+	Override void PostBeginPlay()
+	{
+		Flip = FALSE;
+		super.PostBeginPlay();
+	}
+	Override void Activate(Actor activator)
+	{
+		if(!Flip)
+		{
+			A_StartSound("Checkpoint/save", CHAN_AUTO, CHANF_UI);
+			Savepoint(activator);
+			SetStateLabel("Close");
+		}
+		else
+		{
+			A_StartSound("*usefail", CHAN_AUTO, CHANF_UI);
+		}
+	}
+	Override void Deactivate (Actor activator)
+	{
+		Activate(activator);
+	}
+	
+	Action void Reactivate()
+	{
+		invoker.Flip = FALSE;
+		SetStateLabel("Open");
+	}
+	Action void Savepoint(Actor activator)
+	{
+		invoker.Flip = TRUE;
+		activator.A_Print("Checkpoint reached.");
+		A_Warp(invoker.user_TPDestTID,activator.pos.x,activator.pos.y,activator.pos.z,activator.angle,WARPF_ABSOLUTEANGLE|WARPF_ABSOLUTEPOSITION|WARPF_NOCHECKPOSITION|WARPF_STOP|WARPF_MOVEPTR|WARPF_USETID);
+		
+		ActorIterator it = level.CreateActorIterator(invoker.user_TPDestTID);
+		Actor mo = it.Next();
+		if (mo)
+			invoker.target = mo;
+	}
+	Override void Tick()
+	{
+		if(Flip && user_TPDestTID > 0 && target != NULL)
+		{
+			if((abs(target.pos.x - self.pos.x) > 96) || (abs(target.pos.y - self.pos.y) > 96) || (abs(target.pos.z - self.pos.z) > 96))//reset the checkpoint if the teleport destination moves too far away
+				Reactivate();
+			else if(level.totaltime % 4 == 0)
+			{
+				Vector3 tfxpos;
+				tfxpos.x = target.pos.x + frandom(-16,16);
+				tfxpos.y += target.pos.y + frandom(-16,16);
+				tfxpos.z += target.pos.z + 0.125;
+				let tfx = Spawn("Zar_TeleGlitter1",tfxpos);
+				tfx.vel.z += 0.25;
+			}
+		}
+		super.Tick();
+	}
+}
+
+class GreenCheckpoint : skp_CheckpointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			GBCP I 1;
+			Wait;
+		Close:
+			GBCP H 1;
+			Wait;
+	}
+}
+
+class RedCheckpoint : skp_CheckpointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			RBCP I 1;
+			Wait;
+		Close:
+			RBCP H 1;
+			Wait;
+	}
+}
+
+class YellowCheckpoint : skp_CheckpointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			YBCP I 1;
+			Wait;
+		Close:
+			YBCP H 1;
+			Wait;
+	}
+}

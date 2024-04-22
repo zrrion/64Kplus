@@ -1,0 +1,35 @@
+class ThriftyCell : ThriftyAmmo replaces Cell
+{
+	Default
+	{
+		Inventory.Amount 20;
+		ThriftyAmmo.AmmoType "Cell";
+		ThriftyAmmo.SmallPickup "ThriftyCell";
+		ThriftyAmmo.PickupMsg "$GOTCELL";
+	}
+	States
+	{
+	Spawn:
+		CELL AAAABBBBCCCCDDDDEEEEEEEEDDCCBB 1;
+		Loop;
+	}
+}
+
+class ThriftyCellPack : ThriftyAmmo replaces CellPack
+{
+	Default
+	{
+		Inventory.Amount 100;
+		ThriftyAmmo.AmmoType "Cell";
+		ThriftyAmmo.SmallPickup "ThriftyCell";
+		ThriftyAmmo.BigPickup TRUE;
+		ThriftyAmmo.PickupMsg "$GOTCELLBOX";
+		ThriftyAmmo.PickupOpenMsg "You opened an energy cell pack.";
+	}
+	States
+	{
+	Spawn:
+		CELP AAAABBBBCCCCDDDDEEEEFFFFFFFFEEDDCCBB 1;
+		Loop;
+	}
+}

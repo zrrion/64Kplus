@@ -1,0 +1,27 @@
+class SwitchSkull : SwitchBase
+{
+	//$Category Switches
+	default
+	{
+		//$Category Switches
+		height 44;
+		radius 20;
+		-FIXMAPTHINGPOS
+	}
+	States
+	{
+	InactiveB:
+		SKLS B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	InactiveA:
+	Spawn:
+		SKLS A 1;
+		wait;
+	NoFlip:
+		SKLS B -1;
+		Stop;
+	}
+}

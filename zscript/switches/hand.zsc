@@ -1,0 +1,106 @@
+class SwitchHand : SwitchBase
+{
+	//$Category Switches
+	bool User_Flicker;
+	default
+	{
+		//$Category Switches
+		radius 4;
+		height 32;
+		renderstyle "Translucent";
+		alpha 0.75;
+		+WALLSPRITE
+		+BRIGHT
+	}
+	Override void Activate(Actor activator)
+	{
+		A_StartSound("switches/normbutn",CHAN_AUTO);
+		
+		bool haskey = user_MarkerType ? activator.CountInv(Key.GetType(user_MarkerType)) > 0 : true;
+		bool doflip = haskey ? Level.ExecuteSpecial(OldSpecial, activator, null, false, args[0], args[1], args[2], args[3], args[4]) : false;
+		
+		if(frame < 6)//we are green
+		{
+			if(doflip && user_NoRepeat)
+			{
+				bUSESPECIAL = false;
+				if(target != null)
+				{
+					if(user_MarkerType > 6)
+						activator.A_TakeInventory(Key.GetType(user_MarkerType), 1);
+					target.Destroy();
+				}
+				if(frame < 6)
+					SetStateLabel("NoFlipGreen");
+				else
+					SetStateLabel("NoFlipRed");
+			}
+			else
+			{
+				if(user_MarkerType && !haskey)
+					Activator.A_Print(Key.GetString(user_MarkerType));
+				
+				if(frame < 6 && doflip)
+					SetStateLabel("InactiveGreenToGreen");
+				else if(doflip)
+					SetStateLabel("InactiveRedToGreen");
+				else if(frame < 6 && !doflip)
+					SetStateLabel("InactiveGreenToRed");
+				else
+					SetStateLabel("InactiveRedToRed");
+				Flip = !Flip;
+			}
+		}
+	}
+	Override void PostBeginPlay()
+	{
+		A_SetSize(16,32,FALSE);
+		super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(User_Flicker && level.totaltime % 16 == 0 && Random(0,2) == 0)//if(level.totaltime % 2 == 0 && Random(0,1) == 0)
+		{
+			if(random(0,1) == 0)
+				A_StartSound("world/spark", CHAN_WEAPON, CHANF_OVERLAP, 0.125, 4);
+			alpha = 0.5;
+		}
+		else if(Random(0,1) == 0)
+		{
+			A_StopSound(CHAN_WEAPON);
+			alpha = 0.75;
+		}
+		
+		super.Tick();
+	}
+	States
+	{
+	InactiveRedToRed:
+		SWHG HIJK 2;
+		SWHG G 70;
+		Goto Spawn;
+	InactiveRedToGreen:
+		SWHG HIJK 2;
+		SWHG B 70;
+		Goto Spawn;
+	InactiveGreenToRed:
+		SWHG CDEF 2;
+		SWHG G 70;
+		Goto Spawn;
+	InactiveGreenToGreen:
+		SWHG CDEF 2;
+		SWHG B 70;
+	InactiveA:
+	Spawn:
+		SWHG A 1;
+		Wait;
+	NoFlipGreen:
+		SWHG CDEF 5;
+		SWHG B -1;
+		Stop;
+	NoFlipRed:
+		SWHG HIJK 5;
+		SWHG B -1;
+		Stop;
+	}
+}

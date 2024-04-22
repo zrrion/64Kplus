@@ -1,0 +1,44 @@
+class skp_Infrared : Infrared replaces Infrared
+{
+	Default
+	{
+		Inventory.PickupFlash "skp_PickupFlash";
+		Inventory.RespawnTics 2450;
+		+INVENTORY.ALWAYSRESPAWN;
+	}
+	int age;
+	bool oldbright;
+	Override void Tick()
+	{
+		super.Tick();
+		
+		if(age == 12)
+			bBRIGHT = FALSE;
+		if(age == 26)
+			bBRIGHT = TRUE;
+		age = age >= 26 ? 0 : age + 1;
+	}
+	States
+	{
+		Spawn:
+		Red:
+			PVIS A 1
+			{
+				if(age == 12 || age == 26)
+					SetStateLabel("RedBlue");
+			}
+			Loop;
+		RedBlue:
+			PVIS BCDEFG 4;
+		Blue:
+			PVIS H 1
+			{
+				if(age == 12 || age == 26)
+					SetStateLabel("BlueRed");
+			}
+			Loop;
+		BlueRed:
+			PVIS IJKLMN 4;
+			Goto Red;
+	}
+}

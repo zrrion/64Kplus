@@ -1,0 +1,34 @@
+class ThriftyBackpack : Backpack replaces Backpack
+{
+	Default
+	{
+		Inventory.PickupSound "misc/i_pkup";
+	}
+	States
+	{
+	Spawn:
+		BPAK A -1;
+		Stop;
+	}
+	//====
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+}

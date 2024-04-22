@@ -1,0 +1,31 @@
+class BigButton : SwitchBase
+{
+	//$Category Switches
+	Default
+	{
+		//$Category Switches
+		height 16;
+		radius 4;
+	}
+	Override void PostBeginPlay()
+	{
+		A_SetSize(24,24,FALSE);
+		super.PostBeginPlay();
+	}
+	States
+	{
+	InactiveB:
+		WL4S B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	InactiveA:
+	Spawn:
+		WL4S A 1;
+		wait;
+	NoFlip:
+		WL4S B -1;
+		Stop;
+	}
+}

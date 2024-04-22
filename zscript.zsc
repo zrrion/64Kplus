@@ -1,0 +1,192 @@
+version "4.5"
+//I wish #include could just include entire directories instead of only individual files
+
+#include "zscript/inventory.zsc"
+#include "zscript/teleport.zsc"
+#include "zscript/player.zsc"
+#include "zscript/blood.zsc"
+#include "zscript/berserk.mixin.zsc"
+
+#include "zscript/decals/decal.zsc"
+
+#include "zscript/doors/gate.zsc"
+
+#include "zscript/props/holo floor/holo floor.zs"
+
+#include "zscript/checkpoints/savepoint.zsc"
+#include "zscript/checkpoints/checkpoint.zsc"
+
+#include "zscript/switches/base.zsc"
+#include "zscript/switches/door.zsc"
+#include "zscript/switches/locked.zsc"
+#include "zscript/switches/secret.zsc"
+#include "zscript/switches/skull.zsc"
+#include "zscript/switches/bigbutton.zsc"
+#include "zscript/switches/hand.zsc"
+
+#include "zscript/weapons/base.zsc"
+#include "zscript/weapons/unmaker.zsc"
+
+#include "zscript/enemies/AreaHazard.zsc"
+#include "zscript/enemies/CacoThing.zsc"
+#include "zscript/enemies/GoreNest.zsc"
+#include "zscript/enemies/DemonDog.zsc"
+#include "zscript/enemies/Shadow.zsc"
+#include "zscript/enemies/zazinombie.zsc"
+
+#include "zscript/effects/purple.zsc"
+#include "zscript/effects/blooddripper.zsc"
+#include "zscript/effects/liquidfizz.zsc"
+#include "zscript/effects/teleport.zsc"
+
+#include "zscript/props/candle.zsc"
+#include "zscript/props/PlasmaOffer.zsc"
+#include "zscript/props/Skulls.zsc"
+#include "zscript/props/GoldProps.zsc"
+#include "zscript/props/FireEye.zsc"
+#include "zscript/props/IronandWoodPil.zsc"
+#include "zscript/props/rustytech.zsc"
+#include "zscript/props/violet.zsc"
+#include "zscript/props/utility_pole.zsc"
+
+#include "zscript/props/hexen/bricks.zsc"
+#include "zscript/props/hexen/candles.zsc"
+#include "zscript/props/hexen/cleaver.zsc"
+#include "zscript/props/hexen/graves.zsc"
+#include "zscript/props/hexen/mush.zsc"
+#include "zscript/props/hexen/rocks.zsc"
+#include "zscript/props/hexen/steins.zsc"
+
+#include "zscript/props/heretic/hangingskuls.zsc"
+#include "zscript/props/heretic/cobwebs.zsc"
+
+#include "zscript/props/duke/medical_stuff.zsc"
+
+#include "zscript/props/blood/shovels.zsc"
+
+#include "zscript/props/wolfendoom/ceil light.zsc"
+#include "zscript/props/wolfendoom/chair.zsc"
+#include "zscript/props/wolfendoom/table.zsc"
+
+
+
+#include "zscript/debris/debrisbase.zsc"
+#include "zscript/debris/paper.zsc"
+#include "zscript/debris/leaves.zsc"
+#include "zscript/debris/keyboard.zsc"
+#include "zscript/debris/grass.zsc"
+
+#include "zscript/items/armor/RedArmor.zsc"
+#include "zscript/items/armor/greenboots.zsc"
+#include "zscript/items/health/bigpotion.zsc"
+
+#include "zscript/items/ammo/SawFuel.zsc"
+
+#include "zscript/items/powerup/doublejump.zcs"
+
+#include "zscript/items/keys/SingleUse.zs"
+#include "zscript/items/keys/PurpleCard.zs"
+#include "zscript/items/keys/GreenSkull.zs"
+
+//everything that replaces something in the base game goes here:
+//starting with items you can pick up
+//weapons ===
+#include "zscript/weapons/retail/fist.zsc"
+#include "zscript/weapons/retail/chainsaw.zsc"
+#include "zscript/weapons/retail/pistol.zsc"
+#include "zscript/weapons/retail/shotgun.zsc"
+#include "zscript/weapons/retail/ssg.zsc"
+#include "zscript/weapons/retail/chaingun.zsc"
+#include "zscript/weapons/retail/rocket.zsc"
+#include "zscript/weapons/retail/plasma.zsc"
+#include "zscript/weapons/retail/BFG.zsc"
+//ammo ===
+#include "zscript/items/retail/ammo/base.zsc"
+#include "zscript/items/retail/ammo/cell.zsc"
+#include "zscript/items/retail/ammo/clip.zsc"
+#include "zscript/items/retail/ammo/rocket.zsc"
+#include "zscript/items/retail/ammo/shell.zsc"
+#include "zscript/items/retail/ammo/backpack.zsc"
+//armor ===
+#include "zscript/items/retail/armor/armorbon.zsc"
+#include "zscript/items/retail/armor/bluearmor.zsc"
+#include "zscript/items/retail/armor/greenarmor.zsc"
+//health ===
+#include "zscript/items/retail/health/base.zsc"
+#include "zscript/items/retail/health/bon1a.zsc"
+#include "zscript/items/retail/health/medikit.zsc"
+#include "zscript/items/retail/health/stimpack.zsc"
+#include "zscript/items/retail/health/ministimpack.zsc"
+//powerups ===
+#include "zscript/items/retail/powerups/goggle.zsc"
+#include "zscript/items/retail/powerups/invis.zsc"
+#include "zscript/items/retail/powerups/invuln.zsc"
+#include "zscript/items/retail/powerups/map.zsc"
+#include "zscript/items/retail/powerups/mega.zsc"
+#include "zscript/items/retail/powerups/soul.zsc"
+#include "zscript/items/retail/powerups/suit.zsc"
+#include "zscript/items/retail/powerups/flash.zsc"
+#include "zscript/items/retail/powerups/zerk.zsc"
+//props ===
+#include "zscript/props/retail/ExplosiveBarrel.zsc"
+#include "zscript/props/retail/BurningBarrel.zsc"
+#include "zscript/props/retail/FloatingSkull.zsc"
+#include "zscript/props/retail/BlueTorch.zsc"
+#include "zscript/props/retail/DeadMarine.zsc"
+#include "zscript/props/retail/RedTorch.zsc"
+#include "zscript/props/retail/GreenTorch.zsc"
+//enemies ===
+#include "zscript/enemies/retail/archvile.zsc"
+#include "zscript/enemies/retail/babyspider.zsc"
+#include "zscript/enemies/retail/baron.zsc"
+#include "zscript/enemies/retail/cacodemon.zsc"
+#include "zscript/enemies/retail/chaingunner.zsc"
+#include "zscript/enemies/retail/cyberdemon.zsc"
+#include "zscript/enemies/retail/demon.zsc"
+#include "zscript/enemies/retail/doomimp.zsc"
+#include "zscript/enemies/retail/hellknight.zsc"
+#include "zscript/enemies/retail/mamaspider.zsc"
+#include "zscript/enemies/retail/mancubus.zsc"
+#include "zscript/enemies/retail/painmeatball.zsc"
+#include "zscript/enemies/retail/shotgunguy.zsc"
+#include "zscript/enemies/retail/skelly.zsc"
+#include "zscript/enemies/retail/zombie.zsc"
+#include "zscript/enemies/retail/soul.zsc"
+#include "zscript/enemies/retail/DeadThings.zsc"//these are used as props, but I have modified them so they can be raised and they noow make more sense here
+//friends ===
+#include "zscript/friends/retail/keen.zsc"
+
+//some basic stuff
+class skp_BulletPuff_XDeath : BulletPuff
+{
+	Default
+	{
+		+EXTREMEDEATH	
+	}
+}
+
+class GenericProjectileTrail : actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOGRAVITY
+		+NOBLOCKMAP
+	}
+	States
+	{
+	Spawn:
+		"####" "#" 1 BRIGHT A_Fadeout(0.05);
+		Wait;
+	}
+}
+
+class GenericProjectileTrail2 : GenericProjectileTrail
+{
+	States
+	{
+	Spawn:
+		"####" "#" 1 Bright A_Fadeout(0.1);
+		Wait;
+	}
+}

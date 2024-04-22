@@ -1,0 +1,66 @@
+class HexenRockA : Actor
+{
+	Default
+	{
+	//$Category Hexen
+	+MOVEWITHSECTOR
+	}
+	States
+	{
+	Spawn:
+		HROK A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = Random(TRUE, FALSE);
+		Super.PostBeginPlay();
+	}
+}
+
+class HexenRockB : HexenRockA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HROK B -1;
+		Stop;
+	}
+}
+
+class HexenRockC : HexenRockA
+{
+	Default
+	{
+		//$Category Hexen
+		Radius 15;
+		Height 19;
+		+SOLID
+	}
+	States
+	{
+	Spawn:
+		HROK C -1;
+		Stop;
+	}
+}
+
+class HexenRockD : HexenRockC
+{
+	Default
+	{
+		//$Category Hexen
+		Radius 25;
+		Height 23;
+	}
+	States
+	{
+	Spawn:
+		HROK D -1;
+		Stop;
+	}
+}

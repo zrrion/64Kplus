@@ -1,0 +1,58 @@
+class SKP_HealthMegaBonus : HealthBonus
+{
+	Default
+	{
+		//$Category Health and Armor
+		Radius 20;
+		Height 16;
+		Inventory.Pickupmessage "Picked up a large health bonus.";
+		Inventory.Icon "BON1G0";
+		Inventory.Amount 10;
+	}
+//====
+	States
+	{
+	Spawn:
+		BON1 EFGHGF 6;
+		loop;
+	}
+//====	
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+}
+
+class CacoMeat : SKP_HealthMegaBonus
+{
+	Default
+	{
+		//$Category Health and Armor
+		Inventory.Pickupmessage "\c[blue]Ate some cacodemon meat?";
+		Inventory.Icon "CSTKB0";
+		Inventory.Amount 25;
+	}
+	States
+	{
+	Spawn:
+		CSTK A 6;
+		CSTK B 7 Bright;
+		loop;
+	}
+}

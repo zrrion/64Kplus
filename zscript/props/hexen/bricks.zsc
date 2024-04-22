@@ -1,0 +1,47 @@
+class HexenBrickA : Actor
+{
+	Default
+	{
+	+MOVEWITHSECTOR
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HBRK A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = Random(TRUE, FALSE);
+		Super.PostBeginPlay();
+	}
+}
+
+class HexenBrickB : HexenBrickA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HBRK B -1;
+		Stop;
+	}
+}
+
+class HexenBrickC : HexenBrickA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HBRK C -1;
+		Stop;
+	}
+}

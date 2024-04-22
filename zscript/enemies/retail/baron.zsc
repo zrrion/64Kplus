@@ -1,0 +1,56 @@
+class skp_BaronOfHell : BaronOfHell replaces BaronOfHell
+{
+	mixin BerserkDroper;
+	
+	Default
+	{
+		Bloodcolor "329E32";
+	}
+	States
+	{
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",3, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",3, Abs(self.painchance-256));
+				}
+		}
+	Xdeath:
+		TNT1 AA 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		BOSS I  8;
+		BOSS J  8 A_Scream;
+		BOSS K  8;
+		BOSS L  8 A_NoBlocking;
+		BOSS MN 8;
+		BOSS O -1 A_BossDeath;
+		Stop;
+	}
+}
+
+class skp_BaronBall : BaronBall replaces BaronBall
+{
+	States
+	{
+	Spawn:
+		BAL7 AABB 2 BRIGHT
+		{
+			A_SpawnParticle("5EDB5E",SPF_FULLBRIGHT,random(8,16),random(1,2),0,frandom(1,-1)*4,frandom(1,-1)*4,frandom(1,-1),frandom(1,-1),frandom(1,-1),frandom(1,-1));
+			A_SpawnParticle("5EDB5E",SPF_FULLBRIGHT,random(8,16),random(1,2),0,frandom(1,-1)*4,frandom(1,-1)*4,frandom(1,-1),frandom(1,-1),frandom(1,-1),frandom(1,-1));
+			A_SpawnParticle("51BC51",SPF_FULLBRIGHT,random(8,16),random(1,2),0,frandom(1,-1)*4,frandom(1,-1)*4,frandom(1,-1),frandom(1,-1),frandom(1,-1),frandom(1,-1));
+			A_SpawnParticle("51BC51",SPF_FULLBRIGHT,random(8,16),random(1,2),0,frandom(1,-1)*4,frandom(1,-1)*4,frandom(1,-1),frandom(1,-1),frandom(1,-1),frandom(1,-1));
+			A_SpawnItemEx("ChainsawSmoke",0,0,-4,0,0,fRandom(1,2),0,0,128);
+		}
+		Loop;
+	Death:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("ChainsawSmoke",0,0,-4,0,0,fRandom(1,2),0,0);
+			bXFLIP = Random(true, false);
+			bYFLIP = Random(true, false);
+		}
+		BAL7 CDE 6 BRIGHT;
+		Stop;
+	}
+}

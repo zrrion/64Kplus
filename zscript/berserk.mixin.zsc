@@ -1,0 +1,48 @@
+mixin class BerserkDroper//mixin BerserkDroper;
+{
+	void A_PowerKillDrops(class<Actor> item, int dropamount = -1, int chance = 256)//just an extended version of the dropitem function
+	{
+		let powerLoot = A_DropItem(item, dropamount, chance);
+		if(powerLoot == NULL)//make sure we dropped something at all
+			return;
+		powerloot.vel.x *= 2;//this just makes the drops look cooler
+		powerloot.vel.y *= 2;
+		powerloot.vel.z *= 2;
+		powerLoot.target = self.target;//let the loot know who should be picking it up
+	}
+}
+
+mixin class BerserkHoover//mixin BerserkHoover;
+{	
+	void Hoover()
+	{
+		if(playerpawn(target) == NULL)//check to see if the target is a player and if they exist
+			return;
+		if(CheckIfCloser(target, 128) && GetAge() > 70 && CanPickup(target))//waits 2 seconds before getting picked up but only if in range and only if able to be picked up
+		{
+			int Hooverlocity = 4;
+			int HooverDistance = 128;
+			
+			bWALLSPRITE = FALSE;
+			bNOGRAVITY = TRUE;
+			A_Weave(Hooverlocity, Hooverlocity, 2, 2);//prevents the items from stacking up and looking weird, also it is fun
+			A_FaceTarget();
+			VelFromAngle(Hooverlocity);
+			Vel.Z = (target.pos.Z + target.height/2 - pos.Z) / DistanceBySpeed(target, Hooverlocity);//moves the item towards the target
+			
+			if(CheckIfCloser(target, self.radius * 2))//if the player isn't moving they'll never pick up the item, to make sure the item is picked up it we call the touch function manually, but only when close enough
+				Touch(target);
+		}
+		else
+		{
+			bNOGRAVITY = FALSE;
+			bWALLSPRITE = bDROPPED;
+		}
+	}
+	override void Touch (Actor toucher)
+	{
+		if(GetAge() < 35)
+			return;
+		super.Touch(toucher);
+	}
+}

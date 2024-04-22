@@ -1,0 +1,241 @@
+class GateInterpolator : Object
+{
+	vector2 mValue;//X is where you are, Y is where you started
+
+	static GateInterpolator Create(float startval)
+	{
+		let fi = new("GateInterpolator");
+		fi.mValue = (startval, startval);
+		return fi;
+	}
+	void Reset()
+	{
+		mValue.Y = mValue.X;
+	}
+	void Update(float destvalue, float mMaxChange = 1.0)
+	{
+		float dif = abs(mValue.X - destvalue);
+		if(mMaxChange > dif)
+			mMaxChange = dif;
+		if(int(mValue.X) == int(destvalue))//if we're close enough to the startint position then we nudge it into place regardless of what the change actually is
+			mValue.X = destvalue;
+		else if(mValue.X != destvalue)//if we aren't at the dest val we need to go there
+			mValue.X += mValue.X > destvalue ? -mMaxChange : mMaxChange;
+	}
+	float GetValue()
+	{
+		return mValue.X;
+	}
+}
+
+class skp_RollerGate : actor 
+{
+	bool user_SpawnOpen;
+	double user_height;
+	double user_rollspeed;
+	int user_Frame;
+
+	double offsetTarget;
+	bool havetoggled;
+	
+	GateInterpolator GateMover;
+	Default 
+	{
+		//$Title "Thing Gate"
+		//$Category "Thing Gates"
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+WALLSPRITE;
+	}
+
+	static void LockSectorLines (sector CurSec, bool lock = true)
+	{
+
+		for (int i = 0; i < CurSec.lines.size(); i++) 
+        {
+            line ln = CurSec.lines[i];
+			if (ln && (ln.flags & Line.ML_TWOSIDED) ) 
+			{
+				if (lock)
+				{
+					SetLineFlags(ln, Line.ML_BLOCKEVERYTHING);
+					SetLineFlags(ln, Line.ML_SOUNDBLOCK);
+					SetLineFlags(ln, Line.ML_BLOCKSIGHT);
+				}
+				else 
+				{
+					SetLineFlags(ln, 0, Line.ML_BLOCKEVERYTHING);
+					SetLineFlags(ln, 0, Line.ML_SOUNDBLOCK);
+					SetLineFlags(ln, 0, Line.ML_BLOCKSIGHT);
+				}
+			}
+        }
+	}
+	static void SetLineFlags(line ln, int setflags, int clearflags = 0)
+	{
+		ln.flags = (ln.flags & ~clearflags) | setflags;
+	}
+	override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		GateMover = GateInterpolator.Create(0);
+		if(user_Frame)
+			frame = user_Frame;
+		if(!user_rollspeed)
+			user_rollspeed = 1.25;
+		if(!user_height)
+			user_height = Abs(CurSector.CenterFloor() - CurSector.CenterCeiling()) - 8;
+		if(user_SpawnOpen)
+			self.activate(self);
+		else
+			LockSectorLines(CurSector, true);
+	}
+	virtual void DoorWait()
+	{
+	}
+	virtual void DoorMove()
+	{
+		A_SpriteOffset(0, GateMover.GetValue());
+	}
+	override void activate(actor activator)
+	{
+		havetoggled = false;
+		if(int(offsetTarget) == 0)
+		{
+			offsetTarget = -1 * user_height;
+			if(SpriteOffset.Y != offsetTarget)
+				A_StartSound("doors/dr1_open");
+		}
+		else
+		{
+			offsetTarget = 0;
+			if(SpriteOffset.Y != offsetTarget)
+				A_StartSound("doors/dr1_clos", CHAN_BODY);
+			LockSectorLines(CurSector, true);
+		}
+	}
+
+	override void deactivate(actor activator)
+	{
+		if(offsetTarget == 0)
+		{
+			havetoggled = false;
+			offsetTarget = 0;
+			if(SpriteOffset.Y != offsetTarget)
+				A_StartSound("doors/dr1_clos", CHAN_BODY);
+			LockSectorLines(CurSector, true);
+		}
+	}
+
+	override void tick()
+	{
+		super.tick();
+		GateMover.Update(offsetTarget, user_rollspeed);
+		double GateDist =  abs(SpriteOffset.Y - offsetTarget);
+		if(GateDist < user_height/2 && !havetoggled)
+		{
+			LockSectorLines(CurSector, !(offsetTarget < 0));
+			havetoggled = true;
+		}
+		if(GateDist == 0 && offsetTarget < 0)
+			DoorWait();
+
+		DoorMove();
+	}
+
+	States 
+	{
+		Spawn:
+			RLDR A 0;
+			RLDR # -1;
+			Stop;
+	}
+}
+
+class skp_RollerGate_Proximity : skp_RollerGate
+{
+	int user_Radius, user_Reset, Reset;
+	Default 
+	{
+		//$Title "Thing Gate - Proximity"
+		//$Category "Thing Gates"
+		+SPECIAL;
+		-NOBLOCKMAP;
+	}
+	Override Void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if(!user_Radius)
+			user_Radius = 128;
+		if(!user_Reset)
+			user_Reset = 150;
+		A_SetSize(user_Radius, user_height);
+	}
+	Override void Touch(Actor toucher)
+	{
+		if(Reset || OffsetTarget != 0)
+			return;
+		self.Activate(self);
+	}
+	Override void DoorWait()
+	{
+		if(!Reset)
+			Reset = user_Reset;
+	}
+	Override void DoorMove()
+	{
+		if(Reset)
+		{
+			Reset--;
+			if(Reset == 0)
+				self.Activate(self);
+			return;
+		}
+		super.DoorMove();
+	}
+	States 
+	{
+		Spawn:
+			RLDR F 0;
+			RLDR F -1;
+			Stop;
+	}
+}
+
+class skp_RollerGate_Decoration : skp_RollerGate
+{
+	bool user_NoBlock;
+	default
+	{
+		//$Title "Thing Gate - Decoration"
+		//$Category "Thing Gates"
+	}
+	override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		if(user_Frame)
+			frame = user_Frame;
+		else if(user_height > 72)
+			frame = 1;
+		LockSectorLines(CurSector, !user_NoBlock);
+	}
+	override void tick()
+	{
+		actor.tick();
+	}
+	override void activate(actor activator)
+	{
+		return;
+	}
+	override void deactivate(actor activator)
+	{
+		return;
+	}
+	States 
+	{
+		Spawn:
+			RLDB A 0;
+			RLDB # -1;
+			Stop;
+	}
+}

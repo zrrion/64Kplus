@@ -1,0 +1,59 @@
+class skp_Pistol : skp_Weapon replaces Pistol
+{
+	Default
+	{
+		Weapon.Slotnumber 2;
+		
+		Weapon.SelectionOrder 1900;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 20;
+		Weapon.AmmoType "Clip";
+		Obituary "$OB_MPPISTOL";
+		+WEAPON.WIMPY_WEAPON
+		Inventory.Pickupmessage "$PICKUP_PISTOL_DROPPED";
+		Tag "$TAG_PISTOL";
+		
+		skp_Weapon.PickupMsg "$PICKUP_PISTOL_DROPPED";
+		skp_Weapon.PickupOpenMsg "Unloaded the pistol.";
+		skp_Weapon.AmmoType "Clip";
+		skp_Weapon.AmmoAmount 20;
+	}
+	States
+	{
+	Ready:
+		D32P A 1 skp_WeaponReady;
+		Wait;
+	Deselect:
+		D32P A 1 skp_Lower;
+		Loop;
+	Select:
+		D32P A 1 skp_Raise;
+		Loop;
+	Fire:
+		D32P A 1
+		{
+			let pspr = player.GetPSprite(PSP_WEAPON);
+			pspr.valign = PSPA_TOP;
+			pspr.halign = PSPA_CENTER;
+			A_OverlayScale(PSP_WEAPON, 1);
+		}
+		D32P B 3 BRIGHT
+		{
+			A_FireBullets(0,0,-1,Random(7,12),"BulletPuff",FBF_USEAMMO|FBF_NORANDOM);
+			A_ZoomFactor(0.98);
+			A_StartSound("weapons/pistol",CHAN_WEAPON);
+			A_Light(2);
+		}
+		D32P C 3
+		{
+			A_Light(1);
+			A_ZoomFactor(1);
+		}
+		D32P DCA 2;
+		D32P A 4 A_ReFire();
+		Goto Ready;
+ 	Spawn:
+		PIST A -1;
+		Stop;
+	}
+}

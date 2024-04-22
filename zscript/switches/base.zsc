@@ -1,0 +1,154 @@
+class Locksmith : Object
+{
+		string KeyMarker[9];
+		string KeyType[9];
+		string KeyString[9];
+		
+		static Locksmith Create()
+		{
+			let l = new("Locksmith");
+			l.KeyMarker[0] = "TNT1A0";	l.KeyMarker[1] = "BKMM";		l.KeyMarker[2] = "YKMM";		l.KeyMarker[3] = "RKMM";		l.KeyMarker[4] = "BSMM";		l.KeyMarker[5] = "YSMM";		l.KeyMarker[6] = "RSMM";		l.KeyMarker[7] = "PKMM";		l.KeyMarker[8] = "GSMM";
+			l.KeyType[0] = "";			l.KeyType[1] = "bluecard";	l.KeyType[2] = "yellowcard";	l.KeyType[3] = "redcard";		l.KeyType[4] = "blueskull";	l.KeyType[5] = "yellowskull";	l.KeyType[6] = "redskull";	l.KeyType[7] = "purplecard";	l.KeyType[8] = "skp_GreenSkull";
+			l.KeyString[0] = "This is an error";
+			l.KeyString[1] = "\c[gray]you need a \c[blue]blue card \c[gray]to activate this switch";
+			l.KeyString[2] = "\c[gray]you need a \c[yellow]yellow card \c[gray]to activate this switch";
+			l.KeyString[3] = "\c[gray]you need a \c[red]red card \c[gray]to activate this switch";
+			l.KeyString[4] = "\c[gray]you need a \c[blue]blue skull \c[gray]to activate this switch";
+			l.KeyString[5] = "\c[gray]you need a \c[yellow]yellow skull \c[gray]to activate this switch";
+			l.KeyString[6] = "\c[gray]you need a \c[red]red skull \c[gray]to activate this switch";
+			l.KeyString[7] = "\c[gray]you need a \c[purple]purple card \c[gray]to activate this switch";
+			l.KeyString[8] = "\c[gray]you need a \c[green]green skull \c[gray]to activate this switch";
+			return l;
+		}
+		string GetType(int type)
+		{
+			return self.KeyType[type];
+		}
+		string GetMarker(int marker)
+		{
+			return self.KeyMarker[marker];
+		}
+		string GetString(int string)
+		{
+			return self.KeyString[string];
+		}
+}
+
+class SwitchBase : SwitchableDecoration abstract
+{
+	bool user_NoRepeat;
+	int user_MarkerType;
+	int OldSpecial;
+	bool Flip;
+	Locksmith Key;
+	default
+	{
+		//$Category Switches
+		+USESPECIAL
+		+NOGRAVITY
+		+NOCLIP
+		-SOLID
+		+FIXMAPTHINGPOS
+		
+		height 22;
+		radius 3.45;
+		Activation THINGSPEC_Switch;
+	}
+	Override void BeginPlay()
+	{
+		super.BeginPlay();
+		Key = Locksmith.Create();
+	}
+	Override void Postbeginplay()
+	{
+		Flip = FALSE;
+
+		OldSpecial = special;
+		special = 0;
+
+		PlaceMarker();
+	}
+
+	void PlaceMarker()
+	{
+		if(user_MarkerType)
+		{
+			target = spawn("KeyMarker",pos,NO_REPLACE);
+			if (target == null)
+				return;
+			target.sprite = GetSpriteIndex(Key.GetMarker(user_MarkerType));	
+			target.args[0] = 0;
+			target.args[1] = 1;
+		}
+	}
+	
+	Override void Activate(Actor activator)
+	{
+		A_StartSound("switches/normbutn",CHAN_AUTO);
+
+		bool haskey = user_MarkerType ? activator.CountInv(Key.GetType(user_MarkerType)) > 0 : true;
+		bool doflip = haskey ? activator.A_CallSpecial(OldSpecial, args[0], args[1], args[2], args[3], args[4]) : false;
+
+		if(doflip && user_NoRepeat)
+		{
+			bUSESPECIAL = false;
+			if(target != null)
+			{
+				if(user_MarkerType > 6)
+					activator.A_TakeInventory(Key.GetType(user_MarkerType), 1);
+				target.Destroy();
+			}
+			SetStateLabel("NoFlip");
+		}
+		else
+		{
+			if(user_MarkerType && !haskey)
+				Activator.A_Print(Key.GetString(user_MarkerType));
+			if(Flip)
+				SetStateLabel("InactiveA");
+			else
+				SetStateLabel("InactiveB");
+			Flip = !Flip;
+		}
+	}
+	Override void Deactivate (Actor activator)
+	{
+		Activate(activator);
+	}
+	States
+	{
+	InactiveB:
+		WLLS B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	Spawn:
+	InactiveA:
+		WLLS A 1;
+		Wait;
+	NoFlip:
+		WLLS B -1;
+		Stop;
+	}
+}
+
+class KeyMarker : MapMarker 
+{
+	States
+	{
+	Spawn:
+		"####" A -1;
+		Stop;
+	SpriteHolder://sprites have to be in state table somewhere for the frame to have an index, putting them here ensures they are added
+		BKMM A 0;//these are defined in TEXTURES
+		YKMM A 0;
+		RKMM A 0;
+		BSMM A 0;
+		YSMM A 0;
+		RSMM A 0;
+		PKMM A 0;
+		GSMM A 0;
+		Goto Spawn;
+	}
+}

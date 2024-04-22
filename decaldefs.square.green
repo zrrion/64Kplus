@@ -1,0 +1,226 @@
+// all decal numbers are formated like this: 1SCDD
+// 1 is there to pad out the number
+// S is the series
+// C is the colour
+// DD is the decal within the series
+// for S:
+//			0		1
+//			caution	square
+// for C:
+//			0		1		2		3		4		5		6
+//			shadow	yellow	green	red		blue	purple	orange
+// for S0; DD:
+//			0			1		2			3			4			5			6			7			8			9			10			11			12			13			14			15			16			17			18
+//			csy_null	csy_bio	csy_cold	csy_crsh	csy_easy	csy_exit	csy_expl	csy_fire	csy_hard	csy_hot		csy_lsr		csy_mark	csy_obey	csy_psn		csy_rad		csy_rat		csy_rgnt	csy_unfr	csy_vltg
+// for S1; DD:
+//			0		1		2		3		4		5		6		7		8		9		10		11		12		13		14		15		16		17		18		19		20		21		22		23		24		25
+//			s*_null	s*_aid	s*_bayd	s*_bayl	s*_bayr	s*_bayu	s*_comp	s*_depd	s*_depl	s*_depr s*_depu	s*_exit	s*_hand	s*_idk	s*_labd	s*_labl	s*_labr	s*_labu	s*_meal	s*_plte	s*_rstr	s*_swch	s*_wh1d	s*_wh1l	s*_wh1r	s*_wh1u
+// shadow ignores DD and for those it should always be left 00
+
+decal SquareGreenNull 11200
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_null
+}
+
+decal SquareGreenAid 11201
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_aid
+}
+
+decal SquareGreenBayDown 11202
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_bayd
+}
+
+decal SquareGreenBayLeft 11203
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_bayl
+}
+
+decal SquareGreenBayRight 11204
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_bayr
+}
+
+decal SquareGreenBayUp 11205
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_bayu
+}
+
+decal SquareGreenComputer 11206
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_comp
+}
+
+decal SquareGreenDepartmentDown 11207
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_depd
+}
+
+decal SquareGreenDepartmentLeft 11208
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_depl
+}
+
+decal SquareGreenDepartmentRight 11209
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_depr
+}
+
+decal SquareGreenDepartmentUp 11210
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_depu
+}
+
+decal SquareGreenExit 11211
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_exit
+}
+
+decal SquareGreenHand 11212
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_Hand
+}
+
+decal SquareGreenIDK 11213
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_idk
+}
+
+decal SquareGreenLabDown 11214
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_labd
+}
+
+decal SquareGreenLabLeft 11215
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_labl
+}
+
+decal SquareGreenLabRight 11216
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_labr
+}
+
+decal SquareGreenLabUp 11217
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_unfr
+}
+
+decal SquareGreenMeal 11218
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_meal
+}
+
+decal SquareGreenPressurePlate 11219
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_plte
+}
+
+decal SquareGreenRestricted 11220
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_rstr
+}
+
+decal SquareGreenSwitch 11221
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_swch
+}
+
+decal SquareGreenWarehouse1Down 11222
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_wh1d
+}
+
+decal SquareGreenWarehouse1Left 11223
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_wh1l
+}
+
+decal SquareGreenWarehouse1Right 11224
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_wh1r
+}
+
+decal SquareGreenWarehouse1Up 11225
+{
+
+	lowerdecal SquareShadow
+	
+	pic sg_wh1u
+}

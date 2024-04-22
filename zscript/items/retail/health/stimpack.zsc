@@ -1,0 +1,18 @@
+class ThriftyStimpack : ThriftyHealth replaces Stimpack
+{
+	Default
+	{
+		Inventory.Amount 10;
+		ThriftyHealth.PickupMsg "$GOTSTIM";
+		ThriftyHealth.PickupOpenMsg "You opened a stimpack.";
+		
+		ThriftyHealth.BigPickup true;
+		
+	}
+	States
+	{
+	Spawn:
+		STIM A -1;
+		Stop;
+	}
+}

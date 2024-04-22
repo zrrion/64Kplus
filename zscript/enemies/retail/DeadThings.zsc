@@ -1,0 +1,97 @@
+class skp_DeadZombieMan : skp_ZombieMan replaces DeadZombieMan
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadShotgunGuy : skp_ShotgunGuy replaces DeadShotgunGuy
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadDoomImp : skp_DoomImp replaces DeadDoomImp
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadChaingunGuy : skp_ChaingunGuy
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadDemon : skp_Demon replaces DeadDemon
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadSpectre : skp_Spectre
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadCacodemon : skp_Cacodemon replaces DeadCacodemon
+{
+	Default
+	{
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		super.PostBeginPlay();
+	}
+}

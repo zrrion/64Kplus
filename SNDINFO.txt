@@ -1,0 +1,60 @@
+weapons/chngun	D
+chainguy/attack D
+//pchwall, pchhit.ogg - Yakuza 4
+punch/wall 		pchwall
+punch/hit		pchhit
+
+player/jump			1stjmp
+player/doublejump	2ndjmp
+
+weapons/UnmakerFire	DSLASER
+
+//misc/teleport	dsempty//I can do this manually where I need to
+misc/teleportREAL	dstelept
+misc/teleport/strife stele
+misc/teleport/raven rtele
+
+weapons/plasmaidle		DSPLSIDL
+$limit weapons/plasmaidle 1
+$volume weapons/plasmaidle 0.5
+
+hazard/start	DSAHSTRT
+hazard/idle		DSAHIDLE
+hazard/hurt		DSAHHURT
+hazard/stop		DSAHSTOP
+
+JumpPad/Jump	JPAD
+
+Checkpoint/save	BKCLS
+Checkpoint/flip	PGTRN
+
+$playersound	player	male	*land	""
+$playersound	player	male	*grunt	""
+$playersound	player	female	*land	""
+$playersound	player	female	*grunt	""
+$playersound	player	other	*land	""
+$playersound	player	other	*grunt	""
+
+$playersound	player	male	*HardLand	dsoof
+$playersound	player	male	*SoftLand	DSLAND
+$playersound	player	male	*SoftStep	DSLANDS
+$playersound	player	female	*HardLand	dsoof
+$playersound	player	female	*SoftLand	DSLAND
+$playersound	player	female	*SoftStep	DSLANDS
+$playersound	player	other	*HardLand	dsoof
+$playersound	player	other	*SoftLand	DSLAND
+$playersound	player	other	*SoftStep	DSLANDS
+
+$pitchset chainguy/sight 0.95
+$pitchset chainguy/pain 0.95
+$pitchset chainguy/death 0.9
+$pitchset chainguy/active 0.95
+$pitchset chainguy/attack 0.95
+
+$pitchset baron/sight 0.95
+$pitchset baron/pain 0.95
+$pitchset baron/death 0.95
+$pitchset baron/active 0.95
+
+$pitchset fatso/sight 0.95
+$pitchset fatso/active 0.95

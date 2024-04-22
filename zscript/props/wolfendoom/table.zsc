@@ -1,0 +1,16 @@
+class WolfTable : Actor
+{
+	Default
+	{
+		//$Category Wolfendoom
+		+SOLID
+		radius 16;
+		height 21;
+	}
+	States
+	{
+		Spawn:
+			WTBL A -1;
+			Stop;
+	}
+}

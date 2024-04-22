@@ -1,0 +1,84 @@
+class Grass_Spawner : SwitchableDecoration
+{
+	Default
+	{
+		//$Category Debris
+		Radius 8;//this doesn't do anything other than make it easier to move arround in Doom Builder
+		Height 16;
+		+FLOORCLIP
+	}
+	States
+	{
+	Spawn:
+		SGRS A 0;
+	Active:
+		TNT1 A 0
+		{
+			for(int i = 0; i < 32; i++)
+			{
+				A_SpawnItemEx("GrassPart",Random(-64,64),0,-8,0,0,0,Random(0,360),129,128);
+			}
+		}
+		Stop;
+	InActive:
+		TNT1 A 0
+		{
+			for(int i = 0; i < 32; i++)
+			{
+				A_SpawnItemEx("GrassPart",Random(-args[0],args[0]),0,-8,0,0,0,Random(0,360),129,args[1]);
+			}
+		}
+		Stop;
+	}
+}
+
+class GrassPart : Actor
+{
+	Default
+	{
+		Radius 1;
+		Height 1;
+		+FLOORCLIP
+		+MOVEWITHSECTOR
+		+NOINTERACTION
+	}
+	Override void PostBeginPlay()
+	{
+		if(Random(0,1) == 0)
+			bXFLIP = TRUE;
+			Scale.X = frandom(1.0,1.5);
+			Scale.Y = frandom(1.0,1.5);
+		Frame = Random (0,8);
+		let GrassType = GetFloorTerrain().TerrainName;
+		switch(GrassType)
+		{
+			case 'RAS_Grass':
+				SetStateLabel("Spawn");
+				break;
+			case 'RAS_HalfGrass':
+				if(random(0,1) == 0)
+					SetStateLabel("Death");
+				SetStateLabel("Spawn");
+				break;
+			case 'RAS_Dirt':
+				if(random(0,3) == 0)
+					SetStateLabel("Death");
+				SetStateLabel("Spawn");
+				break;
+			default:
+				SetStateLabel("Death");
+				break;
+		}
+		A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_TOFLOOR|WARPF_NOCHECKPOSITION);
+		Super.PostBeginPlay();
+	}
+	States
+	{
+	Spawn:
+		SGRS "#" -1;
+		Stop;
+	Death:
+		TNT1 A 0;
+		Stop;
+	}
+}

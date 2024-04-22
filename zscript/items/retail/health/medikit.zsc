@@ -1,0 +1,18 @@
+class ThriftyMedikit : ThriftyHealth replaces Medikit 
+{
+	Default
+	{
+		Inventory.Amount 25;
+		ThriftyHealth.PickupMsg "$GOTMEDIKIT";
+		ThriftyHealth.PickupOpenMsg "You opened a medikit.";
+		
+		ThriftyHealth.BigPickup true;
+		
+	}
+	States
+	{
+	Spawn:
+		MEDI A -1;
+		Stop;
+	}
+}

@@ -1,0 +1,17 @@
+"asset(s)","changes made from base","credits",,
+"weapons and ammo","merged sprites from PC doom and Doom64 together","id software","midway",
+"doom alpha/beta assets","used directly, some touch up for consistency","id software",,
+"pump/reload animations for the shotgun, ssg, and the cooldown(?) frame for the plasma rifle","modified to be consistent with changes made to weapon sprites in general","cage","id software","midway"
+"SSG idle frame hand",,"nmn",,
+"offset values for the punch animation from ww-skillguns",,"wildweasel",,
+"assorted nashgore sprites",,"nash",,
+"rocket projectile",,"Captain J",,
+"hand sprites for the pistol",,"Captain J",,
+"keen reading sprites",,"SiFi270",,
+"Chaingun pickup sprite",,"Jabberwock",,
+"Satyr/Hellknight sprites",,"vader","Jared Deberjerak","whoever made the alternate hellknight death anim that I used"
+"spawner code","unsure if this exists still after the zscript rewrite","Blue Shadow",,
+"arachnorb sprites","used as a base for the cacomera","Jimmy91",,
+"baby cacodemon sprites","used as a base for the cacomera","osjclatchford ",,
+"violet's bow from a boy and his barrel",,"Jimmy",,
+"propane tank sprite","base for PPNTA0","Lost Ruins",,

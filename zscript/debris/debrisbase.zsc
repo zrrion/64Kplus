@@ -1,0 +1,31 @@
+class SKP_DebrisBase : actor
+{
+	Default
+	{
+		//$Category Debris
+		+FLATSPRITE
+		+NOINTERACTION
+		+NOBLOCKMAP
+		-FLOORCLIP//Always be on top of water
+		+MOVEWITHSECTOR
+	}
+	Override void PostBeginPlay()
+	{
+		A_Warp(AAPTR_DEFAULT, 0, 0, 0.125, 0, WARPF_NOCHECKPOSITION|WARPF_TOFLOOR);
+		super.PostBeginPlay();
+	}
+	Action void SKP_FrameSet(int F)
+	{
+		if(f > 0)
+			Frame = random(0,F);
+		A_SetAngle(frandom(0,360));
+		A_SetScale(frandom(0.9,1.3));
+	}
+	States
+	{
+		Spawn:
+			TROO A -1 nodelay SKP_FrameSet(0);
+			Stop;
+			
+	}
+}

@@ -1,0 +1,45 @@
+WLLSA="voxels/SW1WALL.kvx"
+{
+}
+
+WLLSB="voxels/SW2WALL.kvx"
+{
+}
+//====
+WL2SA="voxels/SW1WAL2.kvx"
+{
+angleoffset = 90
+}
+
+WL2SB="voxels/SW2WAL2.kvx"
+{
+}
+//====
+WL3SA="voxels/SW1WAL3.kvx"
+{
+angleoffset = 90
+}
+
+WL3SB="voxels/SW2WAL3.kvx"
+{
+angleoffset = 90
+}
+
+WL4SA="voxels/SW1WAL4.kvx"
+{
+angleoffset = 90
+}
+
+WL4SB="voxels/SW2WAL4.kvx"
+{
+angleoffset = 90
+}
+
+SKLSA="voxels/SW1SKULL.dat"
+{
+angleoffset = 90
+}
+SKLSB="voxels/SW2SKULL.dat"
+{
+angleoffset = 90
+}

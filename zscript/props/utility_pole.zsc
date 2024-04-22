@@ -1,0 +1,45 @@
+class UtilityPole : Actor
+{
+	Default
+	{
+		//$Category Iron and wood
+		radius 32;
+		height 32;
+		+NOGRAVITY
+		+WALLSPRITE
+		+NOBLOCKMAP
+		+NOINTERACTION
+	}
+	Override void PostBeginPlay()
+	{
+		if(self.pos.x > self.pos.y && self.pos.x % 5 == 0)
+			self.frame = 0;
+		else
+			self.frame = 1;
+		Self.angle += 90;
+		super.PostBeginPlay();
+	}
+	States
+	{
+		Spawn:
+			PLNE A -1;
+			Stop;
+	}
+}
+
+class UtilityPoleTransformer : Actor
+{
+	Default
+	{
+		//$Category Iron and wood
+		radius 16;
+		height 32;
+		+NOGRAVITY
+	}
+	States
+	{
+		Spawn:
+			TRAN A -1;
+			Stop;
+	}
+}

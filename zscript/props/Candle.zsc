@@ -1,0 +1,22 @@
+class skp_Candle : Candlestick replaces Candlestick 
+{
+	int User_Type;
+Default
+	{
+		radius 16;
+		+Bright;
+	}
+States
+	{
+	Spawn:
+		CAND A -1 Nodelay
+		{
+			if(User_Type)
+				sprite = GetSpriteIndex("GCAN");
+		}
+	Death:
+		GCAN A 0;//this is just ehre to put these sprites in the index
+		CAND A 0;
+		Stop;
+	}
+}

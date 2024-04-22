@@ -1,0 +1,101 @@
+class skp_SpiderMastermind : SpiderMastermind replaces SpiderMastermind
+{
+	mixin BerserkDroper;
+	
+	Default
+	{
+		//Damagefactor "Unmaker", 0.5;
+	}
+	States
+	{
+	Missile:
+		SPID A 20 BRIGHT A_FaceTarget;
+		SPID G 2 BRIGHT A_SPosAttackUseAtkSound;
+		SSMA C 2 BRIGHT;
+		SPID H 2 BRIGHT A_SposAttackUseAtkSound;
+		SSMA C 2 BRIGHT;
+		SPID H 1 BRIGHT A_SpidRefire;
+		Goto Missile+1;
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",3, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",3, Abs(self.painchance-256));
+				}
+		}
+	Death:
+		TNT1 A 0
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				A_SpawnItemEx("skp_BloodMist",random(0,self.radius), 0, self.height/2 + random (8,-8), 0, 0, 0, random(0,360), SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+			}
+		}
+		SPID J 5 Bright A_Scream;
+		SPID JJJ 5 Bright
+		{
+			for(int i = 0; i < 4; i++)
+			{
+				A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius-16,fRandom(1,-1)*Radius-16,2*(height/3),0,0,fRandom(1,2));
+			}
+		}
+		SPID K 5 Bright
+		{
+			if (CallACS("CVarCheck",6))
+				{
+					A_DropItem("Chaingun");
+				}
+			for(int i = 0; i < 4; i++)
+			{
+				A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius-16,fRandom(1,-1)*Radius-16,2*(height/3),0,0,fRandom(1,2));
+			}
+			A_NoBlocking();
+			
+		}
+		SPID KLLMMNNOOPPQQRR 5 Bright
+		{
+		for(int i = 0; i < 4; i++)
+			{
+				A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius-16,fRandom(1,-1)*Radius-16,2*(height/3),0,0,fRandom(1,2));
+			}
+		}
+		SPID S 30;
+		SPID S -1 A_BossDeath;
+		Stop;
+	}
+}
+
+extend class skp_SpiderMastermind
+{
+	Void A_SposAttackUseAtkSound()
+	{
+		if(CallACS("CVarCheck",4))
+		{
+			A_StartSound("spider/attack", CHAN_WEAPON);
+			A_SpawnProjectile("ArachnotronPlasma",(height/2)-4,2,frandom(0,8));
+			A_SpawnProjectile("ArachnotronPlasma",(height/2)-4,2,frandom(-8,0));
+		}
+		else
+		{
+			super.A_SposAttackUseAtkSound();
+		}
+	}
+	void A_SpidRefire()
+	{
+		A_FaceTarget();
+		if (Random(0, 2) == 0)
+		{
+			if (!target || HitFriend() || target.health <= 0 || !CheckSight(target, SF_SEEPASTBLOCKEVERYTHING|SF_SEEPASTSHOOTABLELINES))
+			{
+				SetState(SeeState);
+			}
+		}
+	}
+	void A_Metal()
+	{
+		A_StartSound("spider/walk", CHAN_AUTO, CHANF_OVERLAP, 1, ATTN_IDLE);//these sound weird when they are cut off IMO
+		A_Chase();
+	}
+}

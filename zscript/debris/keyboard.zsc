@@ -1,0 +1,16 @@
+class SKP_Keyboard : SKP_DebrisBase
+{
+	Default
+	{
+		//$Catagory Debris
+		+YFLIP//I don't like how this shows up basically upside down. On things without a top/bottom it doesn't matter but here it does
+		radius 22;
+	}
+	States
+	{
+		Spawn:
+			KBRD A -1;
+			Stop;
+			
+	}
+}

@@ -1,0 +1,217 @@
+statusbar fullscreen, forcescaled, 0.75
+{
+	DrawNumber 3, DBIGFONT, Red, Health, DrawShadow(2,2), Alignment(center), 26, 180;
+	IfInvulnerable
+	{
+		DrawString CONFONT, Gold, "Health", 27, 170, 0, Alignment(center);
+		DrawString CONFONT, Gold, "Armor", 295, 170, 0, Alignment(center);
+	}
+	else
+	{
+		DrawString CONFONT, Grey, "Health", 27, 170, 0, Alignment(center);
+		DrawString CONFONT, Grey, "Armor", 295, 170, 0, Alignment(center);
+	}
+	
+	DrawNumber 3, DBIGFONT, Red, Armor, DrawShadow(2,2), Alignment(center), 296, 180;
+	
+	DrawNumber 3, SMALLFONT, Red, Ammo1, DrawShadow(2,2), Alignment(center), WhenNotZero, 160, 190;
+	Alpha 0.5
+	{
+		DrawImage ammoicon1, 160, 190, centerbottom;
+		DrawKeyBar 4, vertical, reverserows, 9, 260, 174, 0, 3, 9;
+		DrawKeyBar 4, vertical, reverserows, 9, 60, 174, 3, 3, 9;
+	}
+	UsesSecondaryAmmo
+	{
+		DrawNumber 3, INDEXFONT_DOOM, Red, Ammo2, DrawShadow(2,2), alignment(left), 185, 200;
+	}
+}
+
+height 0;
+statusbar normal, forcescaled, fullscreenoffsets
+{
+	drawimage "ST_TOM_L", 0, -1;
+	drawimage "ST_TOM_M", 0, -1;
+	drawimage "ST_TOM_R", -1, -1;
+	drawimage "ST_TOM_S", -1, -1;
+	UsesAmmo
+	{
+		DrawNumber 3, ALPHAFONTRed, Untranslated, Ammo1, alignment(right), -23, -19;
+		DrawNumber 3, ALPHAFONTRedSmall, Untranslated, Ammo1Capacity, alignment(left), -21, -7;
+		DrawString ALPHAFONTRedSmall, Untranslated, "S" , -23, -7;
+		DrawNumber 3, ALPHAFONTRedSmall, Untranslated, Ammo1, alignment(right), -28, -7;
+	}
+	IfInvulnerable
+	{
+		DrawString ALPHAFONTBlue, Untranslated, "666" , 23, -26, 0, alignment(left);
+		DrawString ALPHAFONTGreen, Untranslated, "666" , 23, -12, 0, alignment(left);
+	}
+	else
+	{
+		DrawNumber 3, ALPHAFONTBlue, Untranslated, Health, alignment(left), 23, -26;
+		DrawNumber 3, ALPHAFONTGreen, Untranslated, Armor, alignment(left), 23, -12;
+	}
+	drawswitchableimage weaponslot 2, "", "ST_TNR2", -1, -1; 
+	drawswitchableimage weaponslot 3, "", "ST_TNR3", -1, -1;
+	drawswitchableimage weaponslot 4, "", "ST_TNR4", -1, -1;
+	drawswitchableimage weaponslot 5, "", "ST_TNR5", -1, -1;
+	drawswitchableimage weaponslot 6, "", "ST_TNR6", -1, -1;
+	drawswitchableimage weaponslot 7, "", "ST_TNR7", -1, -1;
+
+	drawswitchableimage keyslot 2, "", "STKEYS0",  69, -7;
+	drawswitchableimage keyslot 3, "", "STKEYS1",  79, -7;
+	drawswitchableimage keyslot 1, "", "STKEYS2",  89, -7;
+	drawswitchableimage keyslot 5, "", "STKEYS3",  99, -8;
+	drawswitchableimage keyslot 6, "", "STKEYS4", 109, -8;
+	drawswitchableimage keyslot 4, "", "STKEYS5", 119, -8;
+
+	InInventory PurpleCard, 1
+	{
+		DrawImage "STKEYSP",  89, -16;
+		InInventory PurpleCard, 2
+		{
+			DrawImage "STKEYSP",  99, -16;
+		}
+	}
+
+	InInventory skp_GreenSkull, 1
+	{
+		DrawImage "STKEYSG",  109, -17;
+		InInventory skp_GreenSkull, 2
+		{
+			DrawImage "STKEYSG",  119, -17;
+		}
+	}
+
+	DrawString ChainsawFuel, Untranslated, "x" , -91, -16, 0, alignment(right);
+	DrawNumber 1, ChainsawFuel, Untranslated, Ammo SKP_SawFuel, alignment(right), -91, -16;
+	
+	isselected "skp_Pistol"
+	{
+		drawimage "ST_ASB0", -51, -1;
+		drawimage "ST_TNG2", -1, -1;
+	}
+	isselected "skp_Shotgun", "skp_SuperShotgun"
+	{
+		drawimage "ST_ASB0", -41, -1;
+		drawimage "ST_TNG3", -1, -1;
+	}
+	isselected "skp_Chaingun"
+	{
+		drawimage "ST_ASB0", -31, -1;
+		drawimage "ST_TNG4", -1, -1;
+	}
+	isselected "skp_RocketLauncher"
+	{
+		drawimage "ST_ASB0", -21, -1;
+		drawimage "ST_TNG5", -1, -1;
+	}
+	isselected "skp_PlasmaRifle"
+	{
+		drawimage "ST_ASB0", -11, -1;
+		drawimage "ST_TNG6", -1, -1;
+	}
+	isselected "skp_BFG9000", "skp_Unmaker"
+	{
+		drawimage "ST_ASB0", -1, -1;
+		drawimage "ST_TNG7", -1, -1;
+	}
+}
+
+statusbar automap, forcescaled, fullscreenoffsets
+{
+	AspectRatio "4:3"
+	{
+		drawimage "ST_TOM_M", 0, -1;
+		drawimage "ST_TOM_S", -1, -1;
+	}
+	Else
+	{
+		drawimage "ST_TOM_M", 0, -1;
+		drawimage "ST_TOM_S", -1, -1;
+		drawimage "ST_TOM_L", 0, -1;
+		drawimage "ST_TOM_R", -1, -1;
+		
+		UsesAmmo
+		{
+			DrawNumber 3, ALPHAFONTRed, Untranslated, Ammo1, alignment(right), -23, -19;
+			DrawNumber 3, ALPHAFONTRedSmall, Untranslated, Ammo1Capacity, alignment(left), -21, -7;
+			DrawString ALPHAFONTRedSmall, Untranslated, "S" , -23, -7;
+			DrawNumber 3, ALPHAFONTRedSmall, Untranslated, Ammo1, alignment(right), -28, -7;
+		}
+
+		IfInvulnerable
+		{
+			DrawString ALPHAFONTBlue, Untranslated, "666" , 23, -26, 0, alignment(left);
+			DrawString ALPHAFONTGreen, Untranslated, "666" , 23, -12, 0, alignment(left);
+		}
+		else
+		{
+			DrawNumber 3, ALPHAFONTBlue, Untranslated, Health, alignment(left), 23, -26;
+			DrawNumber 3, ALPHAFONTGreen, Untranslated, Armor, alignment(left), 23, -12;
+		}
+		
+		drawswitchableimage weaponslot 2, "", "ST_TNR2", -1, -1; 
+		drawswitchableimage weaponslot 3, "", "ST_TNR3", -1, -1;
+		drawswitchableimage weaponslot 4, "", "ST_TNR4", -1, -1;
+		drawswitchableimage weaponslot 5, "", "ST_TNR5", -1, -1;
+		drawswitchableimage weaponslot 6, "", "ST_TNR6", -1, -1;
+		drawswitchableimage weaponslot 7, "", "ST_TNR7", -1, -1;
+
+		drawswitchableimage keyslot 2, "", "STKEYS0",  69, -7;
+		drawswitchableimage keyslot 3, "", "STKEYS1",  79, -7;
+		drawswitchableimage keyslot 1, "", "STKEYS2",  89, -7;
+		drawswitchableimage keyslot 5, "", "STKEYS3",  99, -8;
+		drawswitchableimage keyslot 6, "", "STKEYS4", 109, -8;
+		drawswitchableimage keyslot 4, "", "STKEYS5", 119, -8;
+
+	InInventory PurpleCard, 1
+	{
+		DrawImage "STKEYSP",  89, -16;
+		InInventory PurpleCard, 2
+		{
+			DrawImage "STKEYSP",  99, -16;
+		}
+	}
+
+	InInventory skp_GreenSkull, 1
+	{
+		DrawImage "STKEYSG",  109, -17;
+		InInventory skp_GreenSkull, 2
+		{
+			DrawImage "STKEYSG",  119, -17;
+		}
+	}
+		
+		isselected "skp_Pistol"
+		{
+			drawimage "ST_ASB0", -51, -1;
+			drawimage "ST_TNG2", -1, -1;
+		}
+		isselected "skp_Shotgun", "skp_SuperShotgun"
+		{
+			drawimage "ST_ASB0", -41, -1;
+			drawimage "ST_TNG3", -1, -1;
+		}
+		isselected "skp_Chaingun"
+		{
+			drawimage "ST_ASB0", -31, -1;
+			drawimage "ST_TNG4", -1, -1;
+		}
+		isselected "skp_RocketLauncher"
+		{
+			drawimage "ST_ASB0", -21, -1;
+			drawimage "ST_TNG5", -1, -1;
+		}
+		isselected "skp_PlasmaRifle"
+		{
+			drawimage "ST_ASB0", -11, -1;
+			drawimage "ST_TNG6", -1, -1;
+		}
+		isselected "skp_BFG9000", "skp_Unmaker"
+		{
+			drawimage "ST_ASB0", -1, -1;
+			drawimage "ST_TNG7", -1, -1;
+		}
+	}
+}

@@ -1,0 +1,44 @@
+class SKP_GreenBoots : BasicArmorBonus
+{
+	Default
+	{
+		//$Category Health and Armor
+		Radius 20;
+		Height 16;
+		Inventory.Pickupmessage "Picked up the green armor boots.";
+		Inventory.Icon "GBTSA0";
+		Armor.Saveamount 10;
+		Armor.Maxsaveamount 200;
+		+COUNTITEM
+		-INVENTORY.ALWAYSPICKUP
+	}
+//====
+	States
+	{
+	Spawn:
+		GBTS A 6;
+		GBTS B 7 Bright;
+		loop;
+	}
+//====	
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+}

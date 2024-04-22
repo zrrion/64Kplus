@@ -1,0 +1,6 @@
+GameInfo
+{
+	PlayerClasses = "skp_DoomPlayer"
+	borderflat = "hudflat"
+	border = HereticBorder
+}

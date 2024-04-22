@@ -1,0 +1,172 @@
+class WolfCeilingLight : Actor
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "wolf lamp green"
+		+SPAWNCEILING
+		+MOVEWITHSECTOR
+		+CEILINGHUGGER
+		+NOGRAVITY
+		radius 16;
+		height 10;
+	}
+	States
+	{
+		Spawn:
+			WLMP A -1;
+			Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let Light = Spawn("WolfLampLight", self.pos);
+		if(Light != NULL)
+			Light.Master = self;
+	}
+	Override void Tick()
+	{
+		super.Tick();
+		self.SetOrigin((self.pos.x, self.pos.y, CurSector.CenterCeiling() - self.height), TRUE);
+
+
+		if(CurSector.lightlevel < 128)
+			self.LightLevel = 160;
+		else
+			self.LightLevel = 256;
+	}
+}
+
+class WolfCeilingLight_Red : WolfCeilingLight
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "wolf lamp red"
+	}
+	States
+	{
+		Spawn:
+			WLMP B -1;
+			Stop;
+	}
+}
+
+class WolfFloorLight : Actor
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "wolf floor lamp green"
+		+SOLID
+		radius 16;
+		height 42;
+	}
+	States
+	{
+		Spawn:
+			WFLP A -1;
+			Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let Light = Spawn("WolfLampCeilingLight", self.pos);
+		if(Light != NULL)
+			Light.Master = self;
+	}
+	Override void Tick()
+	{
+		super.Tick();
+
+		if(CurSector.lightlevel < 128)
+			self.LightLevel = 160;
+		else
+			self.LightLevel = 256;
+	}
+}
+
+class WolfFloorLight_Red : WolfFloorLight
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "wolf floor lamp red"
+	}
+	States
+	{
+		Spawn:
+			WFLP B -1;
+			Stop;
+	}
+}
+
+Class WolfLampLight : Actor
+{
+	Default
+	{
+		Radius 8;
+		Height 16;
+		+NOBLOCKMAP
+		+MOVEWITHSECTOR
+		+BRIGHT
+		+FLATSPRITE
+		+NOINTERACTION
+		RenderStyle "ADD";
+		Alpha 0.125;
+	}
+	double D;
+	Sector S;
+	//F3DFLoor F;
+	Override Void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		[D, S] = CurSector.NextLowestFloorAt(self.pos.x, self.pos.y, self.pos.z, FFCF_NODROPOFF);
+		if(TexMan.GetName(S.GetTexture(0)) == "F_SKY1")
+			self.destroy();
+		vector3 LightPos = (self.pos.x, self.pos.y, D);
+		SetOrigin(LightPos, false);
+	}
+
+	Override void Tick()
+	{
+		super.Tick();
+		if(S.lightlevel < 128 || (master && (self.pos-master.pos).length() > 128))
+			self.Alpha = 0.125/2;
+		else
+			self.Alpha = 0.125;
+	}
+	States
+	{
+		Spawn:
+			//WLMP B -1;
+			WLMP C -1;
+			Stop;
+	}
+}
+
+Class WolfLampCeilingLight : WolfLampLight
+{
+	Default
+	{
+		-MOVEWITHSECTOR
+		+NOGRAVITY
+		RenderStyle "ADD";
+		Alpha 0.125;
+	}
+	Override Void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		[D, S] = CurSector.NextHighestCeilingAt(self.pos.x, self.pos.y, self.pos.z, self.pos.z + 2048);
+		if(TexMan.GetName(S.GetTexture(1)) == "F_SKY1")
+			self.destroy();
+		vector3 LightPos = (self.pos.x, self.pos.y, D);
+		LightPos = Vec3Offset(0, 0, D - self.pos.z, false);
+		SetOrigin(LightPos, true);
+	}
+	Override void Tick()
+	{
+		super.Tick();
+			self.SetOrigin((self.pos.x, self.pos.y, S.CenterCeiling() - 0.125), TRUE);
+	}
+}

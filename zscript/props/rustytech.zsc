@@ -1,0 +1,28 @@
+class TechPillar2 : TechPillar
+{
+	Default
+	{
+		//$Category Obstacles
+	}
+	States
+	{
+	Spawn:
+		ELEC B -1;
+		Stop;
+	}
+}
+
+class TechPillar3 : TechPillar
+{
+	Default
+	{
+		//$Category Obstacles
+		Height 77;
+	}
+	States
+	{
+	Spawn:
+		ELEC C -1;
+		Stop;
+	}
+}

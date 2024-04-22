@@ -1,0 +1,198 @@
+class skp_SuperShotgun : skp_Weapon replaces SuperShotgun
+{
+	Default
+	{
+		Weapon.Slotnumber 3;
+		
+		Weapon.SelectionOrder 400;
+		Weapon.AmmoUse 2;
+		Weapon.AmmoGive 8;
+		Weapon.AmmoType "Shell";
+		Inventory.PickupMessage "$GOTSHOTGUN2";
+		Obituary "$OB_MPSSHOTGUN";
+		Tag "$TAG_SUPERSHOTGUN";
+		
+		skp_Weapon.PickupMsg "$GOTSHOTGUN2";
+		skp_Weapon.PickupOpenMsg "Unloaded the super shotgun.";
+		skp_Weapon.AmmoType "Shell";
+		skp_Weapon.AmmoAmount 8;
+	}
+	States
+	{
+	Ready:
+		SSIH A 1 skp_WeaponReady;
+		Loop;
+	Deselect:
+		SSIH A 1 skp_Lower;
+		Loop;
+	Select:
+		SSIH A 1 skp_Raise;
+		Loop;
+	Fire:
+		SSIH A 3
+		{
+			A_OverlayOffset(1,0,32);
+			let pspr = player.GetPSprite(PSP_WEAPON);
+			pspr.valign = PSPA_TOP;
+			pspr.halign = PSPA_CENTER;
+			A_OverlayScale(PSP_WEAPON, 1);
+		}
+		SSIH B 4 Bright A_FireShotgunCone();
+		SSIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.15);
+			A_ZoomFactor(0.98);
+			A_Light(2);
+		}
+		SSIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.1);
+			A_ZoomFactor(0.99);
+			A_Light(1);
+		}
+		SSIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.05);
+			A_ZoomFactor(1);
+			A_Light(0);
+		}
+		SSIH D 3
+		{
+			A_OverlayScale(PSP_WEAPON, 1);
+			A_OverlayOffset(1,0+24,32+24);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH D 3
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH E 3
+		{
+			A_CheckReload();
+			A_OverlayOffset(1,0+4,32+4);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH E 5
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SSIH E 2
+		{
+			A_OverlayOffset(1,0+4,32+6);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH F 3
+		{
+			A_OpenShotgun2();
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH F 3
+		{
+			A_OverlayOffset(1,0+32,32+32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SSIH G 3 
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH H 4 
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SSIH I 3
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH I 3
+		{
+			A_LoadShotgun2();
+			A_OverlayOffset(1,0+32,32+32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH I 3 
+		{
+			A_OverlayOffset(1,0+48,32+48);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SSIH J 4
+		{
+			A_OverlayOffset(1,0+32,32+64);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH J 3 
+		{
+			A_OverlayOffset(1,0+16,32+32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SSIH J 2 
+		{
+			A_OverlayOffset(1,0,32+16);
+			A_CloseShotgun2();
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		//SSIH K 1 A_WeaponOffset(0+56,32+40);
+		SSIH A 2 
+		{
+			A_OverlayOffset(1,0-2,32+5);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH A 1 
+		{
+			A_OverlayOffset(1,0,32+2);
+			A_ReFire();
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH A 1 
+		{
+			A_OverlayOffset(1,0+1,32);
+			A_ReFire();
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SSIH A 3 
+		{
+			A_OverlayOffset(1,0,32);
+			A_ReFire();
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		Goto Ready;
+	Spawn:
+		SGN2 A -1;
+		Stop;
+	}
+	
+	Action void A_FireShotgunCone()
+	{
+		A_StartSound("weapons/sshotf", CHAN_WEAPON);
+		A_ZoomFactor(0.97);
+		A_Light(3);
+		
+			A_FireBullets(-15,0,-1,10,"skp_BulletPuff_XDeath",FBF_EXPLICITANGLE,96);//Giving it a spread like this does functionally the same thing as doing one 30, but it will every now and again let you gib 2 former humans at once
+			A_FireBullets(  0,0,-1,10,"skp_BulletPuff_XDeath",FBF_EXPLICITANGLE,96);
+			A_FireBullets( 15,0,-1,10,"skp_BulletPuff_XDeath",FBF_EXPLICITANGLE,96);
+		
+		float ShotAng, ShotRadX, ShotRadY;
+		for(int i = 0; i < 14; i++)
+		{
+			ShotRadX = fRandom(0.0,13.1);
+			ShotRadY = fRandom(0.0,8.1);
+			ShotAng = fRandom(0.0,359.9);
+			A_FireBullets(ShotRadX * Cos(ShotAng), ShotRadY * Sin(ShotAng), -1, 5, "BulletPuff", i == 0 ? FBF_EXPLICITANGLE|FBF_USEAMMO : FBF_EXPLICITANGLE);//only use ammo on the first call
+		}
+		
+		let pspr = player.GetPSprite(PSP_WEAPON);
+		pspr.valign = PSPA_TOP;
+		pspr.halign = PSPA_CENTER;
+		A_OverlayScale(PSP_WEAPON, 1.2);
+	}
+}

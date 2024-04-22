@@ -1,0 +1,54 @@
+class HexenMushroomLarge : Actor
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	float GrowSpeed;
+	int FCstart;
+	States
+	{
+	Spawn:
+		MUSH A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = Random(TRUE, FALSE);
+		Super.PostBeginPlay();
+		if(self.frame < 3)
+			self.frame = random(0,2);
+		else
+			self.frame = random(3,7);
+		FCstart = Floorclip;
+		GrowSpeed = frandom(0.25,1.0);
+		if(level.time > 0)
+			Floorclip += 32;
+
+		super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(Floorclip > FCstart)
+			Floorclip -= GrowSpeed;
+		if(Floorclip < FCstart)
+			Floorclip = FCstart;
+		super.Tick();
+	}
+}
+
+class HexenMushroomSmall : HexenMushroomLarge
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		MUSH D -1;
+		Stop;
+	}
+}

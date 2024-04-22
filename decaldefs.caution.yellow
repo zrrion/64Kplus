@@ -1,0 +1,170 @@
+// all decal numbers are formated like this: 1SCDD
+// 1 is there to pad out the number
+// S is the series
+// C is the colour
+// DD is the decal within the series
+// for S:
+//			0		1
+//			caution	square
+// for C:
+//			0		1		2		3		4		5		6
+//			shadow	yellow	green	red		blue	purple	orange
+// for S0; DD:
+//			0			1		2			3			4			5			6			7			8			9			10			11			12			13			14			15			16			17			18
+//			csy_null	csy_bio	csy_cold	csy_crsh	csy_easy	csy_exit	csy_expl	csy_fire	csy_hard	csy_hot		csy_lsr		csy_mark	csy_obey	csy_psn		csy_rad		csy_rat		csy_rgnt	csy_unfr	csy_vltg
+// for S1; DD:
+//			0		1		2		3		4		5		6		7		8		9		10		11		12		13		14		15		16		17		18		19		20		21		22		23		24		25
+//			s*_null	s*_aid	s*_bayd	s*_bayl	s*_bayr	s*_bayu	s*_comp	s*_depd	s*_depl	s*_depr s*_depu	s*_exit	s*_hand	s*_idk	s*_labd	s*_labl	s*_labr	s*_labu	s*_meal	s*_plte	s*_rstr	s*_swch	s*_wh1d	s*_wh1l	s*_wh1r	s*_wh1u
+// shadow ignores DD and for those it should always be left 00
+
+decal CautionNull 10100
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_null
+}
+
+decal CautionBiohazard 10101
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_bio
+}
+
+decal CautionCold 10102
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_cold
+}
+
+decal CautionCrusher 10103
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_crsh
+}
+
+decal CautionEasy 10104
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_easy
+}
+
+decal CautionExit 10105
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_exit
+}
+
+decal CautionExplosive 10106
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_expl
+}
+
+decal CautionFire 10107
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_fire
+}
+
+decal CautionHard 10108
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_hard
+}
+
+decal CautionHot 10109
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_hot
+}
+
+decal CautionLaser 10110
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_lsr
+}
+
+decal CautionMark 10111
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_mark
+}
+
+decal CautionObey 10112
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_obey
+}
+
+decal CautionPoison 10113
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_psn
+}
+
+decal CautionRadiation 10114
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_rad
+}
+
+decal CautionRipAndTear 10115
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_rat
+}
+
+decal CautionArgent 10116
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_rgnt
+}
+
+decal CautionUnfair 10117
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_unfr
+}
+
+decal CautionVoltage 10118
+{
+
+	lowerdecal CautionShadow
+	
+	pic csy_vltg
+}

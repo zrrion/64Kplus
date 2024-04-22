@@ -1,0 +1,226 @@
+// all decal numbers are formated like this: 1SCDD
+// 1 is there to pad out the number
+// S is the series
+// C is the colour
+// DD is the decal within the series
+// for S:
+//			0		1
+//			caution	square
+// for C:
+//			0		1		2		3		4		5		6
+//			shadow	yellow	green	red		blue	purple	orange
+// for S0; DD:
+//			0			1		2			3			4			5			6			7			8			9			10			11			12			13			14			15			16			17			18
+//			csy_null	csy_bio	csy_cold	csy_crsh	csy_easy	csy_exit	csy_expl	csy_fire	csy_hard	csy_hot		csy_lsr		csy_mark	csy_obey	csy_psn		csy_rad		csy_rat		csy_rgnt	csy_unfr	csy_vltg
+// for S1; DD:
+//			0		1		2		3		4		5		6		7		8		9		10		11		12		13		14		15		16		17		18		19		20		21		22		23		24		25
+//			s*_null	s*_aid	s*_bayd	s*_bayl	s*_bayr	s*_bayu	s*_comp	s*_depd	s*_depl	s*_depr s*_depu	s*_exit	s*_hand	s*_idk	s*_labd	s*_labl	s*_labr	s*_labu	s*_meal	s*_plte	s*_rstr	s*_swch	s*_wh1d	s*_wh1l	s*_wh1r	s*_wh1u
+// shadow ignores DD and for those it should always be left 00
+
+decal SquareOrangeNull 11600
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_null
+}
+
+decal SquareOrangeAid 11601
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_aid
+}
+
+decal SquareOrangeBayDown 11602
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_bayd
+}
+
+decal SquareOrangeBayLeft 11603
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_bayl
+}
+
+decal SquareOrangeBayRight 11604
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_bayr
+}
+
+decal SquareOrangeBayUp 11605
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_bayu
+}
+
+decal SquareOrangeComputer 11606
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_comp
+}
+
+decal SquareOrangeDepartmentDown 11607
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_depd
+}
+
+decal SquareOrangeDepartmentLeft 11608
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_depl
+}
+
+decal SquareOrangeDepartmentRight 11609
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_depr
+}
+
+decal SquareOrangeDepartmentUp 11610
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_depu
+}
+
+decal SquareOrangeExit 11611
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_exit
+}
+
+decal SquareOrangeHand 11612
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_Hand
+}
+
+decal SquareOrangeIDK 11613
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_idk
+}
+
+decal SquareOrangeLabDown 11614
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_labd
+}
+
+decal SquareOrangeLabLeft 11615
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_labl
+}
+
+decal SquareOrangeLabRight 11616
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_labr
+}
+
+decal SquareOrangeLabUp 11617
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_unfr
+}
+
+decal SquareOrangeMeal 11618
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_meal
+}
+
+decal SquareOrangePressurePlate 11619
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_plte
+}
+
+decal SquareOrangeRestricted 11620
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_rstr
+}
+
+decal SquareOrangeSwitch 11621
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_swch
+}
+
+decal SquareOrangeWarehouse1Down 11622
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_wh1d
+}
+
+decal SquareOrangeWarehouse1Left 11623
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_wh1l
+}
+
+decal SquareOrangeWarehouse1Right 11624
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_wh1r
+}
+
+decal SquareOrangeWarehouse1Up 11625
+{
+
+	lowerdecal SquareShadow
+	
+	pic so_wh1u
+}

@@ -1,0 +1,157 @@
+class skp_Shotgun : skp_Weapon replaces Shotgun
+{
+	Default
+	{
+		Weapon.Slotnumber 3;
+		
+		Weapon.SelectionOrder 1300;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 8;
+		Weapon.AmmoType "Shell";
+		Inventory.PickupMessage "$GOTSHOTGUN";
+		Obituary "$OB_MPSHOTGUN";
+		Tag "$TAG_SHOTGUN";
+		
+		skp_Weapon.PickupMsg "$GOTSHOTGUN";
+		skp_Weapon.PickupOpenMsg "Unloaded the shotgun.";
+		skp_Weapon.AmmoType "Shell";
+		skp_Weapon.AmmoAmount 8;
+	}
+	States
+	{
+	Ready:
+		SGIH A 1 skp_WeaponReady;
+		Loop;
+	Deselect:
+		SGIH A 1 skp_Lower;
+		Loop;
+	Select:
+		SGIH A 1 skp_Raise;
+		Loop;
+	Fire:
+		SGIH A 3
+		{
+			A_WeaponOffset(0,32);
+			let pspr = player.GetPSprite(PSP_WEAPON);
+			pspr.valign = PSPA_TOP;
+			pspr.halign = PSPA_CENTER;
+			A_OverlayScale(PSP_WEAPON, 1);
+		}
+		SGIH B 4 Bright A_FireShotgunCone();
+		SGIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.1);
+			A_ZoomFactor(0.98);
+			A_Light(2);
+		}
+		SGIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.05);
+			A_ZoomFactor(0.99);
+			A_Light(1);
+		}
+		SGIH C 1 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1);
+			A_ZoomFactor(1);
+			A_Light(0);
+		}
+		SGIH D 3 
+		{
+			A_OverlayOffset(1,0+32,32+32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH D 1
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SGIH E 1
+		{
+			A_OverlayOffset(1,0+8,32+16);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH E 4
+		{
+			A_OverlayOffset(1,0-16,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SGIH F 3
+		{
+			A_OverlayOffset(1,0+8,32+16);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH F 3
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SGIH E 3
+		{
+			A_OverlayOffset(1,0-16,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH E 2 
+		{
+			A_OverlayOffset(1,0+8,32+16);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SGIH D 2
+		{
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH D 2
+		{
+			A_OverlayOffset(1,0+32,32+32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		
+		SGIH A 3
+		{
+			A_ReFire();
+			A_OverlayOffset(1,0+5,32+8);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH A 2
+		{
+			A_ReFire();
+			A_OverlayOffset(1,0+2,32+3);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		SGIH A 4
+		{
+			A_ReFire();
+			A_OverlayOffset(1,0,32);
+			skp_SawQuickFire("User1",BT_USER1);
+		}
+		Goto Ready;
+	Spawn:
+		SHOT A -1;
+		Stop;
+	}
+	
+	Action void A_FireShotgunCone()
+	{
+		A_StartSound("weapons/shotgf", CHAN_WEAPON);
+		A_ZoomFactor(0.97);
+		A_Light(3);
+		
+		float ShotAng, shotRad;
+		for(int i = 0; i < 7; i++)
+		{
+			ShotRad = fRandom(0.0,4.25);
+			ShotAng = fRandom(0.0,359.9);
+			A_FireBullets(ShotRad * Cos(ShotAng), ShotRad * Sin(ShotAng), -1, 5, "BulletPuff", i == 0 ? FBF_EXPLICITANGLE|FBF_USEAMMO : FBF_EXPLICITANGLE);//only use ammo on the first call
+		}
+		
+		let pspr = player.GetPSprite(PSP_WEAPON);
+		pspr.valign = PSPA_TOP;//setting these with the action function wasn't working, easier to set them like this anyway
+		pspr.halign = PSPA_CENTER;
+		A_OverlayScale(PSP_WEAPON, 1.18);
+	}
+}

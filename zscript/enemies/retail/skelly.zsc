@@ -1,0 +1,76 @@
+class skp_Revenant : Revenant replaces Revenant
+{
+	mixin BerserkDroper;
+	
+	Default
+	{
+	}
+	States
+	{
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",3, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",3, Abs(self.painchance-256));
+				}
+		}
+	Xdeath:
+		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		SKEL LM 7;
+		SKEL N 7 A_Scream;
+		SKEL O 7 A_NoBlocking;
+		SKEL P 7;
+		SKEL Q -1;
+		Stop;
+	}
+}
+
+class skp_RevenantTracer : RevenantTracer replaces RevenantTracer
+{
+	int timer;
+	Default
+	{
+		+DONTSEEKINVISIBLE
+		+SEEKERMISSILE
+	}
+	States
+	{
+	Spawn:
+		FATB AB 2 BRIGHT A_Tracer();
+		Loop;
+	Death:
+		FBXP A 8 BRIGHT;
+		FBXP B 6 BRIGHT;
+		FBXP C 4 BRIGHT;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		timer = 0;
+		super.PostBeginPlay();
+	}
+	void A_Tracer()
+	{	
+		if(self.timer > random(175,350))//should rough out to somehting like 10-20 sec
+			return;
+		self.timer++;
+		super.A_Tracer();
+	}
+}
+/*
+extend class skp_RevenantTracer
+{
+	void A_Tracer()
+	{
+		for(int i = 0; i < 3; i++)
+			A_SpawnItemEx("ChainsawSmoke",0,0,0,0,0,0,0,192);
+		
+		if(self.timer > random(175,350))//should rough out to somehting like 10-20 sec
+			return;
+		self.timer++;
+		console.printf("timer is: %i",self.timer);
+		super.A_Tracer();
+	}
+}*/

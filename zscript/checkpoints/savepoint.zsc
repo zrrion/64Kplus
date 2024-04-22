@@ -1,0 +1,130 @@
+extend class skp_DoomPlayer
+{
+	skp_SavepointBase LastPoint;
+}
+
+class skp_SavepointBase : switchabledecoration
+{
+bool Flip;
+int PostFlipTimer;
+	Default
+	{
+		//$Category Savepoints
+		+USESPECIAL
+		+SOLID
+		Activation THINGSPEC_Switch;
+		radius 16;
+		height 50;
+	}
+	Override void PostBeginPlay()
+	{
+		Flip = FALSE;
+		super.PostBeginPlay();
+	}
+	Override void Activate(Actor activator)
+	{
+		let Doom = skp_DoomPlayer(activator);
+		if(Doom)
+			target = Doom;
+		if(!flip)
+		{
+			if(Doom.LastPoint)
+				Doom.LastPoint.Reactivate();
+			Doom.LastPoint = self;
+			Savepoint();
+		}
+		else
+		{
+			A_StartSound("*usefail", CHAN_AUTO, CHANF_UI);
+		}
+	}
+	Override void Deactivate (Actor activator)
+	{
+		Activate(activator);
+	}
+	void ResetWait()
+	{
+		PostFlipTimer++;
+		if(target && PostFlipTimer > 512 && Distance2D(target) > 1024 && !CheckSight(target, SF_IGNOREVISIBILITY|SF_SEEPASTSHOOTABLELINES|SF_SEEPASTBLOCKEVERYTHING|SF_IGNOREWATERBOUNDARY))
+		{
+			A_StartSound("Checkpoint/save", CHAN_AUTO, CHANF_UI);
+			let Doom = skp_DoomPlayer(target);
+			if(Doom)
+				Doom.LastPoint = NULL;
+			Reactivate();
+		}
+	}
+	void Reactivate()
+	{
+		Flip = FALSE;
+		PostFlipTimer = 0;
+		SetStateLabel("Open");	
+	}
+	void Savepoint()
+	{
+		Flip = TRUE;
+		Autosave();
+		A_StartSound("Checkpoint/save", CHAN_AUTO, CHANF_UI);
+		SetStateLabel("Close");
+	}
+}
+
+class GreenSavepoint : skp_SavepointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			GBCP B 1 NODELAY A_SetTics(35 * random(5,30));
+			GBCP C 3 A_StartSound("Checkpoint/flip", CHAN_AUTO, CHANF_UI, 1.0, ATTN_STATIC); 
+			GBCP DEFG 3;
+			Loop;
+		Close:
+			GBCP A 1 ResetWait();
+			Wait;
+	}
+}
+
+class RedSavepoint : skp_SavepointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			RBCP B 1 NODELAY A_SetTics(35 * random(5,30));
+			RBCP C 3 A_StartSound("Checkpoint/flip", CHAN_AUTO, CHANF_UI, 1.0, ATTN_STATIC); 
+			RBCP DEFG 3;
+			Loop;
+		Close:
+			RBCP A 1 ResetWait();
+			Wait;
+	}
+}
+
+class YellowSavepoint : skp_SavepointBase
+{
+	Default
+	{
+		//$Category Savepoints
+	}
+	States
+	{
+		Spawn:
+		Open:
+			YBCP B 1 NODELAY A_SetTics(35 * random(5,30));
+			YBCP C 3 A_StartSound("Checkpoint/flip", CHAN_AUTO, CHANF_UI, 1.0, ATTN_STATIC); 
+			YBCP DEFG 3;
+			Loop;
+		Close:
+			YBCP A 1 ResetWait();
+			Wait;
+	}
+}

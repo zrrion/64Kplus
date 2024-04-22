@@ -1,0 +1,66 @@
+class SKP_JumpBoots : Inventory
+{
+	double SOOld;
+	Default
+	{
+		//$Category Powerups
+		+COUNTITEM;
+		+INVENTORY.HUBPOWER;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.InterHubAmount 0;
+		+SPECIALFLOORCLIP;
+		Inventory.PickupMessage "You picked up the double jump boots";
+		Inventory.PickupSound "misc/p_pkup";
+	}
+	Action Void skp_BootFx()
+	{
+		let mo = Spawn("SKP_JumpBoots_SFX", (self.pos.X, self.pos.Y ,self.pos.Z - Floorclip), NO_REPLACE);
+		if(mo == NULL)
+			return;
+		mo.SpriteOffset.Y = self.SpriteOffset.Y;
+	}
+	Override void Tick()
+	{
+		if(isFrozen() || owner)
+			return;
+		SOOld = SpriteOffset.Y;
+		SpriteOffset.Y = 8 * sin(level.time * 2);		
+		If(level.totaltime % 2 == 0 && SOOld > SpriteOffset.Y)
+			skp_BootFx();
+		super.Tick();
+	}
+	States
+	{
+	Spawn:
+		DBLJ B 6;
+		DBLJ A 7 bright;
+		Loop;
+	}
+}
+
+class SKP_JumpBoots_Perm : SKP_JumpBoots//same as the normal jump boots but they stay between maps
+{
+	default
+	{
+		+INVENTORY.PERSISTENTPOWER;
+		Inventory.InterHubAmount 1;
+	}
+}
+
+class SKP_JumpBoots_SFX : actor
+{
+	Default
+	{
+		+NOINTERACTION;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		Renderstyle "add";
+	}
+	States
+	{
+	Spawn:
+		DBLJ C 2;
+		DBLJ C 1 A_Fadeout;
+		wait;
+	}
+}

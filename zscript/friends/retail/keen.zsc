@@ -1,0 +1,147 @@
+class skp_Keen : CommanderKeen replaces CommanderKeen
+{
+	int oldheight;
+	Default
+	{
+		Health 100;
+		Radius 16;
+		Height 54;
+		Mass 10;
+		PainChance 256;
+		+SOLID
+		+SPAWNCEILING
+		+NOGRAVITY
+		+SHOOTABLE
+		+COUNTKILL
+		+NOICEDEATH
+		-ISMONSTER
+		+NOBLOOD
+		+DONTFALL
+		+DONTTHRUST
+		+MOVEWITHSECTOR
+		PainSound "keen/pain";
+		DeathSound "keen/death";
+	}
+	States
+	{
+	Spawn:
+		KEEN A -1;
+		Loop;
+	Pain:
+		KEEN B	4;
+		KEEN B	8 A_Pain;
+		Goto Spawn;
+	Death:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("FreeKeen",0,0,8);
+			A_NoBlocking();
+		}
+		KEEN CD	6;
+		KEEN E 6 A_Scream;
+		KEEN FG 6;
+		KEEN GGGGG 6;
+		KEEN G 6 A_KeenDie;
+		KEEN G -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		oldheight = self.height;
+		super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		A_Warp(AAPTR_DEFAULT, self.pos.x, self.pos.y , ceilingz - oldheight, 0, WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEPOSITION|WARPF_STOP);//stick the friend to the ceiling for real
+		super.Tick();
+	}
+}
+
+class skp_HellKeen : skp_Keen
+{
+	Default
+	{
+		-NOBLOOD
+		Bloodcolor "329E32";
+		PainSound "keen/pain";
+		DeathSound "keen/death";
+	}
+	States
+	{
+	Spawn:
+		KEN2 AABCB 8;
+		Loop;
+	Pain:
+		KEN2 D	4;
+		KEN2 D	8 A_Pain;
+		Goto Spawn;
+	Death:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("FreeHellKeen",0,0,16);
+			A_NoBlocking();
+		}
+		KEEN CD	6;
+		KEEN E 6 A_Scream;
+		KEEN FG 6;
+		KEEN GGGGG 6;
+		KEEN G 6 A_NoBlocking;//this is meant for a more general use, and as such is really designed for use with whatever, instead of the one thing that A_KeenDie does
+		KEEN G -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		oldheight = self.height;
+		super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		A_Warp(AAPTR_DEFAULT, self.pos.x, self.pos.y , ceilingz - oldheight, 0, WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEPOSITION|WARPF_STOP);//stick the friend to the ceiling for real
+		super.Tick();
+	}
+}
+
+class FreeKeen : DemonChunk//ignore that keen is a gib, just rember reading is important
+{
+	Default
+	{
+		+SKYEXPLODE//he'll be fine
+		+MOVEWITHSECTOR
+		radius 4;
+		gravity 0.125;
+	}
+	States
+	{
+		Spawn:
+			KEEN H 1 A_CheckFloor("Death");
+			Loop;
+		Death:
+			KEEN IJK 6;
+			KEEN L -1;
+			Stop;
+	}
+}
+
+class FreeHellKeen : FreeKeen
+{
+	Default
+	{
+		Bloodcolor "00 A0 00";
+		gravity 0.25;
+	}
+	States
+	{
+		Spawn:
+			KEN2 E 1 A_CheckFloor("Death");
+			Loop;
+		Death:
+			KEN2 F -1
+			{
+				for(int i = 0; i < 3; i++)
+				{
+					A_SpawnItemEx("Blood",0, 0, 8, random(4,-4), 0, random(0,4), random(0,360), SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+				}
+			}
+			Stop;
+	}
+}

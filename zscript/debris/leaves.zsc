@@ -1,0 +1,40 @@
+class SKP_Leaves : actor
+{
+	Default
+	{
+		//$Catagory Debris
+		+NOINTERACTION;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		Radius 4;
+	}
+	Action void SKP_LeafPile()
+	{
+		for(int i = 0; i < 8 ; i++)
+		{
+			A_SpawnItemEx("SKP_Leaf", Random(-48,48), Random(-48,48));
+		}
+	}
+	States
+	{
+		Spawn:
+			LEFA A 1 nodelay SKP_LeafPile(); //A-W
+			Stop;
+			
+	}
+}
+
+class SKP_Leaf : SKP_DebrisBase
+{
+	default
+	{
+		+DONTOVERLAP;
+	}
+	States
+	{
+		Spawn:
+			LEFA "#" -1 nodelay SKP_FrameSet(22); //A-W
+			Stop;
+			
+	}
+}

@@ -1,0 +1,106 @@
+class skp_Fist : skp_Weapon replaces fist
+{
+Default
+	{
+		Weapon.Slotnumber 1;
+		Weapon.SelectionOrder 3700;
+		Weapon.Kickback 100;
+		Obituary "$OB_MPFIST";
+		Tag "$TAG_FIST";
+		+WEAPON.WIMPY_WEAPON
+		+WEAPON.MELEEWEAPON
+		+WEAPON.CHEATNOTWEAPON
+		+WEAPON.ALT_AMMO_OPTIONAL
+		-INVENTORY.UNDROPPABLE
+	}
+States
+	{
+	Ready:
+		HAND A 1 skp_WeaponReady();
+		Loop;
+	Deselect:
+		HAND A 1 skp_LowerFist();
+		Loop;
+	Select:
+		HAND A 1 skp_RaiseFist();
+		Loop;
+	Fire.Refire:
+		TNT1 A 1 
+		{
+			if((player.cmd.buttons & BT_ATTACK) || (player.cmd.buttons & BT_ALTATTACK))//it doesn't matter which button you press, the fist has the same altfire and fire, if you swap from one to the other it will still work
+				{
+					invoker.bAltFire = FALSE;
+					player.cmd.buttons |= BT_ATTACK;
+				}
+			A_Refire("Fire.Punch");
+		}
+		TNT1 A 0 ResolveState("Altfire.Return");
+		Goto ready;//this never actually goes to ready, but you can't not tell it to go somewhere
+	}
+	Action void skp_LowerFist()//I want to be able to take this from the player, but not let the palyer drop it so we have the flag only set when the weapon is selected
+	{
+		invoker.bUNDROPPABLE = FALSE;
+		skp_Lower();
+	}
+	Action void skp_RaiseFist()
+	{
+		invoker.bUNDROPPABLE = TRUE;
+		skp_Raise();
+	}
+}
+
+class skp_FistPuff : actor
+{
+Default
+	{
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+PUFFONACTORS
+		+PUFFGETSOWNER
+		+NOEXTREMEDEATH
+		+ROLLSPRITE
+		+ROLLCENTER
+		-RANDOMIZE
+		ActiveSound "";
+		AttackSound "";
+		SeeSound "";
+		VSpeed 1;
+		Mass 5;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay;
+	Crash:
+		TNT1 A 1 A_StartSound("punch/wall",CHAN_AUTO, 0, 0.5);
+		PUFF CDEF 4
+			{
+				A_SetRenderStyle(0.5,STYLE_Translucent);
+			}
+		PUFF F 1 
+			{
+				A_SetScale(Scale.X+0.012);
+				A_Fadeout(0.05);
+			}
+		Wait;
+	XDeath:
+		TNT1 A 1 A_StartSound("punch/hit",CHAN_AUTO, 0, 0.5);
+		Stop;
+	}
+	Override Void PostBeginPlay()
+	{
+		if(ACS_ScriptCall("CVarCheck",2))
+			A_SetRoll(Random(0,359));
+		A_SetScale(frandom(0.9,1.1));
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_FistPuff_XDeath : skp_FistPuff
+{
+	Default
+	{
+		+EXTREMEDEATH
+		DamageType "GloryKill";
+	}
+}

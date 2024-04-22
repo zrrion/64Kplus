@@ -1,0 +1,35 @@
+class ThriftyClip : ThriftyAmmo replaces Clip
+{
+	Default
+	{
+		Inventory.Amount 10;
+		ThriftyAmmo.AmmoType "Clip";
+		ThriftyAmmo.SmallPickup "ThriftyClip";
+		ThriftyAmmo.PickupMsg "$GOTCLIP";
+	}
+	States
+	{
+	Spawn:
+		CLIP A -1;
+		Stop;
+	}
+}
+
+class ThriftyClipBox : ThriftyAmmo replaces ClipBox
+{
+	Default
+	{
+		Inventory.Amount 50;
+		ThriftyAmmo.AmmoType "Clip";
+		ThriftyAmmo.SmallPickup "ThriftyClip";
+		ThriftyAmmo.BigPickup TRUE;
+		ThriftyAmmo.PickupMsg "$GOTCLIPBOX";
+		ThriftyAmmo.PickupOpenMsg "You opened a box of bullets";
+	}
+	States
+	{
+	Spawn:
+		AMMO A -1;
+		Stop;
+	}
+}

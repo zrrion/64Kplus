@@ -1,0 +1,41 @@
+class ThriftyShell : ThriftyAmmo replaces Shell
+{
+	Default
+	{
+		Inventory.Amount 4;
+		ThriftyAmmo.AmmoType "Shell";
+		ThriftyAmmo.SmallPickup "ThriftyShell";
+		ThriftyAmmo.PickupMsg "$GOTSHELLS";
+	}
+	States
+	{
+	Spawn:
+		SHEL A 0;
+		SHEL "#" -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Frame = random(0,8);
+	}
+}
+
+class ThriftyShellBox : ThriftyAmmo replaces ShellBox
+{
+	Default
+	{
+		Inventory.Amount 20;
+		ThriftyAmmo.AmmoType "Shell";
+		ThriftyAmmo.SmallPickup "ThriftyShell";
+		ThriftyAmmo.BigPickup TRUE;
+		ThriftyAmmo.PickupMsg "$GOTSHELLBOX";
+		ThriftyAmmo.PickupOpenMsg "You opened a box of shotgun shells.";
+	}
+	States
+	{
+	Spawn:
+		SBOX A -1;
+		Stop;
+	}
+}

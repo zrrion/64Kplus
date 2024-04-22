@@ -1,0 +1,30 @@
+class skp_Allmap : Allmap replaces Allmap
+{
+	Default
+	{
+		Inventory.PickupFlash "skp_PickupFlash";
+	}
+	States
+	{
+	Spawn:
+		PMAC ABCD 6 BRIGHT;
+		Loop;
+	MacBoot:
+		PMAC EGG 6 BRIGHT;//heh, egg
+		Goto Spawn;
+	MacOff:
+		PMAC HIFFFF 3 BRIGHT;
+		PMAC F 0 BRIGHT A_SetTics(random(0,96));
+		Goto Spawn;
+	}
+	Override void Tick()
+	{
+		int i = random(0,480);
+		int j = random(0,1);
+		if(i + j == 0 && frame < 4)
+			SetStateLabel("MacBoot");
+		else if(i == 0 && frame < 4)
+			SetStateLabel("MacOff");
+		Super.Tick();
+	}
+}	

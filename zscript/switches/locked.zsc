@@ -1,0 +1,29 @@
+class SwitchNeedsKey : SwitchBase
+{
+	//$Category Switches
+	//$bool user_NoRepeat;
+	//$int user_MarkerType;
+	default
+	{
+		//$Category Switches
+		height 32;
+		radius 16;
+		-FIXMAPTHINGPOS
+	}
+	States
+	{
+	InactiveB:
+		WL3S B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	InactiveA:
+	Spawn:
+		WL3S A 1;
+		wait;
+	NoFlip:
+		WL3S B -1;
+		Stop;
+	}
+}

@@ -1,0 +1,11 @@
+ChainsawFuel
+	{
+		0 ST_FUEL0
+		1 ST_FUEL1
+		2 ST_FUEL2
+		3 ST_FUEL3
+		4 ST_FUEL4
+		5 ST_FUEL5
+		x ST_FUELX
+		z ST_FUELZ
+	}

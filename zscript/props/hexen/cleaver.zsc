@@ -1,0 +1,21 @@
+class HexenCleaver : Actor
+{
+
+	Default
+	{
+		//$Category Hexen
+		+WALLSPRITE//felt cute, might delete later
+		+MOVEWITHSECTOR
+	}
+	States
+	{
+	Spawn:
+		HCLV A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		self.angle += 90;
+		super.PostBeginPlay();
+	}
+}

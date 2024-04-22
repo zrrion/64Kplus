@@ -1,0 +1,39 @@
+class skp_SawFuel : Ammo
+{
+	Default
+	{
+		//$Category Ammunition
+		Inventory.PickupMessage "Picked up some chainsaw fuel";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 5;
+		Ammo.BackpackAmount 1;
+		Ammo.BackpackMaxAmount 5;
+		Inventory.Icon "SAWFA0";//the conister is yellow to match the body of the saw and because the thing runs on diesel, not gas
+	}
+	States
+	{
+	Spawn:
+		SAWF A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
+}

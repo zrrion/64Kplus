@@ -1,0 +1,114 @@
+class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
+{
+	Default
+	{
+		Weapon.Slotnumber 5;
+		
+		Weapon.SelectionOrder 2500;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 2;
+		Weapon.AmmoType "RocketAmmo";
+		+WEAPON.NOAUTOFIRE
+		Inventory.PickupMessage "$GOTLAUNCHER";
+		Tag "$TAG_ROCKETLAUNCHER";
+		
+		skp_Weapon.PickupMsg "$GOTLAUNCHER";
+		skp_Weapon.PickupOpenMsg "Unloaded the rocket launcher.";
+		skp_Weapon.AmmoType "RocketAmmo";
+		skp_Weapon.AmmoAmount 2;
+	}
+	States
+	{
+	Ready:
+		D32R A 1 skp_WeaponReady();
+		Loop;
+	Deselect:
+		D32R A 1 skp_Lower();
+		Loop;
+	Select:
+		D32R A 1 skp_Raise();
+		Loop;
+	Fire:
+		D32R B 3 Bright A_Light(1);
+		D32R C 3 Bright;
+		D32R D 1 Bright;
+		D32R D 2 Bright skp_FireRocket();
+		D32R EF 3 Bright
+		{
+			A_SetPitch(pitch-1,SPF_INTERPOLATE);
+			A_ZoomFactor(0.98);
+		}
+		D32R GGHH 1 Bright
+		{
+			A_SetPitch(pitch+0.5,SPF_INTERPOLATE);
+			A_ZoomFactor(0.995);
+		}
+		D32R A 1
+		{
+			A_ZoomFactor(1);
+			A_Light(0);
+			A_SetPitch(pitch+0.5,SPF_INTERPOLATE);
+		}
+		TNT1 A 0 A_ReFire();
+		Goto Ready;
+	Spawn:
+		RLOG A -1;
+		Stop;
+	}
+	
+	Action void skp_FireRocket()
+	{
+		A_ZoomFactor(frandom(0.98,0.985));
+		A_Light(3);
+		A_SetPitch(pitch-0.5,SPF_INTERPOLATE);
+		A_ZoomFactor(0.975);
+		
+		A_FireProjectile("skp_player_rocket");
+	}
+}
+
+class skp_rocket : Rocket replaces Rocket
+{
+	Default
+	{
+		Decal "Scorch";
+		+EXTREMEDEATH
+	}
+	States
+	{
+	Spawn:
+		RCKT A 1 Bright;
+		Loop;
+	Death:
+		MISL B 8 Bright
+		{
+			A_Explode(-1,-1,XF_THRUSTZ);
+			A_QuakeEx(1,1,1,60,0,128,"",0,0,0,0,96);
+			A_SpawnItemEx("RocketSmokeTrail",0,0,2*(height/3),0,0,fRandom(1,2));
+		}
+		MISL C 6 Bright;
+		MISL D 4 Bright;
+		Stop;
+	}
+}
+
+class skp_player_rocket : skp_rocket
+{
+/*	Default
+	{
+		//speed 1;
+	}
+	Override void tick()
+	{
+		if(isFrozen())
+			return;
+		let Shooter = self.target;
+		if(Shooter != NULL && self.frame < 1)
+		{
+			double P = (self.pitch + (Shooter.pitch * 4)) / 5;
+			double A = (self.angle + (Shooter.angle * 4)) / 5;
+			Vel3DFromAngle(self.vel.Length(), A, P);
+		}
+		super.Tick();
+	}*/
+}

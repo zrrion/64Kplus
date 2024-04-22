@@ -1,0 +1,59 @@
+class HereticWebBase : Actor
+{
+	Default
+	{
+		//$Category Heretic
+		radius 16;
+		height 32;
+		+SPAWNCEILING
+		+NOGRAVITY
+		+WALLSPRITE
+		renderstyle "translucent";
+		alpha 0.75;
+	}
+	Override void PostBeginPlay()
+	{
+		
+		self.alpha = frandom(0.5, 0.75);
+		if(self.frame < 2)
+		{
+			self.angle -= 90;
+			self.frame = random(0,1);
+			A_SpriteOffset(0,-1 * frandom(0.0,16.0));
+		}
+		else
+		{
+			bXFLIP = random(TRUE, FALSE);
+			A_SpriteOffset(0,-1 * frandom(0.0,8.0));
+		}
+		super.PostBeginPlay();
+	}
+}
+
+class HereticWebCorner : HereticWebBase
+{
+	Default
+	{
+		//$Category Heretic
+	}
+	States
+	{
+	Spawn:
+		HWEB A -1;
+		Stop;
+	}
+}
+
+class HereticWebCeiling : HereticWebBase
+{
+	Default
+	{
+	//$Category Heretic
+	}
+	States
+	{
+	Spawn:
+		HWEB C -1;
+		Stop;
+	}
+}

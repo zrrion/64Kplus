@@ -1,0 +1,35 @@
+class ThriftyRocketAmmo : ThriftyAmmo replaces RocketAmmo
+{
+	Default
+	{		
+		Inventory.Amount 1;	
+		ThriftyAmmo.AmmoType "RocketAmmo";
+		ThriftyAmmo.SmallPickup "ThriftyRocketAmmo";
+		ThriftyAmmo.PickupMsg "$GOTROCKET";
+	}
+	States
+	{
+	Spawn:
+		ROCK A -1;
+		Stop;
+	}
+}
+
+class ThriftyRocketBox : ThriftyAmmo replaces RocketBox
+{
+	Default
+	{
+		Inventory.Amount 5;
+		ThriftyAmmo.AmmoType "RocketAmmo";
+		ThriftyAmmo.SmallPickup "ThriftyRocketAmmo";
+		ThriftyAmmo.BigPickup TRUE;
+		ThriftyAmmo.PickupMsg "$GOTROCKBOX";
+		ThriftyAmmo.PickupOpenMsg "You opened a box of rockets";
+	}
+	States
+	{
+	Spawn:
+		BROK A -1;
+		Stop;
+	}
+}

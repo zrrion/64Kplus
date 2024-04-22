@@ -1,0 +1,83 @@
+class ZombieSS : WolfensteinSS
+{
+	mixin BerserkDroper;
+	
+	Default
+	{
+		//$Category Monsters
+		//$Category Wolfendoom
+		Health 50;
+		Radius 20;
+		Height 56;
+		Speed 8;
+		PainChance 170;
+		Monster;
+		+FLOORCLIP
+		SeeSound "grunt/sight";
+		PainSound "grunt/pain";
+		DeathSound "grunt/death";
+		ActiveSound "grunt/active";
+		AttackSound "grunt/attack";
+		Obituary "%o was killed by a retro zombie";
+		Tag "Retro Zombie";
+		Dropitem "Clip";
+	}
+	States
+	{
+	Spawn:
+		ZMSS AB 10 A_Look;
+		Loop;
+	See:
+		ZMSS AABBCCDD 3 A_Chase;
+		Loop;
+	Missile:
+		ZMSS E 15 A_FaceTarget;
+		ZMSS E 5 A_FaceTarget;
+		ZMSS F 4 BRIGHT A_CPosAttack;
+		ZMSS E 6 A_FaceTarget;
+		ZMSS F 4 BRIGHT A_CPosAttack;
+		ZMSS E 1 A_CPosRefire;
+		Goto Missile+1;
+	Pain:
+		ZMSS H 3;
+		ZMSS H 3 A_Pain;
+		Goto See;
+	Death:
+		ZMSS I 5;
+		ZMSS J 5 A_Scream;
+		ZMSS K 5 A_NoBlocking;
+		ZMSS L 5;
+		ZMSS M -1;
+		Stop;
+	Death.GloryKill:
+		TNT1 A 0 
+		{
+			for(int i = 0; i < 5; i++)
+				{
+					A_PowerKillDrops("ArmorBonus",1, Abs(self.painchance-256));
+					A_PowerKillDrops("HealthBonus",1, Abs(self.painchance-256));
+				}
+		}
+	Xdeath:
+		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		ZMSS N 5 ;
+		ZMSS O 5 A_XScream;
+		ZMSS P 5 A_NoBlocking;
+		ZMSS QRSTU 5;
+		ZMSS V -1;
+		Stop;
+	Raise:
+		"----" "#" 0
+		{
+			if(frame > 12)
+				SetStateLabel("Raise.Xdeath");
+		}
+		ZMSS M 5;
+		ZMSS LKJI 5;
+		Goto See ;
+	Raise.Xdeath:
+		ZMSS VU 6;
+		ZMSS TSRQPON 4;
+		Goto See;
+	}
+}

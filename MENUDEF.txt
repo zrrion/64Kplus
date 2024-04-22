@@ -1,0 +1,40 @@
+AddOptionMenu "OptionsMenu"
+{
+	StaticText "64k+ v1.1"
+	Submenu "64k+ Options", "64KMenu"
+}
+
+OptionValue "DisabledEnabled"
+{
+	0, "Disabled"
+	1, "Enabled"
+}
+
+OptionValue "TeleporterOption"
+{
+	0, "Doom"
+	1, "Fire"
+	2, "Smoke"
+	3, "Raven"
+	4, "Strife"
+}
+/*
+server bool arg_GoreRotation = True;
+server bool arg_ItemRotation = True;
+*/
+OptionMenu "64KMenu"
+{
+	Title       "64K + Options"
+	StaticText 	""
+	StaticText 	"Special Effects Options"		, 1
+	Option      "Sprite Rotation"				, "arg_GoreRotation"    , "DisabledEnabled"
+	Option      "Dropped Item Rotation"			, "arg_ItemRotation"    , "DisabledEnabled"
+	Option      "Teleport Effect Type"			, "arg_Teleporter"		, "TeleporterOption"
+	StaticText 	""
+	StaticText 	"Gameplay Options"				, 1
+	Option      "Enemy Changes"					, "arg_EnemyChanges"    , "DisabledEnabled"
+	Option      "Boss Item Drops" 				, "arg_EnemyDrops"		, "DisabledEnabled"
+	StaticText 	""
+	StaticText 	"Physics Options"				, 1
+	Option      "Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
+}

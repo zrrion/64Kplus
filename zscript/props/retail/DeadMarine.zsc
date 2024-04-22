@@ -1,0 +1,28 @@
+class skp_DeadMarine : DeadMarine replaces DeadMarine
+{
+	States
+	{
+	Spawn:
+		DMOG "#" -1;
+		Stop;
+	}
+	Override Void PostBeginPlay()
+	{
+		Frame = Random(0,2);
+		bXFLIP = Random(true,false);
+		Super.PostBeginPlay();
+	}
+}
+
+class skp_GibbedMarine : GibbedMarine replaces GibbedMarine
+{
+	Override Void PostBeginPlay()
+	{
+		bXFLIP = Random(true,false);
+		for(int i = 0; i < 5; i++)
+		{
+			A_SpawnItemEx("skp_PlacedXdeathGib",0,0,45,frandom(-3,3),frandom(-3,3),frandom(1,3),random(0,360),SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEVELOCITY);
+		}
+		Super.PostBeginPlay();
+	}
+}

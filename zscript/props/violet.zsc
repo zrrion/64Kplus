@@ -1,0 +1,112 @@
+class FormerViolet : actor
+{
+	Default
+	{
+	//$Category Secret
+		radius 16;
+		height 23;
+		+solid
+	}
+	States
+	{
+		Spawn:
+			VBRL A -1;
+			Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		for(int i = 0; i < 10; i++)
+		{
+			A_SpawnItemEx("FormerVioletGib",0,0,45,frandom(-6,6),frandom(-6,6),frandom(3,6),random(0,360));
+		}
+		A_SpawnItemEx("FormerVioletBow",0,0,45,frandom(-3,3),frandom(-3,3),frandom(3,6),random(0,360));
+		super.PostBeginPlay();
+	}
+}
+
+class FormerVioletGib : DemonChunk
+{
+	Default
+	{
+		+THRUACTORS
+		+MOVEWITHSECTOR
+		radius 4;
+	}
+	States
+	{
+		Spawn:
+			VBRL "#" 1;
+			Loop;
+		Death:
+			VBRL "#" -1;
+			Stop;
+	}
+	Override Void PostBeginPlay()
+	{
+		Frame = Random(2,6);
+		bXFLIP = Random(true,false);
+		Super.PostBeginPlay();
+	}
+}
+
+class FormerVioletBow : HealthBonus
+{
+	Default
+	{
+		+INVENTORY.ALWAYSPICKUP
+		Inventory.Amount 1;
+		Inventory.PickupMessage "\c[Purple]It is all you have left now...";
+	}
+	States
+	{
+		Spawn:
+			VBRL B -1;
+			Stop;
+	}
+	Override bool TryPickup(in out Actor Toucher)
+	{
+		DamageThing(self.Amount);
+		self.Amount = 0;
+		return Super.TryPickup(Toucher);
+	}
+}
+
+class Gumby : DemonChunk
+{
+	Default
+	{
+		//$Category Secret
+		+THRUACTORS
+		+MOVEWITHSECTOR
+		radius 4;
+	}
+	States
+	{
+		Spawn:
+			GMBY A 1;
+			Loop;
+		Death:
+			GMBY A -1;
+			Stop;
+	}
+}
+
+class Pokey : DemonChunk
+{
+	Default
+	{
+		//$Category Secret
+		+THRUACTORS
+		+MOVEWITHSECTOR
+		radius 4;
+	}
+	States
+	{
+		Spawn:
+			POKY A 1;
+			Loop;
+		Death:
+			POKY A -1;
+			Stop;
+	}
+}

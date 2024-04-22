@@ -1,0 +1,246 @@
+class skp_BFG9000 : skp_Weapon replaces BFG9000
+{
+	Default
+	{
+		Weapon.Slotnumber 7;
+		Weapon.SlotPriority 0;
+		
+		Weapon.SelectionOrder 2800;
+		Weapon.AmmoUse 40;
+		Weapon.AmmoGive 40;
+		Weapon.AmmoType "Cell";
+		+WEAPON.NOAUTOFIRE;
+		Inventory.PickupMessage "$GOTBFG9000";
+		Tag "$TAG_BFG9000";
+		
+		skp_Weapon.PickupMsg "$GOTBFG9000";
+		skp_Weapon.PickupOpenMsg "Unloaded the BFG.";
+		skp_Weapon.AmmoType "Cell";
+		skp_Weapon.AmmoAmount 40;
+	}
+	States
+	{
+	Ready:
+		BFHI A 1 skp_WeaponReady;
+		Loop;
+	Deselect:
+		BFHI A 1 skp_Lower;
+		Loop;
+	Select:
+		BFHI A 1 skp_Raise;
+		Loop;
+	Fire:
+		BFHI A 0 Bright A_StartSound("weapons/bfgf", CHAN_WEAPON); 
+		BFHI AAAAA 1 Bright A_OverlayOffset(1,frandom(-0.25,0.25),32+frandom(0,0.125));
+		BFHI AAAAA 1 Bright A_OverlayOffset(1,frandom(-0.5 , 0.5),32+frandom(0,0.25));
+		BFHI AAAAA 1 Bright A_OverlayOffset(1,frandom(-1   ,   1),32+frandom(0,0.5));
+		BFHI AAAAA 1 Bright A_OverlayOffset(1,frandom(-2.5 , 2.5),32+frandom(0,1));
+		
+		BFHI B 3 Bright 
+			{
+				let pspr = player.GetPSprite(PSP_WEAPON);
+				pspr.valign = PSPA_TOP;
+				pspr.halign = PSPA_CENTER;
+				A_GunFlash();
+			}
+		BFHI C 7 Bright
+		{
+			A_OverlayScale(PSP_WEAPON, 1.1);
+			A_ZoomFactor(0.99);
+		}
+		BFHI D 6 Bright A_ShootBFG();
+		BFHI A 1 Bright
+		{
+			A_ZoomFactor(0.98);
+			A_OverlayScale(PSP_WEAPON, 1.18);
+		}
+		BFHI A 1 Bright
+		{
+			A_ZoomFactor(0.985);
+			A_OverlayScale(PSP_WEAPON, 1.12);
+		}
+		BFHI A 1 Bright
+		{
+			A_ZoomFactor(0.99);
+			A_OverlayScale(PSP_WEAPON, 1.10);
+		}
+		BFHI A 1 Bright
+		{
+			A_ZoomFactor(0.995);
+			A_OverlayScale(PSP_WEAPON, 1.01);
+		}
+		BFHI AAAAAAAAAAAAAAAAAAAA 1
+		{
+			A_ZoomFactor(1);
+			A_OverlayScale(PSP_WEAPON, player.GetPSprite(PSP_WEAPON).scale.x <= 1 ? 0 : -0.01, 0, WOF_ADD);
+			A_ReFire();
+		}
+		Goto Ready;
+		Flash:
+			TNT1 A 5 A_Light(2);
+			TNT1 A 6 A_Light(Random(4,5));
+			TNT1 A 1 A_Light(3);
+			TNT1 A 1 A_Light(2);
+			TNT1 A 1 A_Light(1);
+			TNT1 A 1 A_ZoomFactor(1.0);
+		Goto LightDone;
+	Spawn:
+		WBFG A -1;
+		Stop;
+	}
+	
+	Action void A_ShootBFG()
+	{
+		A_FireProjectile("skp_BFGBall");
+	
+		let pspr = player.GetPSprite(PSP_WEAPON);
+		pspr.valign = PSPA_TOP;
+		pspr.halign = PSPA_CENTER;
+	
+		A_ZoomFactor(0.975);
+		A_OverlayOffset(1,0,32);
+		A_OverlayScale(PSP_WEAPON, 1.18);
+		A_Light(3);
+	}
+}
+
+class skp_BFGBall : BFGBall replaces BFGBall
+{
+	Default
+	{
+		DamageType "Plasma";
+		+EXTREMEDEATH
+		+ROLLSPRITE
+		+ROLLCENTER
+		Decal "BFGLightning";
+	}
+	States
+	{
+	Spawn:
+		BFS1 AABBCCDD 1 Bright
+			{
+				A_SpawnParticle("439337",1,Random(35,55),Random(1,8),0,random(1,-1)*random(0,16),random(1,-1)*random(0,16),random(1,-1)*random(0,16),0,0,0,0,0,0,0.75);
+				A_SpawnParticle("439337",1,Random(35,55),Random(1,8),0,random(1,-1)*random(0,16),random(1,-1)*random(0,16),random(1,-1)*random(0,16),0,0,0,0,0,0,0.75);
+				A_SpawnParticle("FFFF23",1,Random(35,55),Random(1,8),0,random(1,-1)*random(0,16),random(1,-1)*random(0,16),random(1,-1)*random(0,16),0,0,0,0,0,0,0.75);
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8));
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8));		
+			}
+		Loop;
+	Death:
+		TNT1 AAA 0
+			{
+				A_SetRoll(0);
+			if(Random(0,3) == 0)
+				{
+					A_SpawnItemEx("skp_BFGArc");
+				}
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8),Random(-2,2),Random(-2,2),Random(-2,2));
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8),Random(-2,2),Random(-2,2),Random(-2,2));
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8),Random(-2,2),Random(-2,2),Random(-2,2));
+				A_SpawnItemEx("skp_BFGProjectileTrail",Random(8,-8),Random(8,-8),Random(8,-8),Random(-2,2),Random(-2,2),Random(-2,2));
+			}
+		Goto super::death;
+	}
+	Override void PostBeginPlay()
+	{
+		if(CallACS("CVarCheck",2))
+		{
+			A_SetRoll(Random(0,359));
+		}
+		Super.PostBeginPLay();
+	}
+	Override void Tick()
+	{
+		if(level.totaltime % 2 == 0 && frame < 3 && Random(0,1) == 0)
+		{
+			A_SpawnItemEx("skp_BFGArc");
+		}
+		super.Tick();
+	}
+}
+
+class skp_BFGProjectileTrail : actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOGRAVITY
+		+NOBLOCKMAP
+		+BRIGHT
+		+ROLLSPRITE
+		+ROLLCENTER
+		Renderstyle "ADD";
+		alpha 0.5;
+	}
+States
+	{
+	Spawn:
+		TPFX ABCDEFGH 2
+			{
+				if(CallACS("CVarCheck",2))
+				{
+					A_SetRoll(Random(0,359));
+					A_SetTics(Random(2,4));
+				}
+			}
+		TPFX IJ 4 A_SetRoll(0);
+		Stop;
+	}
+}
+
+class skp_BFGArc : actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOGRAVITY
+		+NOBLOCKMAP
+		+ROLLSPRITE
+		+WALLSPRITE
+		+BRIGHT
+		Renderstyle "ADD";
+	}
+	States
+	{
+	Spawn:
+		BFS0 "#" 2;
+		BFS0 "#" 1 A_Fadeout(0.2);
+		Wait;
+	}
+	Override void PostBeginPlay()
+	{
+		A_SetRoll(fRandom(0,359));
+		A_SetAngle(fRandom(0,359));
+		A_SetScale(fRandom(0.9,1.1),fRandom(0.5,1.1));
+		frame = random(0,3);
+		super.PostBeginPlay();
+	}
+}
+
+class skp_BFGExtra : BFGExtra replaces BFGExtra
+{
+	Default
+	{
+		+EXTREMEDEATH
+		+ROLLSPRITE
+		+ROLLCENTER
+	}
+	States
+	{
+	Spawn:
+		BFE2 ABCD 8 Bright
+			{
+				if(CallACS("CVarCheck",2))
+				{
+					A_SetRoll(Random(0,359));
+				}
+			}
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(Random(0,1) == 0)
+			A_SpawnItemEx("skp_BFGArc");
+		super.PostBeginPlay();
+	}
+}

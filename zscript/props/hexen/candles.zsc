@@ -1,0 +1,41 @@
+class HexenCandleA : Actor
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HCDL A -1;
+		Stop;
+	}
+}
+
+class HexenCandleB : HexenCandleA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HCDL B -1;
+		Stop;
+	}
+}
+
+class HexenCandleC : HexenCandleA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HCDL C -1;
+		Stop;
+	}
+}

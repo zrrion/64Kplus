@@ -1,0 +1,32 @@
+class HexenSteinA : Actor
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HSTN A -1;
+		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = Random(TRUE, FALSE);
+		Super.PostBeginPlay();
+	}
+}
+
+class HexenSteinB : HexenSteinA
+{
+	Default
+	{
+	//$Category Hexen
+	}
+	States
+	{
+	Spawn:
+		HSTN B -1;
+		Stop;
+	}
+}
