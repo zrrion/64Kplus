@@ -12,7 +12,8 @@ class Cacomera : Cacodemon
 		Speed 8;
 		PainChance 128;
 		Monster;
-		+FLOAT +NOGRAVITY
+		+FLOAT;
+		+NOGRAVITY;
 		SeeSound "caco/sight";
 		PainSound "caco/pain";
 		DeathSound "caco/death";
@@ -54,7 +55,7 @@ class Cacomera : Cacodemon
 		int mallcop = 0;
 
 		if(TeleportTarget is "LostSoul" && CheckTPDest(TeleportTarget.pos))
-			blart = TeleportTarget.pos
+			blart = TeleportTarget.pos;
 		else
 		{
 		[paul, blart] = GetTPDest(TeleportTarget, CheckGround);
@@ -83,6 +84,11 @@ class Cacomera : Cacodemon
 	}
 	Override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
 	{
+		if(inflictor is "LostSoul")//they just don't like them
+		{
+			target = inflictor;
+			A_Pain();
+		}
 		if(inflictor is "ExplosiveBarrel" || inflictor is "Rocket" || source is "Archvile"|| source is "BaronOfHell" || mod == "Crush")//some conditions make them try to teleport right away, fighting an archvile ot a baron, getting hit by an explosion, or getting crushed will do it.
 			DoTeleport();
 		return super.DamageMobj(inflictor, source, damage, mod, flags, angle);
@@ -97,6 +103,12 @@ class Cacomera : Cacodemon
 		CORB AAAA 3 A_Chase(NULL, "Missile", CHF_DONTIDLE);
 		Loop;
 	Missile:
+		CORB B 0
+		{
+			if(target is "LostSoul" && DoTeleport())
+				SetStateLabel("See");
+			User_TeleportTimer += 20;
+		}
 		CORB B 5 A_FaceTarget();
 		CORB B 5 BRIGHT A_SpawnProjectile("CacomeraBall");
 		Goto See;
