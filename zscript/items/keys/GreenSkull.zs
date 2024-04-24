@@ -156,6 +156,9 @@ class ButtonAction : SwitchableDecoration
 	Override void Activate(Actor activator)
 	{
 		A_CallSpecial(oldspecial, args[0], args[1], args[2], args[3], args[4]);
+		if(SwitchBase(activator) && SwitchBase(activator).user_NoRepeat)
+			self.destroy();
+
 	}
 	Override void Deactivate(Actor activator)
 	{
@@ -166,7 +169,7 @@ class ButtonAction : SwitchableDecoration
 		spawn:
 		activate:
 		deactivate:
-			SPGE A 1;
+			ACTN A 1;
 			wait;
 	}
 }
