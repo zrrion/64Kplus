@@ -12,6 +12,7 @@ version "4.5"
 #include "zscript/doors/gate.zsc"
 
 #include "zscript/props/holo floor/holo floor.zs"
+#include "zscript/props/plants/wolf bushes.zsc"
 
 #include "zscript/checkpoints/savepoint.zsc"
 #include "zscript/checkpoints/checkpoint.zsc"
