@@ -45,16 +45,16 @@ $playersound	player	other	*HardLand	dsoof
 $playersound	player	other	*SoftLand	DSLAND
 $playersound	player	other	*SoftStep	DSLANDS
 
-$pitchset chainguy/sight 0.95
-$pitchset chainguy/pain 0.95
+$pitchset chainguy/sight 0.98
+$pitchset chainguy/pain 0.98
 $pitchset chainguy/death 0.9
-$pitchset chainguy/active 0.95
-$pitchset chainguy/attack 0.95
+$pitchset chainguy/active 0.98
+$pitchset chainguy/attack 0.98
 
-$pitchset baron/sight 0.95
-$pitchset baron/pain 0.95
+$pitchset baron/sight 0.98
+$pitchset baron/pain 0.98
 $pitchset baron/death 0.95
-$pitchset baron/active 0.95
+$pitchset baron/active 0.98
 
-$pitchset fatso/sight 0.95
-$pitchset fatso/active 0.95
+$pitchset fatso/sight 0.98
+$pitchset fatso/active 0.98
