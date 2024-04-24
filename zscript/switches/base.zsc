@@ -37,6 +37,7 @@ class Locksmith : Object
 class SwitchBase : SwitchableDecoration abstract
 {
 	bool user_NoRepeat;
+	bool user_WaitToReactivate;
 	int user_MarkerType;
 	int OldSpecial;
 	bool Flip;
@@ -53,6 +54,7 @@ class SwitchBase : SwitchableDecoration abstract
 		height 22;
 		radius 3.45;
 		Activation THINGSPEC_Switch;
+		ActiveSound "switches/normbutn";
 	}
 	Override void BeginPlay()
 	{
@@ -67,6 +69,7 @@ class SwitchBase : SwitchableDecoration abstract
 		special = 0;
 
 		PlaceMarker();
+		super.Postbeginplay();
 	}
 
 	void PlaceMarker()
@@ -84,10 +87,10 @@ class SwitchBase : SwitchableDecoration abstract
 	
 	Override void Activate(Actor activator)
 	{
-		A_StartSound("switches/normbutn",CHAN_AUTO);
+		A_StartSound(ActiveSound,CHAN_AUTO);
 
 		bool haskey = user_MarkerType ? activator.CountInv(Key.GetType(user_MarkerType)) > 0 : true;
-		bool doflip = haskey ? activator.A_CallSpecial(OldSpecial, args[0], args[1], args[2], args[3], args[4]) : false;
+		bool doflip = haskey ? DoCallSpecial(activator) : false;
 
 		if(doflip && user_NoRepeat)
 		{
@@ -115,14 +118,25 @@ class SwitchBase : SwitchableDecoration abstract
 	{
 		Activate(activator);
 	}
+	virtual bool DoCallSpecial(Actor activator)
+	{
+		return activator.A_CallSpecial(OldSpecial, args[0], args[1], args[2], args[3], args[4]);
+	}
+	virtual void DisableReactivation()
+	{
+		if(user_WaitToReactivate)
+			bUSESPECIAL = FALSE;
+	}
+	virtual void EnableReactivation()
+	{
+		Flip = Flip ? FALSE : TRUE;
+		bUSESPECIAL = TRUE;
+	}
 	States
 	{
 	InactiveB:
-		WLLS B 70;
-		TNT1 A 0
-		{
-			Flip = Flip ? FALSE : TRUE;
-		}
+		WLLS B 70 DisableReactivation();
+		TNT1 A 0 EnableReactivation();
 	Spawn:
 	InactiveA:
 		WLLS A 1;
@@ -150,5 +164,77 @@ class KeyMarker : MapMarker
 		PKMM A 0;
 		GSMM A 0;
 		Goto Spawn;
+	}
+}
+
+class ProximitySwitch : SwitchBase
+{
+	default
+	{
+		//$Category Switches
+		//$Arg0 "Radius"
+        //$Arg0Type 23
+        //$Arg0Default 128
+
+        //$Arg1 "Height"
+        //$Arg1Type 24
+        //$Arg1Default 64
+
+		//$Arg2 "Action"
+        //$Arg2Type 14
+        //$Arg2Default 0
+		-USESPECIAL;
+		-NOCLIP;
+		-SOLID;
+		-FIXMAPTHINGPOS;
+		+INVISIBLE;
+		+SPECIAL;
+		height 128;
+		radius 64;
+		ActiveSound "";
+	}
+	Override void Postbeginplay()
+	{
+		int newRad = args[0] ? args[0] : radius;
+		int newHei = args[1] ? args[1] : height;
+		A_SetSize(newRad, newHei, false);
+
+		Flip = FALSE;
+		user_WaitToReactivate = TRUE;
+		OldSpecial = special;
+		special = 0;
+		SwitchableDecoration.Postbeginplay();
+	}
+	Override void Touch(Actor toucher)
+	{
+		if(toucher is "PlayerPawn")
+			Activate(toucher);
+	}
+	Override void DisableReactivation()
+	{
+		super.DisableReactivation();
+		bSPECIAL = bUSESPECIAL;
+	}
+	Override void EnableReactivation()
+	{
+		super.EnableReactivation();
+		bSPECIAL = bUSESPECIAL;
+	}
+	Override bool DoCallSpecial(Actor activator)
+	{
+		if(args[2])
+		{
+			bool Result = activator.A_CallSpecial(130, args[2]);
+			if(user_NoRepeat)
+				self.destroy();//we can't do this with normal switches because they remain visible, fine to do here though
+			return Result;
+		}
+		return false;
+	}
+	states
+	{
+		Spawn:
+			PROX A 1;
+			wait;
 	}
 }
