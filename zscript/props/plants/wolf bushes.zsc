@@ -1,0 +1,35 @@
+class WolfBushSmall : Actor
+{
+	default
+	{
+		-SOLID;
+		radius 32;
+		height 24;
+	}
+	Override void PostBeginPlay()
+	{
+		bXFLIP = random(0,1);
+		super.PostBeginPlay();
+	}
+	states
+	{
+		Spawn:
+			WBSH A -1;
+			stop;
+	}
+}
+
+class WolfBushLarge : WolfBushSmall
+{
+	default
+	{
+		radius 45;
+		height 32;
+	}
+	states
+	{
+		Spawn:
+			WBSH B -1;
+			stop;
+	}
+}
