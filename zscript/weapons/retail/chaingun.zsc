@@ -11,11 +11,6 @@ class skp_Chaingun : skp_Weapon replaces Chaingun
 		Inventory.PickupMessage "$GOTCHAINGUN";
 		Obituary "$OB_MPCHAINGUN";
 		Tag "$TAG_CHAINGUN";
-		
-		skp_Weapon.PickupMsg "$GOTCHAINGUN";
-		skp_Weapon.PickupOpenMsg "Unloaded the chaingun.";
-		skp_Weapon.AmmoType "Clip";
-		skp_Weapon.AmmoAmount 20;
 	}
 	States
 	{

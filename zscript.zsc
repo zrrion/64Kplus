@@ -88,6 +88,7 @@ version "4.5"
 #include "zscript/items/keys/SingleUse.zs"
 #include "zscript/items/keys/PurpleCard.zs"
 #include "zscript/items/keys/GreenSkull.zs"
+#include "zscript/items/Thrifty.zsc"
 
 //everything that replaces something in the base game goes here:
 //starting with items you can pick up

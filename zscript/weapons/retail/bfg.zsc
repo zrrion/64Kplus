@@ -12,11 +12,6 @@ class skp_BFG9000 : skp_Weapon replaces BFG9000
 		+WEAPON.NOAUTOFIRE;
 		Inventory.PickupMessage "$GOTBFG9000";
 		Tag "$TAG_BFG9000";
-		
-		skp_Weapon.PickupMsg "$GOTBFG9000";
-		skp_Weapon.PickupOpenMsg "Unloaded the BFG.";
-		skp_Weapon.AmmoType "Cell";
-		skp_Weapon.AmmoAmount 40;
 	}
 	States
 	{

@@ -11,11 +11,6 @@ class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
 		+WEAPON.NOAUTOFIRE
 		Inventory.PickupMessage "$GOTLAUNCHER";
 		Tag "$TAG_ROCKETLAUNCHER";
-		
-		skp_Weapon.PickupMsg "$GOTLAUNCHER";
-		skp_Weapon.PickupOpenMsg "Unloaded the rocket launcher.";
-		skp_Weapon.AmmoType "RocketAmmo";
-		skp_Weapon.AmmoAmount 2;
 	}
 	States
 	{

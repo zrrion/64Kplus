@@ -12,11 +12,6 @@ class skp_Pistol : skp_Weapon replaces Pistol
 		+WEAPON.WIMPY_WEAPON
 		Inventory.Pickupmessage "$PICKUP_PISTOL_DROPPED";
 		Tag "$TAG_PISTOL";
-		
-		skp_Weapon.PickupMsg "$PICKUP_PISTOL_DROPPED";
-		skp_Weapon.PickupOpenMsg "Unloaded the pistol.";
-		skp_Weapon.AmmoType "Clip";
-		skp_Weapon.AmmoAmount 20;
 	}
 	States
 	{

@@ -12,12 +12,7 @@ class skp_Chainsaw : skp_Weapon replaces Chainsaw
 		
 		Weapon.Slotnumber 1;
 		Weapon.AmmoGive2 5;
-		+WEAPON.ALT_AMMO_OPTIONAL
-		
-		skp_Weapon.PickupMsg "$GOTCHAINSAW";
-		skp_Weapon.PickupOpenMsg "Unloaded the chainsaw. Somehow.";
-		skp_Weapon.AmmoType "SKP_SawFuel";
-		skp_Weapon.AmmoAmount 5;
+		+WEAPON.ALT_AMMO_OPTIONAL;
 	}
 	States
 	{

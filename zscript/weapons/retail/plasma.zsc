@@ -10,11 +10,6 @@ class skp_PlasmaRifle  : skp_Weapon replaces PlasmaRifle
 		Weapon.AmmoType "Cell";
 		Inventory.PickupMessage "$GOTPLASMA";
 		Tag "$TAG_PLASMARIFLE";
-		
-		skp_Weapon.PickupMsg "$GOTPLASMA";
-		skp_Weapon.PickupOpenMsg "Unloaded the plasma rifle.";
-		skp_Weapon.AmmoType "Cell";
-		skp_Weapon.AmmoAmount 40;
 	}
 	States
 	{

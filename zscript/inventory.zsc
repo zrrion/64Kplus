@@ -4,14 +4,7 @@ class CustomCustomInventory : CustomInventory//Actor
 	
 	override string PickupMessage()
     {
-		if(false)
-		{
-			return PickupMessage();
-		}
-		else
-		{
-			return PickupMsg;
-		}
+		return PickupMsg;
     }
 	
 	action void A_SetPickupMessage(string Message)

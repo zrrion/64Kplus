@@ -1,0 +1,244 @@
+
+
+extend class skp_DoomPlayer
+{
+	override bool CanReceive(Inventory item)
+	{
+		bool SuperRet = super.CanReceive(item);
+		if(item.GetAge() <= 1)
+		{
+			return SuperRet;
+		}
+		//ordered like this based on what I expect will get picked up most often
+		if(item.bALWAYSPICKUP || TryReceiveAmmo(item) || TryReceiveHealth(item) || TryReceiveArmor(item) || TryReceiveWeapon(item))
+		{
+			if(item.bNOSKIN)
+			{
+				item.bNOSKIN = false;// it can have its skin back as a treat
+				return false;
+			}
+			if(SuperRet)
+			{
+				string SayTheLine = StringTable.Localize(item.PickupMessage());
+				string Ammo1;
+				string Ammo2;
+				if(Weapon(item))
+				{
+					let YerGun = Weapon(item);
+					SayTheLine = StringTable.Localize(YerGun.PickupMessage());
+					if(item.bSUMMONEDMONSTER)
+						SayTheLine = "You unloaded a weapon.";
+					if(YerGun.AmmoGive1)
+						Ammo1 = string.Format(" (+%i)", YerGun.AmmoGive1);
+					if(YerGun.AmmoGive2)
+						Ammo2 = string.Format(" (+%i)", YerGun.AmmoGive2);
+				}
+				else if(Ammo(item))//the flags do whatever I tell them to do okay
+				{
+					if(item.bSUMMONEDMONSTER)
+						SayTheLine = "You opened a box of ammo.";
+					Ammo1 = string.Format(" (+%i)", item.Amount);
+				}
+				else if(Health(item))
+				{
+					if(item.bSUMMONEDMONSTER)
+						SayTheLine = "You opened an aid kit.";
+					Ammo1 = string.Format(" (+%i)", item.Amount);
+				}
+				else if(BasicArmorBonus(item))
+					Ammo1 = string.Format(" (+%i)", BasicArmorBonus(item).SaveAmount);
+				else if(BasicArmorPickup(item))
+					Ammo1 = string.Format(" (+%i)", BasicArmorPickup(item).SaveAmount);
+				SayTheLine = string.Format("%s\cr%s%s\cl", SayTheLine, Ammo1, Ammo2);
+
+				item.PrintPickupMessage(true, SayTheLine);
+				item.PlayPickupSound(self);
+				self.player.bonuscount = 6;
+				item.bQUIET = true;
+				return true;
+			}
+		}
+		return SuperRet;
+	}
+
+	/*override void HasReceived(Inventory item)
+	{
+		if(!item)
+			return;
+		
+		super.HasReceived(item);
+	}*/
+	bool TryReceiveAmmo(Inventory item)
+	{
+		let Pickup = Ammo(item);
+		if(!Pickup)
+			return false;
+		
+		let SmallPickup = Pickup.GetParentAmmo();
+		let Holding = FindInventory(SmallPickup);
+		if(!Holding)
+			return true;
+		int HoldingAmount = Holding.Amount;
+		int HoldingMax = Holding ? Holding.MaxAmount : GetDefaultByType(Holding.GetClass()).MaxAmount;
+		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
+		int PickupAmount = Pickup.bIgnoreSkill || Pickup.bDROPPED ? GetDefaultByType(Holding.GetClass()).Amount : GetDefaultByType(Holding.GetClass()).Amount*G_SkillPropertyFloat(SKILLP_AmmoFactor);
+		
+
+		//with the setup done lets get to the real stuff
+
+		if(HoldingAmount >= HoldingMax)//we do not need the ammo
+		{
+			item.bNOSKIN;
+			return false;
+		}
+		if(HoldingNeed >= PickupAmount)//we can pick up the entire thing
+			return true;
+		if(!(Pickup is SmallPickup))//this is a big pickup and we can't pick the entir ething up but we still need ammo
+		{
+			int SmallPickupAmount = GetDefaultByType(SmallPickup).Amount;//the default amount the small pickup gets you
+			item.amount -= HoldingNeed;//remove what we need from the pool
+			item.bSUMMONEDMONSTER = true;
+			while(item.amount > SmallPickupAmount)
+			{
+				A_DropItem(SmallPickup, SmallPickupAmount);//drop a small pickup
+				item.amount -= SmallPickupAmount;//remove the small pickup amount from the pool
+			}
+			if(item.amount)//if there is less than a small pickup left then we drop a small pickup with what's left
+				A_DropItem(SmallPickup, item.amount);
+			item.amount = HoldingNeed;//we set the amount back to what we need
+			return true;
+		}
+		return false;
+	}
+	bool TryReceiveHealth(Inventory item)
+	{
+		let Pickup = Health(item);
+		if(!Pickup)
+			return false;
+		Class<Actor> SmallPickup = 'MiniStimpack';
+		int HoldingAmount = self.Health;
+		int HoldingMax = self.GetMaxHealth(true);
+		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
+		//with the setup done lets get to the real stuff
+		
+		if(HoldingAmount >= HoldingMax)//we do not need the health
+		{
+			item.bNOSKIN;
+			return false;
+		}
+		if(HoldingNeed >= Pickup.Amount)//we can pick up the entire thing
+			return true;
+		if(!(Pickup is SmallPickup))
+		{
+			int SmallPickupAmount = inventory(GetDefaultByType(SmallPickup)).Amount;//the default amount the small pickup gets you
+			item.amount -= HoldingNeed;//remove what we need from the pool
+			item.bSUMMONEDMONSTER = true;
+			while(item.amount > SmallPickupAmount)
+			{
+				A_DropItem(SmallPickup, SmallPickupAmount);//drop a small pickup
+				item.amount -= SmallPickupAmount;//remove the small pickup amount from the pool
+			}
+			if(item.amount)//if there is less than a small pickup left then we drop a small pickup with what's left
+				A_DropItem(SmallPickup, item.amount);
+			item.amount = HoldingNeed;//we set the amount back to what we need
+			return true;
+		}
+		return false;
+	}
+	bool TryReceiveArmor(Inventory item)
+	{
+		if(item is "BasicArmorBonus" || item is "BasicArmorPickup")
+		{
+			let armor = BasicArmor(FindInventory("BasicArmor"));
+			if(!CountInv("BasicArmor"))
+				return true;
+			if(BasicArmorPickup(item))
+			{
+				if (armor && armor.Amount >= BasicArmorPickup(item).SaveAmount + armor.BonusCount)
+				{
+					return false;
+				}
+			}
+			if(BasicArmorBonus(item))
+			{
+				if (armor && armor.Amount + CountInv("BasicArmor") > BasicArmorBonus(item).MaxSaveAmount)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	bool TryReceiveWeapon(Inventory item)
+	{
+		let Pickup = Weapon(item);
+		bool NeedGun;
+		bool Need1;
+		bool Need2;
+		if(!Pickup)
+			return false;
+		if(Pickup.AmmoGive1 && Pickup.AmmoType1)
+		{
+			let Holding = FindInventory(Pickup.AmmoType1);
+			if(Holding)
+			{
+				int HoldingAmount = Holding ? Holding.Amount : 0;
+				int HoldingMax = Holding ? Holding.MaxAmount : GetDefaultByType(Holding.GetClass()).MaxAmount;
+				int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount;
+				if(HoldingNeed)
+				{
+					Need1 = TRUE;
+					if(HoldingNeed < Pickup.AmmoGive1)
+					{
+						item.bSUMMONEDMONSTER = true;
+						A_DropItem(Pickup.AmmoType1, Pickup.AmmoGive1 - HoldingNeed);//drop what we don't need
+						Pickup.AmmoGive1 = HoldingNeed;
+					}
+				}
+			}
+			else
+				Need1 = TRUE;
+		}
+		if(Pickup.AmmoGive2 && Pickup.AmmoType2)
+		{
+			let Holding = FindInventory(Pickup.AmmoType2);
+			if(Holding)
+			{
+				int HoldingAmount = Holding ? Holding.Amount : 0;
+				int HoldingMax = Holding ? Holding.MaxAmount : GetDefaultByType(Holding.GetClass()).MaxAmount;
+				int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount;
+				if(HoldingNeed)
+				{
+					Need2 = TRUE;
+					if(HoldingNeed < Pickup.AmmoGive2)
+					{
+						item.bSUMMONEDMONSTER = true;
+						A_DropItem(Pickup.AmmoType2, Pickup.AmmoGive2 - HoldingNeed);//drop what we don't need
+						Pickup.AmmoGive2 = HoldingNeed;
+					}
+				}
+			}
+			else
+				Need2 = TRUE;
+		}
+		if(!FindInventory(Pickup.GetClass()))
+			NeedGun = TRUE;
+		if(NeedGun || Need1 || Need2)
+		{
+			if(!Need1 && Pickup.AmmoGive1)
+			{
+				item.bSUMMONEDMONSTER = true;
+				A_DropItem(Pickup.AmmoType1, Pickup.AmmoGive1);//drop what we don't need
+				Pickup.AmmoGive1 = 0;
+			}
+			if(!Need2 && Pickup.AmmoGive2)
+			{
+				item.bSUMMONEDMONSTER = true;
+				A_DropItem(Pickup.AmmoType2, Pickup.AmmoGive2);//drop what we don't need
+				Pickup.AmmoGive2 = 0;
+			}
+		}
+		return NeedGun || Need1 || Need2;
+	}
+}

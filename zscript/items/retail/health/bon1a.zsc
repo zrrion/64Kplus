@@ -1,4 +1,4 @@
-class SKPHealthBonus : HealthBonus replaces HealthBonus
+class skp_HealthBonus : HealthBonus replaces HealthBonus
 {
 	
 	mixin BerserkHoover;
@@ -24,7 +24,7 @@ class SKPHealthBonus : HealthBonus replaces HealthBonus
 			bWALLSPRITE = FALSE;
 		Super.Tick();
 	}
-	Override bool TryPickup (in out Actor toucher)
+	/*Override bool TryPickup (in out Actor toucher)
 	{
 		int ToucherAmount = Toucher.Health;
 		int ToucherMax = Toucher.GetMaxHealth(true);
@@ -45,9 +45,5 @@ class SKPHealthBonus : HealthBonus replaces HealthBonus
 			}
 		}
 		Return result;
-	}
-	/*Override String PickupMessage()
-	{
-		return string.Format("%s (+%i)", StringTable.Localize(super.PickupMessage()), amount);
 	}*/
 }

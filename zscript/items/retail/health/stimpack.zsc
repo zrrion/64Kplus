@@ -1,18 +1,24 @@
-class ThriftyStimpack : ThriftyHealth replaces Stimpack
+class skp_Stimpack : Stimpack replaces Stimpack
 {
-	Default
+	Override void PostBeginPlay()
 	{
-		Inventory.Amount 10;
-		ThriftyHealth.PickupMsg "$GOTSTIM";
-		ThriftyHealth.PickupOpenMsg "You opened a stimpack.";
-		
-		ThriftyHealth.BigPickup true;
-		
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
 	}
-	States
+	
+	Override void Tick()
 	{
-	Spawn:
-		STIM A -1;
-		Stop;
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }

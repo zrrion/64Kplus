@@ -1,25 +1,9 @@
 class skp_Weapon : Weapon
 {
-	String PickupMsg;
-	String PickupOpenMsg;
-	property PickupMsg: PickupMsg;
-	property PickupOpenMsg: PickupOpenMsg;
-	
-	Class<Ammo> AmmoType;
-	property AmmoType: AmmoType;
-	
-	int AmmoAmount;
-	property AmmoAmount: AmmoAmount;
-	
 	int AmountHolder;
 	int ReadySprite;
 	Default
 	{
-	
-		skp_Weapon.PickupMsg "Picked up a weapon.";//pickup message for when you need all the ammo in the weapon
-		skp_Weapon.PickupOpenMsg "Unloaded a weapon.";//pickup message for when you need some of the ammo in the weapon
-		skp_Weapon.AmmoType "Clip";//ammo to drop when unloaded
-		skp_Weapon.AmmoAmount 0;//how many you get
 		Weapon.Kickback 100;
 		
 		Weapon.AmmoUse2 1;
@@ -208,62 +192,6 @@ class skp_Weapon : Weapon
 		self.angle += bWALLSPRITE ? fRandom(3.0,4.0) : 0;
 		Super.Tick();
 	}
-	
-	override bool TryPickup (in out Actor toucher)
-	{
-		/*State ReadyState = FindState('Ready');
-		if (ReadyState != NULL && ReadyState.ValidateSpriteFrame())
-		{
-			let ToucherAmmo = Toucher.FindInventory(self.AmmoType);
-			int ToucherAmount = AmmoAmount;
-			int ToucherMax = ToucherAmmo ? ToucherAmmo.MaxAmount : GetDefaultByType(self.AmmoType).MaxAmount;
-			int ToucherNeed = Abs(ToucherAmount - ToucherMax);
-			int AdjustedAmount = bIgnoreSkill ? self.AmmoAmount : self.AmmoAmount*G_SkillPropertyFloat(SKILLP_AmmoFactor);
-			int OpenAmount = (AdjustedAmount % ToucherAmount == 0) ? ToucherAmount : AdjustedAmount % ToucherAmount;
-			
-			
-			if(AdjustedAmount + ToucherAmount <= ToucherMax)//this checks to see if we can pick up the entire thing
-			{
-				return Super.TryPickup(Toucher);//if it is valid for pickup call the OG funtion, it is less strict so it should always pick up something if it gets called
-			}
-			else if(ToucherAmount < ToucherMax)//do we need ammo at all
-			{
-				PickupMsg = self.PickupOpenMsg;//we are opening the box
-				Toucher.A_GiveInventory(self.AmmoType,ToucherNeed);
-				AmountHolder = ToucherNeed;
-				ToucherAmount -= ToucherNeed;//remove the amount of the spawned pickup from the amount
-				int SmallPickupAmount = GetDefaultByType(self.AmmoType).Amount;
-				
-				While(ToucherAmount >= SmallPickupAmount)//so long as we have enough for a full pickup drop a full pickup
-				{
-					A_DropItem(self.AmmoType, SmallPickupAmount);//drop a pickup with the normal amount
-					ToucherAmount -= SmallPickupAmount;//remove that amount from the total
-				}
-				if(ToucherAmount > 0)//if we get here and still have amount it means we have less than a full smal pickup so we just drop a partial
-				{
-					A_DropItem(self.AmmoType, ToucherAmount);
-					ToucherAmount *= 0;
-					//self.AmmoGive *= 0;
-					AmmoGive1 *= 0;
-					AmmoGive2 *= 0;
-				}
-				self.bALWAYSPICKUP = true;
-				return Super.TryPickup(Toucher);
-			}
-		}
-		return false;*/
-		return Super.TryPickup(Toucher);
-	}
-	
-	/*Override String PickupMessage ()
-	{
-		if(amount > 0)
-			return string.Format("%s", StringTable.Localize(self.PickupMsg));
-		else if(AmountHolder > 0)
-			return string.Format("%s", StringTable.Localize(self.PickupMsg));
-		else
-			return self.PickupMsg;
-	}*/
 }
 
 Class skp_BulletPuff : BulletPuff replaces BulletPuff

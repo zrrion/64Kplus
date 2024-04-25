@@ -27,8 +27,4 @@ class SKPBlueArmor : BlueArmor replaces BlueArmor
 			bWALLSPRITE = FALSE;
 		Super.Tick();
 	}
-	/*Override String PickupMessage()
-	{
-		return string.Format("%s (+%i)", StringTable.Localize(super.PickupMessage()), SaveAmount);
-	}*/
 }

@@ -1,14 +1,35 @@
-class ThriftyMiniStimpack : ThriftyHealth//I know it isn't retail but it is needed by the retail stuff so whatever
+class MiniStimpack : Health//I know it isn't retail but it is needed by the retail stuff so whatever
 {
 	Default
 	{
 		Inventory.Amount 5;
-		ThriftyHealth.PickupMsg "You picked up a small stimpack.";
+		Inventory.PickupMessage "You picked up a small aid kit.";
 	}
 	States
 	{
 	Spawn:
 		ZTIM A -1;
 		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }

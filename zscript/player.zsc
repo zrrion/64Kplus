@@ -16,7 +16,6 @@ class skp_DoomPlayer : DoomPlayer
 	Player.StartItem "skp_Pistol";
 	Player.StartItem "skp_Fist";
 	Player.StartItem "Clip", 50;
-	Player.StartItem "PickupMsgHandler", 1;
 	//Player.ForwardMove 1.0;
 	//Player.SideMove 1.0;
 	}

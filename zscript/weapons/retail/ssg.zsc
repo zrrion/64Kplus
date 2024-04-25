@@ -11,11 +11,6 @@ class skp_SuperShotgun : skp_Weapon replaces SuperShotgun
 		Inventory.PickupMessage "$GOTSHOTGUN2";
 		Obituary "$OB_MPSSHOTGUN";
 		Tag "$TAG_SUPERSHOTGUN";
-		
-		skp_Weapon.PickupMsg "$GOTSHOTGUN2";
-		skp_Weapon.PickupOpenMsg "Unloaded the super shotgun.";
-		skp_Weapon.AmmoType "Shell";
-		skp_Weapon.AmmoAmount 8;
 	}
 	States
 	{

@@ -1,11 +1,8 @@
-class ThriftyShell : ThriftyAmmo replaces Shell
+class skp_Shell : Shell replaces Shell
 {
-	Default
+	default
 	{
-		Inventory.Amount 4;
-		ThriftyAmmo.AmmoType "Shell";
-		ThriftyAmmo.SmallPickup "ThriftyShell";
-		ThriftyAmmo.PickupMsg "$GOTSHELLS";
+		Inventory.PickupMessage "Picked up some shotgun shells.";
 	}
 	States
 	{
@@ -16,26 +13,55 @@ class ThriftyShell : ThriftyAmmo replaces Shell
 	}
 	Override void PostBeginPlay()
 	{
-		Super.PostBeginPlay();
 		Frame = random(0,8);
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+		Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }
 
-class ThriftyShellBox : ThriftyAmmo replaces ShellBox
+class skp_ShellBox : ShellBox replaces ShellBox
 {
-	Default
-	{
-		Inventory.Amount 20;
-		ThriftyAmmo.AmmoType "Shell";
-		ThriftyAmmo.SmallPickup "ThriftyShell";
-		ThriftyAmmo.BigPickup TRUE;
-		ThriftyAmmo.PickupMsg "$GOTSHELLBOX";
-		ThriftyAmmo.PickupOpenMsg "You opened a box of shotgun shells.";
-	}
 	States
 	{
 	Spawn:
 		SBOX A -1;
 		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }

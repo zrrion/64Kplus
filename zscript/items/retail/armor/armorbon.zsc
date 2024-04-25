@@ -33,7 +33,7 @@
 		Super.Tick();
 	}
 	
-	Override bool TryPickup (in out Actor toucher)
+	/*Override bool TryPickup (in out Actor toucher)
 	{
 		let T = skp_DoomPlayer(toucher);
 		let Armor = BasicArmor(T.FindInventory("BasicArmor"));
@@ -55,9 +55,5 @@
 			}
 		}
 		Return result;
-	}
-	/*Override String PickupMessage()
-	{
-		return string.Format("%s (+%i)", StringTable.Localize(super.PickupMessage()), amount);
 	}*/
 }

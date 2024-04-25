@@ -1,35 +1,61 @@
-class ThriftyClip : ThriftyAmmo replaces Clip
+class skp_Clip : Clip replaces Clip
 {
-	Default
-	{
-		Inventory.Amount 10;
-		ThriftyAmmo.AmmoType "Clip";
-		ThriftyAmmo.SmallPickup "ThriftyClip";
-		ThriftyAmmo.PickupMsg "$GOTCLIP";
-	}
 	States
 	{
 	Spawn:
 		CLIP A -1;
 		Stop;
 	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
+	}
 }
 
-class ThriftyClipBox : ThriftyAmmo replaces ClipBox
+class skp_ClipBox : ClipBox replaces ClipBox
 {
-	Default
-	{
-		Inventory.Amount 50;
-		ThriftyAmmo.AmmoType "Clip";
-		ThriftyAmmo.SmallPickup "ThriftyClip";
-		ThriftyAmmo.BigPickup TRUE;
-		ThriftyAmmo.PickupMsg "$GOTCLIPBOX";
-		ThriftyAmmo.PickupOpenMsg "You opened a box of bullets";
-	}
 	States
 	{
 	Spawn:
 		AMMO A -1;
 		Stop;
+	}
+	Override void PostBeginPlay()
+	{
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
+	}
+	
+	Override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }

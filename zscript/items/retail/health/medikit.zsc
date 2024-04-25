@@ -1,18 +1,24 @@
-class ThriftyMedikit : ThriftyHealth replaces Medikit 
+class skp_Medikit : Medikit replaces Medikit 
 {
-	Default
+	Override void PostBeginPlay()
 	{
-		Inventory.Amount 25;
-		ThriftyHealth.PickupMsg "$GOTMEDIKIT";
-		ThriftyHealth.PickupOpenMsg "You opened a medikit.";
-		
-		ThriftyHealth.BigPickup true;
-		
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+			bWALLSPRITE = TRUE;
+		A_SetAngle(Random(0,360));
+	Super.PostBeginPlay();
 	}
-	States
+	
+	Override void Tick()
 	{
-	Spawn:
-		MEDI A -1;
-		Stop;
+		if(isFrozen())
+			return;
+		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		{
+			bWALLSPRITE = TRUE;
+			self.angle += fRandom(3.0,4.0);
+		}
+		else
+			bWALLSPRITE = FALSE;
+		Super.Tick();
 	}
 }

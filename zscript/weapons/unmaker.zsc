@@ -14,11 +14,6 @@ class skp_unmaker : skp_Weapon
 		Obituary "%o was unmade by %k.";
 		Inventory.Pickupmessage "What the !@#%* is this!";
 		Tag "Unmaykr";
-		
-		skp_Weapon.PickupMsg "What the !@#%* is this!";
-		skp_Weapon.PickupOpenMsg "Unloaded? whatever that was.";
-		skp_Weapon.AmmoType "Cell";
-		skp_Weapon.AmmoAmount 80;
 	}
 	States
 	{
