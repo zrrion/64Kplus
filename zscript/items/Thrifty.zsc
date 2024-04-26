@@ -10,14 +10,18 @@ extend class skp_DoomPlayer
 			return SuperRet;
 		}
 		//ordered like this based on what I expect will get picked up most often
-		if(item.bALWAYSPICKUP || TryReceiveAmmo(item) || TryReceiveHealth(item) || TryReceiveArmor(item) || TryReceiveWeapon(item))
+		bool TRA = TryReceiveAmmo(item);
+		bool TRH = TryReceiveHealth(item);
+		bool TRAr = TryReceiveArmor(item);
+		bool TRW = TryReceiveWeapon(item);
+		if(item.bALWAYSPICKUP || TRA || TRH || TRAr || TRW)
 		{
 			if(item.bNOSKIN)
 			{
 				item.bNOSKIN = false;// it can have its skin back as a treat
 				return false;
 			}
-			if(SuperRet)
+			else if(SuperRet)
 			{
 				string SayTheLine = StringTable.Localize(item.PickupMessage());
 				string Ammo1;
@@ -58,6 +62,8 @@ extend class skp_DoomPlayer
 				return true;
 			}
 		}
+		if(item is "ammo" || item is "Health" || item is "BasicArmorBonus" || item is "BasicArmorPickup" || item is "Weapon")
+			return false;
 		return SuperRet;
 	}
 
@@ -81,33 +87,31 @@ extend class skp_DoomPlayer
 		int HoldingAmount = Holding.Amount;
 		int HoldingMax = Holding ? Holding.MaxAmount : GetDefaultByType(Holding.GetClass()).MaxAmount;
 		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
-		int PickupAmount = Pickup.bIgnoreSkill || Pickup.bDROPPED ? GetDefaultByType(Holding.GetClass()).Amount : GetDefaultByType(Holding.GetClass()).Amount*G_SkillPropertyFloat(SKILLP_AmmoFactor);
+		int PickupAmount = Pickup.bIgnoreSkill || Pickup.bDROPPED ? item.Amount : GetDefaultByType(item.GetClass()).Amount*G_SkillPropertyFloat(SKILLP_AmmoFactor);
+		int PickupSmallAmount = GetDefaultByType(SmallPickup).Amount;
+		int PickupMaxAmount = GetDefaultByType(Holding.GetClass()).MaxAmount;
 		
-
-		//with the setup done lets get to the real stuff
-
-		if(HoldingAmount >= HoldingMax)//we do not need the ammo
+		if(DoNeedFullPickup(HoldingAmount, HoldingMax, PickupAmount, PickupMaxAmount))//we can pick up the entire thing
 		{
-			item.bNOSKIN;
-			return false;
-		}
-		if(HoldingNeed >= PickupAmount)//we can pick up the entire thing
+			item.bNOSKIN = false;
 			return true;
-		if(!(Pickup is SmallPickup))//this is a big pickup and we can't pick the entir ething up but we still need ammo
+		}
+		if(DoNeedPickup(HoldingAmount, HoldingMax, PickupAmount, PickupMaxAmount) && GetDefaultByType(item.GetClass()).Amount != PickupSmallAmount)//this is a big pickup and we can't pick the entire thing up but we still need ammo
 		{
-			int SmallPickupAmount = GetDefaultByType(SmallPickup).Amount;//the default amount the small pickup gets you
 			item.amount -= HoldingNeed;//remove what we need from the pool
 			item.bSUMMONEDMONSTER = true;
-			while(item.amount > SmallPickupAmount)
+			while(item.amount > PickupSmallAmount)
 			{
-				A_DropItem(SmallPickup, SmallPickupAmount);//drop a small pickup
-				item.amount -= SmallPickupAmount;//remove the small pickup amount from the pool
+				A_DropItem(SmallPickup, PickupSmallAmount);//drop a small pickup
+				item.amount -= PickupSmallAmount;//remove the small pickup amount from the pool
 			}
 			if(item.amount)//if there is less than a small pickup left then we drop a small pickup with what's left
 				A_DropItem(SmallPickup, item.amount);
 			item.amount = HoldingNeed;//we set the amount back to what we need
+			item.bNOSKIN = false;
 			return true;
 		}
+		item.bNOSKIN = true;
 		return false;
 	}
 	bool TryReceiveHealth(Inventory item)
@@ -119,18 +123,16 @@ extend class skp_DoomPlayer
 		int HoldingAmount = self.Health;
 		int HoldingMax = self.GetMaxHealth(true);
 		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
+		int SmallPickupAmount = inventory(GetDefaultByType(SmallPickup)).Amount;
 		//with the setup done lets get to the real stuff
-		
-		if(HoldingAmount >= HoldingMax)//we do not need the health
+		if(DoNeedFullPickup(HoldingAmount, HoldingMax, Pickup.Amount, Pickup.MaxAmount))//we can pick up the entire thing
 		{
-			item.bNOSKIN;
-			return false;
-		}
-		if(HoldingNeed >= Pickup.Amount)//we can pick up the entire thing
+			item.bNOSKIN = false;
 			return true;
-		if(!(Pickup is SmallPickup))
+		}
+		if(DoNeedPickup(HoldingAmount, HoldingMax, SmallPickupAmount, Pickup.MaxAmount) && GetDefaultByType(item.GetClass()).Amount != SmallPickupAmount)
 		{
-			int SmallPickupAmount = inventory(GetDefaultByType(SmallPickup)).Amount;//the default amount the small pickup gets you
+			//the default amount the small pickup gets you
 			item.amount -= HoldingNeed;//remove what we need from the pool
 			item.bSUMMONEDMONSTER = true;
 			while(item.amount > SmallPickupAmount)
@@ -141,8 +143,10 @@ extend class skp_DoomPlayer
 			if(item.amount)//if there is less than a small pickup left then we drop a small pickup with what's left
 				A_DropItem(SmallPickup, item.amount);
 			item.amount = HoldingNeed;//we set the amount back to what we need
+			item.bNOSKIN = false;
 			return true;
 		}
+		item.bNOSKIN = true;
 		return false;
 	}
 	bool TryReceiveArmor(Inventory item)
@@ -240,5 +244,20 @@ extend class skp_DoomPlayer
 			}
 		}
 		return NeedGun || Need1 || Need2;
+	}
+	bool DoNeedFullPickup(int have, int max, int give, int maxgive)
+	{
+		bool result;
+		if(have >= max || have >= maxgive)
+			result = false;
+		else if(have + give <= max || have + give <= maxgive)
+			result = true;
+		return result;
+	}
+	bool DoNeedPickup(int have, int max, int give, int maxgive)
+	{
+		if(have >= max || have >= maxgive)
+			return false;
+		return true;
 	}
 }
