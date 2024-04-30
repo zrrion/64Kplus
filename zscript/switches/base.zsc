@@ -38,6 +38,7 @@ class SwitchBase : SwitchableDecoration abstract
 {
 	bool user_NoRepeat;
 	bool user_WaitToReactivate;
+	int User_ReactivateDelay;
 	int user_MarkerType;
 	int OldSpecial;
 	bool Flip;
@@ -64,7 +65,8 @@ class SwitchBase : SwitchableDecoration abstract
 	Override void Postbeginplay()
 	{
 		Flip = FALSE;
-
+		if(!User_ReactivateDelay)
+			User_ReactivateDelay = 70;
 		OldSpecial = special;
 		special = 0;
 
@@ -135,7 +137,11 @@ class SwitchBase : SwitchableDecoration abstract
 	States
 	{
 	InactiveB:
-		WLLS B 70 DisableReactivation();
+		WLLS B 70
+		{
+			DisableReactivation();
+			A_SetTics(User_ReactivateDelay);
+		}
 		TNT1 A 0 EnableReactivation();
 	Spawn:
 	InactiveA:
@@ -169,9 +175,11 @@ class KeyMarker : MapMarker
 
 class ProximitySwitch : SwitchBase
 {
+	bool User_SectorGetsAction;
+	actor SecAct;
 	default
 	{
-		//$Category Switches
+		//$Category Actions
 		//$Arg0 "Radius"
         //$Arg0Type 23
         //$Arg0Default 128
@@ -203,6 +211,19 @@ class ProximitySwitch : SwitchBase
 		user_WaitToReactivate = TRUE;
 		OldSpecial = special;
 		special = 0;
+		if(User_SectorGetsAction)
+		{
+			SecAct = Spawn("SecActHitFloor", pos);
+			let SA = SectorAction(SecAct);
+			if(SA)
+			{
+				SA.special = 130;
+				SA.args[0] = args[2];
+
+				SA.tracer = CurSector.SecActTarget;
+				CurSector.SecActTarget = SA;
+			}
+		}
 		SwitchableDecoration.Postbeginplay();
 	}
 	Override void Touch(Actor toucher)
@@ -224,6 +245,8 @@ class ProximitySwitch : SwitchBase
 	{
 		if(args[2])
 		{
+			if(activator.special == 70)
+				activator.A_Stop();
 			bool Result = activator.A_CallSpecial(130, args[2]);
 			if(user_NoRepeat)
 				self.destroy();//we can't do this with normal switches because they remain visible, fine to do here though
@@ -231,10 +254,52 @@ class ProximitySwitch : SwitchBase
 		}
 		return false;
 	}
+	override void OnDestroy ()
+	{
+		if(SecAct)
+			SecAct.destroy();
+		Super.OnDestroy();
+	}
 	states
 	{
 		Spawn:
 			PROX A 1;
+			wait;
+	}
+}
+
+class ButtonAction : SwitchableDecoration
+{
+	int oldspecial;
+	default
+	{
+		//$Category Actions
+		+USESPECIAL;
+		Activation THINGSPEC_Switch;
+	}
+	override void PostBeginPlay()
+	{
+		oldspecial = special;
+		special = 0;
+
+	}
+	Override void Activate(Actor activator)
+	{
+		activator.A_CallSpecial(oldspecial, args[0], args[1], args[2], args[3], args[4]);
+		if(SwitchBase(activator) && SwitchBase(activator).user_NoRepeat)
+			self.destroy();
+
+	}
+	Override void Deactivate(Actor activator)
+	{
+		super.Activate(activator);
+	}
+	states
+	{
+		spawn:
+		activate:
+		deactivate:
+			ACTN A 1;
 			wait;
 	}
 }
