@@ -1,0 +1,9 @@
+Terrain VOID
+{
+	Friction		3.0
+	Footclip		1
+	Liquid
+}
+
+floor F_SKY1 VOID
+floor "Textures/Wolfendoom/void/VOID0000.png" VOID
