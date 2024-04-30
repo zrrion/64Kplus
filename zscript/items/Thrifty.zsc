@@ -14,7 +14,7 @@ extend class skp_DoomPlayer
 		bool TRH = TryReceiveHealth(item);
 		bool TRAr = TryReceiveArmor(item);
 		bool TRW = TryReceiveWeapon(item);
-		if(item.bALWAYSPICKUP || TRA || TRH || TRAr || TRW)
+		if(TRA || TRH || TRAr || TRW || item.bALWAYSPICKUP)
 		{
 			if(item.bNOSKIN)
 			{
@@ -91,7 +91,7 @@ extend class skp_DoomPlayer
 		int PickupSmallAmount = GetDefaultByType(SmallPickup).Amount;
 		int PickupMaxAmount = GetDefaultByType(Holding.GetClass()).MaxAmount;
 		
-		if(DoNeedFullPickup(HoldingAmount, HoldingMax, PickupAmount, PickupMaxAmount))//we can pick up the entire thing
+		if(item.bALWAYSPICKUP || DoNeedFullPickup(HoldingAmount, HoldingMax, PickupAmount, PickupMaxAmount))//we can pick up the entire thing
 		{
 			item.bNOSKIN = false;
 			return true;
@@ -125,7 +125,7 @@ extend class skp_DoomPlayer
 		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
 		int SmallPickupAmount = inventory(GetDefaultByType(SmallPickup)).Amount;
 		//with the setup done lets get to the real stuff
-		if(DoNeedFullPickup(HoldingAmount, HoldingMax, Pickup.Amount, Pickup.MaxAmount))//we can pick up the entire thing
+		if(item.bALWAYSPICKUP || DoNeedFullPickup(HoldingAmount, HoldingMax, Pickup.Amount, Pickup.MaxAmount))//we can pick up the entire thing
 		{
 			item.bNOSKIN = false;
 			return true;
