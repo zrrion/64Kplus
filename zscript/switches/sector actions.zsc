@@ -1,0 +1,170 @@
+class SectorActionExpanded : SectorAction replaces SectorAction
+{
+	int user_SectorTag;
+	array<Sector> SectorList;
+	array<SectorAction> Tracers;
+	override void OnDestroy()
+	{
+		if(!User_SectorTag)
+		{
+			super.OnDestroy();
+		}
+		if (!(SectorList.Size() && Tracers.Size()))
+		{
+			for(int i = 0; i < SectorList.Size(); i++)
+			{
+				let YerSector = SectorList[i];
+				let YerTracer = Tracers[i];
+				if(YerSector.SecActTarget == self)
+					YerSector.SecActTarget = YerTracer;
+				else
+				{
+					let probe = SectorActionExpanded(YerSector.SecActTarget);
+					if(probe)
+					{
+						if(probe.Tracers.Size())
+						{
+							let StartTracer = probe.Tracers[0];
+							for(int j = 0; j < probe.Tracers.Size(); j++)
+							{
+								StartTracer = probe.Tracers[j];
+								if(StartTracer == self)
+								{
+									probe.Tracers.Delete(j);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		Actor.OnDestroy();
+	}
+	override void BeginPlay()
+	{
+		actor.BeginPlay();
+	}
+	override void PostBeginPlay()
+	{
+		actor.PostBeginPlay();
+		if(!User_SectorTag)
+		{
+			tracer = CurSector.SecActTarget;
+			CurSector.SecActTarget = self;
+			return;
+		}
+
+		for(int i = 0; i < level.Sectors.size(); i++)//this iterates through all secotrs in the level
+		{
+			let TagCheck = level.Sectors[i];
+			if(TagCheck && TagCheck.CountTags())
+			{
+				if(SectorList.Find(TagCheck) != SectorList.Size())// if the sector is already in the list we skip checking it
+					continue;
+				for(int j = 0; j < TagCheck.CountTags(); j++)//here we check their tags
+				{
+					if(TagCheck.GetTag(j) == User_SectorTag)//if the tag matches we add it to our array
+					{
+						SectorList.Push(TagCheck);
+						break;
+					}
+				}
+			}
+		}
+		// Add ourself to self CurSector's list of actions
+		for(int i = 0; i < SectorList.Size(); i++)
+		{
+			Tracers.push(SectorList[i].SecActTarget);
+			SectorList[i].SecActTarget = self;
+		}
+	}
+}
+
+class SecActEnterExpanded : SectorActionExpanded replaces SecActEnter
+{
+	Default
+	{
+		Health SECSPAC_Enter;
+	}
+}
+
+class SecActExitExpanded : SectorActionExpanded replaces SecActExit
+{
+	Default
+	{
+		Health SECSPAC_Exit;
+	}
+}
+
+class SecActHitFloorExpanded : SectorActionExpanded replaces SecActHitFloor
+{
+	Default
+	{
+		Health SECSPAC_HitFloor;
+	}
+}
+
+class SecActHitCeilExpanded : SectorActionExpanded replaces SecActHitCeil
+{
+	Default
+	{
+		Health SECSPAC_HitCeiling;
+	}
+}
+
+class SkyPickerExpanded : SkyPicker replaces SkyPicker//just in case I need it
+{
+	int user_SectorTag;
+	override void PostBeginPlay ()
+	{
+		Actor.PostBeginPlay();
+		console.printf("%i", user_SectorTag);
+		if(!user_SectorTag)
+		{
+			let SkyPicker = Spawn("SkyPicker", self.pos, NO_REPLACE);
+			if(SkyPicker)
+			{
+				SkyPicker.args[0] = self.args[0];
+				SkyPicker.args[1] = self.args[1];
+			}
+			return;
+		}
+		Actor box;
+		if (args[0])
+		{
+			let it = Level.CreateActorIterator(args[0], "SkyViewpoint");
+			box = it.Next ();
+		}
+		if (!box && !args[0])
+		{
+			A_Log(String.Format("Can't find SkyViewpoint %d for sector %d\n", args[0], CurSector.Index()));
+		}
+		else
+		{
+			int boxindex = level.GetSkyboxPortal(box);
+			// Do not override special portal types, only regular skies.
+			for(int i = 0; i < level.Sectors.size(); i++)//this iterates through all secotrs in the level
+			{
+				if(level.Sectors[i].CountTags())
+				{
+					for(int j = 0; j < level.Sectors[i].CountTags(); j++)//here we check their tags
+					{
+						if(level.Sectors[i].GetTag(j) == User_SectorTag)//if the tag matches we add it to our array
+						{
+
+							let SkyPicker = Spawn("SkyPicker", (level.Sectors[i].centerspot.X, level.Sectors[i].centerspot.Y, level.Sectors[i].CenterFloor()), NO_REPLACE);
+							if(SkyPicker)
+							{
+								SkyPicker.args[0] = self.args[0];
+								SkyPicker.args[1] = self.args[1];
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		Destroy();
+	}
+}
