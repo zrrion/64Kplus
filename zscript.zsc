@@ -25,6 +25,7 @@ version "4.5"
 #include "zscript/switches/bigbutton.zsc"
 #include "zscript/switches/hand.zsc"
 #include "zscript/switches/sector actions.zsc"
+#include "zscript/switches/caco.zsc"
 
 #include "zscript/weapons/base.zsc"
 #include "zscript/weapons/unmaker.zsc"

@@ -1,0 +1,58 @@
+class CacoSwitch : SwitchBase
+{
+	//$Category Switches
+	Default
+	{
+		//$Category Switches
+		height 50;
+		radius 32;
+		-FIXMAPTHINGPOS;
+		+SHOOTABLE;
+		+WALLSPRITE;
+		+NOBLOODDECALS;
+		+NOICEDEATH;
+		+DONTGIB;
+		+DONTTHRUST;
+		Bloodcolor "Blue";
+		PainSound "caco/pain";
+	}
+	Override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
+	{
+		if(!bNOPAIN && random(0,1))
+		{
+			SetStateLabel("Pain");
+		}
+		return 0;
+	}
+	States
+	{
+	InactiveB:
+		//TNT1 A 0 {	bNOPAIN = true;	}
+		SWCD B 70;
+		TNT1 A 0
+		{
+			Flip = Flip ? FALSE : TRUE;
+		}
+	InactiveA:
+	Spawn:
+		TNT1 A 0 {	bNOPAIN = false;	}
+		SWCD A 1;
+		wait;
+	NoFlip:
+		//TNT1 A 0	{	bNOPAIN = true;	}
+		SWCD B -1;
+		Stop;
+	Pain:
+		TNT1 A 0	{	bNOPAIN = true;	}
+		SWCD C 8 A_Pain();
+		TNT1 A 0
+		{
+				bNOPAIN = false;
+				if(!Flip && bUSESPECIAL)
+					SetStateLabel("spawn");
+				else
+					SetStateLabel("NoFlip");
+		}
+		Goto Spawn;
+	}
+}

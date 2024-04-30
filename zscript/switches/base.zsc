@@ -73,7 +73,14 @@ class SwitchBase : SwitchableDecoration abstract
 		PlaceMarker();
 		super.Postbeginplay();
 	}
-
+	Override void Tick()
+	{
+		super.Tick();
+		if(CurSector.lightlevel < 160)
+			self.LightLevel = 160;
+		else
+			self.LightLevel = CurSector.lightlevel;
+	}
 	void PlaceMarker()
 	{
 		if(user_MarkerType)
@@ -134,6 +141,7 @@ class SwitchBase : SwitchableDecoration abstract
 		Flip = Flip ? FALSE : TRUE;
 		bUSESPECIAL = TRUE;
 	}
+
 	States
 	{
 	InactiveB:
@@ -274,6 +282,7 @@ class ButtonAction : SwitchableDecoration
 	default
 	{
 		//$Category Actions
+		+INVISIBLE;
 		+USESPECIAL;
 		Activation THINGSPEC_Switch;
 	}
