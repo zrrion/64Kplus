@@ -45,16 +45,26 @@ $playersound	player	other	*HardLand	dsoof
 $playersound	player	other	*SoftLand	DSLAND
 $playersound	player	other	*SoftStep	DSLANDS
 
-$pitchset chainguy/sight 0.98
-$pitchset chainguy/pain 0.98
+$pitchset chainguy/sight 0.97
+$pitchset chainguy/pain 0.97
 $pitchset chainguy/death 0.9
-$pitchset chainguy/active 0.98
-$pitchset chainguy/attack 0.98
+$pitchset chainguy/active 0.97
+$pitchset chainguy/attack 0.97
 
-$pitchset baron/sight 0.98
-$pitchset baron/pain 0.98
+$pitchset baron/sight 0.96
+$pitchset baron/pain 0.96
 $pitchset baron/death 0.95
-$pitchset baron/active 0.98
+$pitchset baron/active 0.96
 
-$pitchset fatso/sight 0.98
-$pitchset fatso/active 0.98
+$pitchset fatso/sight 0.96
+$pitchset fatso/active 0.96
+
+cacomera/sight			dscacsit
+cacomera/active			dsdmact
+cacomera/pain			dsdmpain
+cacomera/death			dscacdth
+
+$pitchset cacomera/sight 1.1
+$pitchset cacomera/active 1.1
+$pitchset cacomera/pain 1.05
+$pitchset cacomera/death 1.2
