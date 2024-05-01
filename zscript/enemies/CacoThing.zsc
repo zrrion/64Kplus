@@ -1,8 +1,10 @@
+
+
 class Cacomera : Cacodemon
 {
 	mixin BerserkDroper;
-	int User_TeleportTimer;
-	
+	int TeleportTimer;
+	int User_TimerReset;
 	Default
 	{
 		Health 300;
@@ -14,10 +16,10 @@ class Cacomera : Cacodemon
 		Monster;
 		+FLOAT;
 		+NOGRAVITY;
-		SeeSound "caco/sight";
-		PainSound "caco/pain";
-		DeathSound "caco/death";
-		ActiveSound "caco/active";
+		SeeSound "cacomera/sight";
+		PainSound "cacomera/pain";
+		DeathSound "cacomera/death";
+		ActiveSound "cacomera/active";
 		Obituary "%o was killed by a cacomera bite.";
 		HitObituary "%o was killed by a cacomera blast.";
 		Tag "Cacomera";
@@ -31,59 +33,71 @@ class Cacomera : Cacodemon
 			int myint = (16 - (2*G_SkillPropertyInt(SKILLP_ACSReturn)));
 			if(bSUMMONEDMONSTER && GetAge() % myint == 0)//don't teleport the instant the target can be teleported near
 				bSUMMONEDMONSTER = random(0,1);
-			if(User_TeleportTimer < 1 && !bSUMMONEDMONSTER)
-			{
-				if(!DoTeleport(target, false))
-					if(!DoTeleport(target, true) && User_TeleportTimer < -128)
-						if(!DoTeleport(self, false))
-							DoTeleport(self, true);
-			}
-			User_TeleportTimer--;
+			if(TeleportTimer < 1 && !bSUMMONEDMONSTER)
+				if(!DoTeleport())
+					DoFakeTeleport();
+			TeleportTimer--;
 			if(!CheckSight(target, SF_SEEPASTSHOOTABLELINES|SF_IGNOREWATERBOUNDARY))
-				User_TeleportTimer -= 3;
+				TeleportTimer -= 3;
 		}
 	}
-	bool DoTeleport(actor TeleportTarget = NULL, bool CheckGround = false)
+	bool DoTeleport(actor TeleportTarget = NULL)
 	{
 		if(!TeleportTarget && !target)
 			return false;
 		if(!TeleportTarget)
 			TeleportTarget = target;
-
 		bool paul;
 		vector3 blart;
-		int mallcop = 0;
-
 		if(TeleportTarget is "LostSoul" && CheckTPDest(TeleportTarget.pos))
+		{
+			paul = true;
 			blart = TeleportTarget.pos;
+		}
 		else
 		{
-		[paul, blart] = GetTPDest(TeleportTarget, CheckGround);
-		while(!paul && CheckTPDest(blart) && mallcop++ < 10)
-			[paul, blart] = GetTPDest(TeleportTarget, CheckGround);
+			[paul, blart] = GetTPDest(TeleportTarget);
 		}
 		
-		if(mallcop < 10)
+		if(paul && CheckTPDest(blart))
 		{
 			Spawn("teleportfog", self.pos);
 			A_Stop();
-			reactiontime += 16 - mallcop;//we won't attack right away, but we will be more likely to attack if we had to try a lot to find a good spot
+			reactiontime += 8;
 			TeleportMove(blart, true, true);
+			self.angle = random(0,360);
 			Spawn("teleportfog", self.pos);
-			User_TeleportTimer = 384 + random(0, 70);
+			TeleportTimer = User_TimerReset + random(0, 70);
+			bSUMMONEDMONSTER = random(0,1);
 			return true;
 		}
-		bSUMMONEDMONSTER = random(0,1);
+		bSUMMONEDMONSTER = false;
 		return false;
+	}
+	void DoFakeTeleport()
+	{
+		Spawn("teleportfog", self.pos);
+		A_Stop();
+		reactiontime += 8;
+		for(int i = 0; i < 50; i++)//I saw this trick in a movie once
+			A_Wander();
+		self.angle = random(0,360);
+		Spawn("teleportfog", self.pos);
+		TeleportTimer = User_TimerReset + random(0, 70);
+		bSUMMONEDMONSTER = random(0,1);
 	}
 	Override void PostBeginPlay()
 	{
+		if(!User_TimerReset)
+			User_TimerReset = 384;
 		Super.PostBeginPlay();
-		if(!User_TeleportTimer)
-			User_TeleportTimer = 384 + random(0, 70);
+		if(!TeleportTimer)
+			TeleportTimer = User_TimerReset + random(0, 70);
 	}
 	Override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
 	{
+		int i = super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+		TeleportTimer -= i;
 		if(inflictor is "LostSoul")//they just don't like them
 		{
 			target = inflictor;
@@ -91,7 +105,7 @@ class Cacomera : Cacodemon
 		}
 		if(inflictor is "ExplosiveBarrel" || inflictor is "Rocket" || source is "Archvile"|| source is "BaronOfHell" || mod == "Crush")//some conditions make them try to teleport right away, fighting an archvile ot a baron, getting hit by an explosion, or getting crushed will do it.
 			DoTeleport();
-		return super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+		return i;
 	}
 	States
 	{
@@ -107,7 +121,7 @@ class Cacomera : Cacodemon
 		{
 			if(target is "LostSoul" && DoTeleport())
 				SetStateLabel("See");
-			User_TeleportTimer += 20;
+			TeleportTimer += 20;
 		}
 		CORB B 5 A_FaceTarget();
 		CORB B 5 BRIGHT A_SpawnProjectile("CacomeraBall");
@@ -118,7 +132,8 @@ class Cacomera : Cacodemon
 		{
 			A_Pain();
 			int t = random(35, 70);
-			User_TeleportTimer = t > User_TeleportTimer ? User_TeleportTimer : t;
+			TeleportTimer = t > TeleportTimer ? TeleportTimer : t;
+			reactiontime += t;
 		}
 		CORB C 6;
 		Goto See;
@@ -155,50 +170,42 @@ class Cacomera : Cacodemon
 			sector TPsec = level.PointInSector(TPDest.XY);
 			double flr, cel;
 			sector flrsec, celsec;
-			[flr, flrsec/*, 3dflr*/] = TPsec.NextHighestCeilingAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
-			[cel, celsec/*, 3dcel*/] = TPsec.NextLowestFloorAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
+			[flr, flrsec] = TPsec.NextHighestCeilingAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
+			[cel, celsec] = TPsec.NextLowestFloorAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
 			TPSpace = abs(flr - cel);
 		}
 		if(TPSpace >= self.height)
 			return true;
 		return false;
 	}
-	bool, vector3 GetTPDest(actor TeleportTarget, bool CheckGround = false)
+	bool, vector3 GetTPDest(actor TeleportTarget, int SpawnRad = 512)
 	{
 		if(!TeleportTarget)
 			return false, (0,0,0);
-		vector3 SpawnPos = TeleportTarget.pos;
-		if(CheckGround && TeleportTarget.bFLOAT && TeleportTarget.bNOGRAVITY)//if the target is flying check at their floor instead of where they are currently
+		bool paul;
+		actor blart;
+		vector3 mallcop;
+		int i;
+		for(i = 0; i < SpawnRad * 2; i++)//the smaller the radius the less we need to attempt since there is less space to fit into
 		{
-			sector TPsec = level.PointInSector(SpawnPos.XY);
-			double flr;
-			sector flrsec;
-			[flr, flrsec] = TPsec.NextLowestFloorAt(SpawnPos.X, SpawnPos.Y, SpawnPos.Z, SpawnPos.Z + TeleportTarget.height);
-			SpawnPos.Z = flr;
+			int radfactor = SpawnRad/self.radius;
+			vector2 Dist = (0, self.radius * random(3, radfactor));
+			Dist = RotateVector(Dist, random(0, 360));
+			mallcop = (TeleportTarget.pos.X + Dist.X, TeleportTarget.pos.Y + Dist.Y, TeleportTarget.pos.Z + self.radius * random(-radfactor, radfactor));
+			[paul, blart] = A_SpawnItemEx("CacomeraCheck", mallcop.X, mallcop.Y, mallcop.Z, flags:SXF_ABSOLUTEPOSITION);
+			if(paul && blart && CheckTPDest(mallcop) && blart.CheckPosition(blart.pos.xy))
+				break;
+			paul = false;
+			if(blart)
+				blart.Destroy();
 		}
-		let TempCaco = Spawn("Cacomera", SpawnPos);
-		if(TempCaco)
+		if(paul && blart)
 		{
-			TempCaco.bTHRUACTORS = true;
-			//cacodemon inflation!
-			//console.printf("%i, %i", TempCaco.radius, TempCaco.height);
-			While(TempCaco.A_SetSize(TempCaco.radius + self.radius, -1, true) && TempCaco.radius < 1024)
-				continue;
-			While(TempCaco.A_SetSize(-1, TempCaco.height + self.radius, true) && TempCaco.height < 1024)
-				continue;
-			//console.printf("%i, %i", TempCaco.radius, TempCaco.height);
-			int minsafe = self.radius + TeleportTarget.radius + 8;
-			int maxsafe = TempCaco.radius - self.radius;
-			if(TempCaco.radius > minsafe && minsafe < maxsafe)
-			{
-				vector2 MyCoolVec2 = (minsafe, frandom(minsafe, maxsafe));
-				MyCoolVec2 = RotateVector(MyCoolVec2, frandom(0,360));
-				vector3 MyCoolVec3 = (TempCaco.Pos.X + MyCoolVec2.X, TempCaco.Pos.Y + MyCoolVec2.Y, TempCaco.Pos.Z + frandom(0, TempCaco.Height - self.height));
-				TempCaco.destroy();
-				return true, MyCoolVec3;
-			}
+			blart.Destroy();
+			return true, mallcop;
 		}
-		TempCaco.destroy();
+		if(blart)
+			blart.Destroy();
 		return false, (0,0,0);
 	}
 	state A_CheckSolidFooting(StateLabel label)
@@ -210,6 +217,14 @@ class Cacomera : Cacodemon
 		if (below)
 			return ResolveState(label);
 		return null;
+	}
+}
+
+class CacomeraCheck : Cacomera//since this is destroyed and not killed we have to use a dummy for checking collision that doesn't count
+{
+	default
+	{
+		-COUNTKILL;
 	}
 }
 
