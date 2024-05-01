@@ -19,10 +19,17 @@ class CacoSwitch : SwitchBase
 	Override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
 	{
 		if(!bNOPAIN && random(0,1))
-		{
 			SetStateLabel("Pain");
-		}
 		return 0;
+	}
+	Override bool CanCollideWith(Actor other, bool passive)
+	{
+		if(self.bSHOOTABLE && other.bMISSILE && !other.bRIPPER)
+		{
+			self.DamageMobj(other, other, 666, "none", 0, 0);
+			return false;
+		}
+		return super.CanCollideWith(other, passive);
 	}
 	States
 	{
@@ -40,6 +47,8 @@ class CacoSwitch : SwitchBase
 		wait;
 	NoFlip:
 		//TNT1 A 0	{	bNOPAIN = true;	}
+		SWCD B 70;
+		SWCD B 0 {	bSHOOTABLE = false;	}
 		SWCD B -1;
 		Stop;
 	Pain:
