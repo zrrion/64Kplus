@@ -18,26 +18,8 @@ mixin class BerserkHoover//mixin BerserkHoover;
 	{
 		if(playerpawn(target) == NULL)//check to see if the target is a player and if they exist
 			return;
-		if(CheckIfCloser(target, 128) && GetAge() > 70 && CanPickup(target))//waits 2 seconds before getting picked up but only if in range and only if able to be picked up
-		{
-			int Hooverlocity = 4;
-			int HooverDistance = 128;
-			
-			bWALLSPRITE = FALSE;
-			bNOGRAVITY = TRUE;
-			A_Weave(Hooverlocity, Hooverlocity, 2, 2);//prevents the items from stacking up and looking weird, also it is fun
-			A_FaceTarget();
-			VelFromAngle(Hooverlocity);
-			Vel.Z = (target.pos.Z + target.height/2 - pos.Z) / DistanceBySpeed(target, Hooverlocity);//moves the item towards the target
-			
-			if(CheckIfCloser(target, self.radius * 2))//if the player isn't moving they'll never pick up the item, to make sure the item is picked up it we call the touch function manually, but only when close enough
-				Touch(target);
-		}
-		else
-		{
-			bNOGRAVITY = FALSE;
-			bWALLSPRITE = bDROPPED;
-		}
+		if(GetAge() > 70 && CanPickup(target))//waits 2 seconds before getting picked up but only if in range and only if able to be picked up
+			Touch(target);
 	}
 	override void Touch (Actor toucher)
 	{
