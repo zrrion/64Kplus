@@ -9,6 +9,7 @@ extend class skp_DoomPlayer
 		{
 			return SuperRet;
 		}
+
 		//ordered like this based on what I expect will get picked up most often
 		bool TRA = TryReceiveAmmo(item);
 		bool TRH = TryReceiveHealth(item);
@@ -21,7 +22,7 @@ extend class skp_DoomPlayer
 				item.bNOSKIN = false;// it can have its skin back as a treat
 				return false;
 			}
-			else if(SuperRet)
+			if(SuperRet)
 			{
 				string SayTheLine = StringTable.Localize(item.PickupMessage());
 				string Ammo1;
@@ -85,11 +86,11 @@ extend class skp_DoomPlayer
 		if(!Holding)
 			return true;
 		int HoldingAmount = Holding.Amount;
-		int HoldingMax = Holding ? Holding.MaxAmount : GetDefaultByType(Holding.GetClass()).MaxAmount;
+		int HoldingMax = Holding ? Holding.MaxAmount : Holding.MaxAmount;
 		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
 		int PickupAmount = Pickup.bIgnoreSkill || Pickup.bDROPPED ? item.Amount : GetDefaultByType(item.GetClass()).Amount*G_SkillPropertyFloat(SKILLP_AmmoFactor);
 		int PickupSmallAmount = GetDefaultByType(SmallPickup).Amount;
-		int PickupMaxAmount = GetDefaultByType(Holding.GetClass()).MaxAmount;
+		int PickupMaxAmount = Holding.MaxAmount;
 		
 		if(item.bALWAYSPICKUP || DoNeedFullPickup(HoldingAmount, HoldingMax, PickupAmount, PickupMaxAmount))//we can pick up the entire thing
 		{
@@ -124,13 +125,15 @@ extend class skp_DoomPlayer
 		int HoldingMax = self.GetMaxHealth(true);
 		int HoldingNeed = HoldingAmount >= HoldingMax ? 0 : HoldingMax - HoldingAmount ;
 		int SmallPickupAmount = inventory(GetDefaultByType(SmallPickup)).Amount;
+		int PickupMaxAmount = GetDefaultByType(item.GetClass()).MaxAmount;
+		PickupMaxAmount += !PickupMaxAmount ? HoldingMax : 0;
 		//with the setup done lets get to the real stuff
-		if(item.bALWAYSPICKUP || DoNeedFullPickup(HoldingAmount, HoldingMax, Pickup.Amount, Pickup.MaxAmount))//we can pick up the entire thing
+		if(item.bALWAYSPICKUP || DoNeedFullPickup(HoldingAmount, HoldingMax, Pickup.Amount, PickupMaxAmount))//we can pick up the entire thing
 		{
 			item.bNOSKIN = false;
 			return true;
 		}
-		if(DoNeedPickup(HoldingAmount, HoldingMax, SmallPickupAmount, Pickup.MaxAmount) && GetDefaultByType(item.GetClass()).Amount != SmallPickupAmount)
+		if(DoNeedPickup(HoldingAmount, HoldingMax, SmallPickupAmount, PickupMaxAmount) && !(item.GetClass() is 'MiniStimpack'))
 		{
 			//the default amount the small pickup gets you
 			item.amount -= HoldingNeed;//remove what we need from the pool
