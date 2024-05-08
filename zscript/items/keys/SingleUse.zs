@@ -1,4 +1,4 @@
-Class SingelUseKeyBase : Key //this is different from a puzzle item
+Class SingelUseKeyBase : Key abstract//this is different from a puzzle item
 {
 	Default
 	{
