@@ -1,6 +1,8 @@
 class SKP_JumpBoots : Inventory
 {
 	double SOOld;
+	class<actor> shine;
+	property shine:shine;
 	Default
 	{
 		//$Category Powerups
@@ -11,10 +13,11 @@ class SKP_JumpBoots : Inventory
 		+SPECIALFLOORCLIP;
 		Inventory.PickupMessage "You picked up the double jump boots";
 		Inventory.PickupSound "misc/p_pkup";
+		SKP_JumpBoots.shine "SKP_JumpBoots_SFX";
 	}
-	Action Void skp_BootFx()
+	Void skp_BootFx()
 	{
-		let mo = Spawn("SKP_JumpBoots_SFX", (self.pos.X, self.pos.Y ,self.pos.Z - Floorclip), NO_REPLACE);
+		let mo = Spawn(shine, (self.pos.X, self.pos.Y ,self.pos.Z - Floorclip), NO_REPLACE);
 		if(mo == NULL)
 			return;
 		mo.SpriteOffset.Y = self.SpriteOffset.Y;
@@ -25,7 +28,7 @@ class SKP_JumpBoots : Inventory
 			return;
 		SOOld = SpriteOffset.Y;
 		SpriteOffset.Y = 8 * sin(level.time * 2);		
-		If(level.totaltime % 2 == 0 && SOOld > SpriteOffset.Y)
+		If(level.totaltime % 7 == 0 && SOOld > SpriteOffset.Y)
 			skp_BootFx();
 		super.Tick();
 	}
@@ -35,15 +38,6 @@ class SKP_JumpBoots : Inventory
 		DBLJ B 6;
 		DBLJ A 7 bright;
 		Loop;
-	}
-}
-
-class SKP_JumpBoots_Perm : SKP_JumpBoots//same as the normal jump boots but they stay between maps
-{
-	default
-	{
-		+INVENTORY.PERSISTENTPOWER;
-		Inventory.InterHubAmount 1;
 	}
 }
 
@@ -59,8 +53,38 @@ class SKP_JumpBoots_SFX : actor
 	States
 	{
 	Spawn:
+		TNT1 A 1;
 		DBLJ C 2;
 		DBLJ C 1 A_Fadeout;
+		wait;
+	}
+}
+
+class SKP_JumpBoots_Perm : SKP_JumpBoots//same as the normal jump boots but they stay between maps
+{
+	default
+	{
+		+INVENTORY.PERSISTENTPOWER;
+		Inventory.InterHubAmount 1;
+		SKP_JumpBoots.shine "SKP_JumpBoots_Perm_SFX";
+	}
+	States
+	{
+	Spawn:
+		DBLJ D 6;
+		DBLJ E 7 bright;
+		Loop;
+	}
+}
+
+class SKP_JumpBoots_Perm_SFX : SKP_JumpBoots_SFX
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		DBLJ F 2;
+		DBLJ F 1 A_Fadeout;
 		wait;
 	}
 }
