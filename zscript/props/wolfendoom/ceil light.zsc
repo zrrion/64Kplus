@@ -1,9 +1,13 @@
 class WolfCeilingLight : Actor
 {
+	class<actor> shine;
+	property shine:shine;
+	int ceilingOffset;
 	Default
 	{
 		//$Category Wolfendoom
 		//$title "wolf lamp green"
+		WolfCeilingLight.shine "WolfLampLight";
 		+SPAWNCEILING
 		+MOVEWITHSECTOR
 		+CEILINGHUGGER
@@ -20,14 +24,22 @@ class WolfCeilingLight : Actor
 	Override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		let Light = Spawn("WolfLampLight", self.pos);
+		ceilingOffset = abs(CurSector.CenterCeiling() - self.pos.z);
+		if(ceilingOffset < self.height)
+			ceilingOffset = self.height;
+
+
+		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
+		{
 			Light.Master = self;
+			self.target = Light;
+		}
 	}
 	Override void Tick()
 	{
 		super.Tick();
-		self.SetOrigin((self.pos.x, self.pos.y, CurSector.CenterCeiling() - self.height), TRUE);
+		self.SetOrigin((self.pos.x, self.pos.y, CurSector.CenterCeiling() - ceilingOffset), TRUE);
 
 
 		if(CurSector.lightlevel < 128)
@@ -54,10 +66,13 @@ class WolfCeilingLight_Red : WolfCeilingLight
 
 class WolfFloorLight : Actor
 {
+	class<actor> shine;
+	property shine:shine;
 	Default
 	{
 		//$Category Wolfendoom
 		//$title "wolf floor lamp green"
+		WolfFloorLight.shine "WolfLampCeilingLight";
 		+SOLID
 		radius 16;
 		height 42;
@@ -71,9 +86,12 @@ class WolfFloorLight : Actor
 	Override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		let Light = Spawn("WolfLampCeilingLight", self.pos);
+		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
+		{
 			Light.Master = self;
+			self.target = Light;
+		}
 	}
 	Override void Tick()
 	{
