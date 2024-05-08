@@ -5,6 +5,7 @@ class skp_Cyberdemon : Cyberdemon replaces Cyberdemon
 	int RocketCounter;
 	Default
 	{
+		//$title "Cyberdemon"
 		//Damagefactor "Unmaker", 0.5;
 	}
 	States

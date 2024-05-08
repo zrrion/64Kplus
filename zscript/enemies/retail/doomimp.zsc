@@ -4,7 +4,7 @@ class skp_DoomImp : DoomImp  replaces DoomImp
 	
 	Default
 	{
-
+		//$title "Imp"
 	}
 	States
 	{

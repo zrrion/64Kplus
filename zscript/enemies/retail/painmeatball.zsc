@@ -4,6 +4,7 @@ class skp_PainElemental : PainElemental replaces PainElemental
 	
 	Default
 	{
+		//$title "Pain Elemental"
 	}
 	States
 	{

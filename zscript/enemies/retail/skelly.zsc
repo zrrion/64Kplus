@@ -4,6 +4,7 @@ class skp_Revenant : Revenant replaces Revenant
 	
 	Default
 	{
+		//$title "Revenant"
 	}
 	States
 	{

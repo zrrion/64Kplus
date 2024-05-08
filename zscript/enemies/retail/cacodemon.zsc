@@ -4,6 +4,7 @@ class skp_Cacodemon : Cacodemon replaces Cacodemon
 	
 	Default
 	{
+		//$title "Cacodemon"
 		Bloodcolor "Blue";
 		Mass 600;
 	}

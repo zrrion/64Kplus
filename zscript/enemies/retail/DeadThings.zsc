@@ -2,6 +2,7 @@ class skp_DeadZombieMan : skp_ZombieMan replaces DeadZombieMan
 {
 	Default
 	{
+		//$title "Dead Zombie"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -16,6 +17,7 @@ class skp_DeadShotgunGuy : skp_ShotgunGuy replaces DeadShotgunGuy
 {
 	Default
 	{
+		//$title "Dead Shotgun Guy"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -30,6 +32,7 @@ class skp_DeadDoomImp : skp_DoomImp replaces DeadDoomImp
 {
 	Default
 	{
+		//$title "Dead Imp"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -44,6 +47,7 @@ class skp_DeadChaingunGuy : skp_ChaingunGuy
 {
 	Default
 	{
+		//$title "Dead Chaingun Guy"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -58,6 +62,7 @@ class skp_DeadDemon : skp_Demon replaces DeadDemon
 {
 	Default
 	{
+		//$title "Dead Pinkey Demon"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -72,6 +77,7 @@ class skp_DeadSpectre : skp_Spectre
 {
 	Default
 	{
+		//$title "Dead Pinkey Spectre"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -86,6 +92,7 @@ class skp_DeadCacodemon : skp_Cacodemon replaces DeadCacodemon
 {
 	Default
 	{
+		//$title "Dead Cacodemon"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()

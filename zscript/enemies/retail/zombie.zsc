@@ -4,6 +4,7 @@ class skp_Zombieman : Zombieman replaces Zombieman
 	
 	Default
 	{
+		//$title "Zombie"
 	}
 	States
 	{

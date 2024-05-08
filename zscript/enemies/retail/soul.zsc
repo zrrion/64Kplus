@@ -3,6 +3,10 @@ class skp_LostSoul : LostSoul replaces LostSoul
 	mixin BerserkDroper;
 	
 	int oldframe;
+	Default
+	{
+		//$title "Lost Soul"
+	}
 	States
 	{
 	See:
@@ -32,7 +36,7 @@ class skp_LostSoul : LostSoul replaces LostSoul
 		SKUL K 6;
 		Stop;
 	}
-	Action void soul_Chase()
+	void soul_Chase()
 	{
 		if(target != NULL && !target.bISMONSTER && (target.bSHADOW || target.bINVISIBLE))//if they have a target that isn't a monster and the target is invisible then don't chase them. lost souls aren't smart
 			A_Wander();

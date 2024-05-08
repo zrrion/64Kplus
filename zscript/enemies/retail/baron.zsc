@@ -4,6 +4,7 @@ class skp_BaronOfHell : BaronOfHell replaces BaronOfHell
 	
 	Default
 	{
+		//$title "Arachnotron"
 		Bloodcolor "329E32";
 	}
 	States

@@ -4,7 +4,7 @@ class skp_ChaingunGuy : ChaingunGuy  replaces ChaingunGuy
 	
 	Default
 	{
-
+		//$title "Chaingun Guy"
 	}
 	States
 	{

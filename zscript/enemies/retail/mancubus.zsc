@@ -4,6 +4,7 @@ class skp_Mancubus : Fatso replaces Fatso
 	
 	Default
 	{
+		//$title "Mancubus"
 	}
 	States
 	{

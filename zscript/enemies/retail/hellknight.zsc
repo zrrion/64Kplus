@@ -4,6 +4,7 @@ class skp_Knight : HellKnight replaces HellKnight
 	
 	default
 	{
+		//$title "Hell Knight"
 		Scale 0.9;
 		Bloodcolor "329E32";
 	}

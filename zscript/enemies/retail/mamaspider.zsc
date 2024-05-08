@@ -4,6 +4,7 @@ class skp_SpiderMastermind : SpiderMastermind replaces SpiderMastermind
 	
 	Default
 	{
+		//$title "Spider Mastermind"
 		//Damagefactor "Unmaker", 0.5;
 	}
 	States

@@ -4,7 +4,7 @@ class skp_Arachnotron : Arachnotron replaces Arachnotron
 	
 	Default
 	{
-
+		//$title "Arachnotron"
 	}
 	States
 	{

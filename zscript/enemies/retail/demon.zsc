@@ -4,7 +4,7 @@ class skp_Demon : Demon  replaces Demon
 	
 	Default
 	{
-
+		//$title "Pinkey Demon"
 	}
 	States
 	{
@@ -35,6 +35,7 @@ class skp_Spectre : skp_Demon replaces Spectre
 {
 	Default
 	{
+		//$title "Pinkey Spectre"
 		+SHADOW
 		RenderStyle "Fuzzy";
 		SeeSound "spectre/sight";
