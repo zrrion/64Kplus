@@ -68,3 +68,5 @@ $pitchset cacomera/sight 1.1
 $pitchset cacomera/active 1.1
 $pitchset cacomera/pain 1.05
 $pitchset cacomera/death 1.2
+
+misc/toss	toss
