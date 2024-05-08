@@ -10,7 +10,6 @@ class SKP_GreenBoots : BasicArmorBonus
 		Armor.Saveamount 10;
 		Armor.Maxsaveamount 200;
 		+COUNTITEM
-		-INVENTORY.ALWAYSPICKUP
 	}
 //====
 	States
