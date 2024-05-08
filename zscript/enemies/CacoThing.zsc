@@ -1,5 +1,3 @@
-
-
 class Cacomera : Cacodemon
 {
 	mixin BerserkDroper;
@@ -7,6 +5,9 @@ class Cacomera : Cacodemon
 	int User_TimerReset;
 	Default
 	{
+		//$title "Cacomera"
+		//$Category Monsters
+		species "Cacodemon";
 		Health 300;
 		radius 20;
 		Height 56;
