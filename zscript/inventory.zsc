@@ -7,9 +7,9 @@ class CustomCustomInventory : CustomInventory//Actor
 		return PickupMsg;
     }
 	
-	action void A_SetPickupMessage(string Message)
+	void A_SetPickupMessage(string Message)
     {
-		invoker.PickupMsg = Message;
+		self.PickupMsg = Message;
     }
 }
 

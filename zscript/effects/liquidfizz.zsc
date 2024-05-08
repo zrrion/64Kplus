@@ -22,7 +22,7 @@ class LiquidFizz : BloodDripper
 	{
 		fizzcolour = A_CheckLiquid(self, "NUKAGE") ? "439337" : A_CheckLiquid(self, "BLOOD") ? "DD0000" : "0000CB";
 	}
-	action bool A_CheckLiquid(Actor mo, string texture)
+	bool A_CheckLiquid(Actor mo, string texture)
 	{
 		int t = texture.length();
 		string tex = Texman.GetName(mo.floorpic);

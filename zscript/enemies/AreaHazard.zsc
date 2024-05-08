@@ -2,7 +2,7 @@ class SKP_AreaHazard : Actor
 {
 	int OldTime, User_CloseIdle, OpenIdle, FastIdle, PainIdle, PainRadius;
 	float User_IntDelay;
-Default
+	Default
 	{
 		Health 100;
 		Radius 10;
@@ -12,7 +12,7 @@ Default
 		DeathSound "world/barrelx";
 		Obituary "$OB_BARREL";
 	}
-override void PostBeginPlay()
+	override void PostBeginPlay()
 	{
 		OldTime = level.totaltime; //lets us tell how long it has been idling
 		if (User_CloseIdle == 0)
@@ -24,11 +24,11 @@ override void PostBeginPlay()
 		PainRadius = 96; //radius the attack effects
 		Super.PostBeginPlay();
 	}
-action void A_TimerReset()
+	void A_TimerReset()
 	{
-		invoker.OldTime = level.totaltime;
+		self.OldTime = level.totaltime;
 	}
-override void Tick()
+	override void Tick()
 	{
 		if(isFrozen())
 			return;
@@ -50,7 +50,7 @@ override void Tick()
 		}
 		super.Tick();
 	}
-States
+	States
 	{
 	Spawn:
 	Idle.Close:
@@ -147,16 +147,16 @@ States
 }
 class AH_Flame : Actor
 {
-default
+	default
 	{
 		+BRIGHT
 		+NOGRAVITY	+NOINTERACTION +NOBLOCKMAP	+DONTSPLASH
 	}
-override void PostBeginPlay()
+	override void PostBeginPlay()
 	{
 		bSPRITEFLIP = Random(TRUE,FALSE);
 	}
-states
+	states
 	{
 		Spawn:
 			AHFR ABCDEFGH 6 

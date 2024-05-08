@@ -14,7 +14,7 @@ class SKP_DebrisBase : actor
 		A_Warp(AAPTR_DEFAULT, 0, 0, 0.125, 0, WARPF_NOCHECKPOSITION|WARPF_TOFLOOR);
 		super.PostBeginPlay();
 	}
-	Action void SKP_FrameSet(int F)
+	void SKP_FrameSet(int F)
 	{
 		if(f > 0)
 			Frame = random(0,F);

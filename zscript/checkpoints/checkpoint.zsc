@@ -34,21 +34,21 @@ bool Flip;
 		Activate(activator);
 	}
 	
-	Action void Reactivate()
+	void Reactivate()
 	{
-		invoker.Flip = FALSE;
+		self.Flip = FALSE;
 		SetStateLabel("Open");
 	}
-	Action void Savepoint(Actor activator)
+	void Savepoint(Actor activator)
 	{
-		invoker.Flip = TRUE;
+		self.Flip = TRUE;
 		activator.A_Print("Checkpoint reached.");
-		A_Warp(invoker.user_TPDestTID,activator.pos.x,activator.pos.y,activator.pos.z,activator.angle,WARPF_ABSOLUTEANGLE|WARPF_ABSOLUTEPOSITION|WARPF_NOCHECKPOSITION|WARPF_STOP|WARPF_MOVEPTR|WARPF_USETID);
+		A_Warp(self.user_TPDestTID,activator.pos.x,activator.pos.y,activator.pos.z,activator.angle,WARPF_ABSOLUTEANGLE|WARPF_ABSOLUTEPOSITION|WARPF_NOCHECKPOSITION|WARPF_STOP|WARPF_MOVEPTR|WARPF_USETID);
 		
-		ActorIterator it = level.CreateActorIterator(invoker.user_TPDestTID);
+		ActorIterator it = level.CreateActorIterator(self.user_TPDestTID);
 		Actor mo = it.Next();
 		if (mo)
-			invoker.target = mo;
+			self.target = mo;
 	}
 	Override void Tick()
 	{

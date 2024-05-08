@@ -8,7 +8,7 @@ class SKP_Leaves : actor
 		+NOBLOCKMAP;
 		Radius 4;
 	}
-	Action void SKP_LeafPile()
+	void SKP_LeafPile()
 	{
 		for(int i = 0; i < 8 ; i++)
 		{
