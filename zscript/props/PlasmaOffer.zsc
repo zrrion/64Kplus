@@ -1,6 +1,9 @@
 class skp_PlasmaOffer : SwitchableDecoration 
 {
-Default
+	int user_amount;
+	bool user_DontTransSpecial;
+	int OldSpecial;
+	Default
 	{
 		//$Category Weapons
 		+SOLID;
@@ -9,7 +12,13 @@ Default
 		Radius 16;
 		Height 44;
 	}
-States
+	override void PostBeginPlay()
+	{
+		if(special && !user_DontTransSpecial)
+			OldSpecial = special;
+		special = 0;
+	}
+	States
 	{
 	Spawn:
 	Active:
@@ -18,7 +27,16 @@ States
 	Inactive:
 		WPRF C -1
 		{
-			A_DropItem("PlasmaRifle");
+			user_amount;
+			let yergun = A_DropItem("PlasmaRifle");
+			A_StartSound("misc/toss");
+			if(user_amount && weapon(yergun))
+			{
+				weapon(yergun).AmmoGive1 = user_amount;
+				yergun.special = self.OldSpecial;
+				for(int i = 0; i < 5; i++)
+					yergun.args[i] = self.args[i];
+			}
 			bUSESPECIAL = FALSE;
 			bSOLID = FALSE;
 		}
