@@ -53,9 +53,9 @@ class SKP_RedArmor : CustomCustomInventory
 			A_GiveInventory("SKP_RedArmorBonus", 1);
 			
 		if(HealthGain == 0)
-			A_SetPickupMessage("Picked up the red armor. \cr(+100 armor)\cl");
+			invoker.A_SetPickupMessage("Picked up the red armor. \cr(+100 armor)\cl");
 		else
-			A_SetPickupMessage(String.Format("%s%i%s","Picked up the red armor. \cr(+", HealthGain, " health | +100 armor)\cl"));
+			invoker.A_SetPickupMessage(String.Format("%s%i%s","Picked up the red armor. \cr(+", HealthGain, " health | +100 armor)\cl"));
 	}
 }
 
