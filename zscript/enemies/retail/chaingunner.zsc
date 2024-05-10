@@ -31,6 +31,7 @@ class skp_ChaingunGuy : ChaingunGuy  replaces ChaingunGuy
 		CPOS P 5 A_XScream;
 		CPOS Q 5 A_NoBlocking;
 		CPOS RS 5;
+	Xdeath.Prop:
 		CPOS T -1;
 		Stop;
 	Raise:

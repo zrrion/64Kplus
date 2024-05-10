@@ -32,6 +32,7 @@ class skp_DoomImp : DoomImp  replaces DoomImp
 		TROO P 5;
 		TROO Q 5 A_NoBlocking;
 		TROO RST 5;
+	Xdeath.Prop:
 		TROO U -1;
 		Stop;
 	Raise:

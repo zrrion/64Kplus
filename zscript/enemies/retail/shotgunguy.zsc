@@ -31,6 +31,7 @@ class skp_ShotgunGuy : ShotgunGuy replaces ShotgunGuy
 		SPOS N 5 A_XScream;
 		SPOS O 5 A_NoBlocking;
 		SPOS PQRST 5;
+	Xdeath.Prop:
 		SPOS U -1;
 		Stop;
 	Raise:

@@ -1,5 +1,26 @@
+mixin class DeadEnemyFunctions
+{
+	bool user_XDeath;
+	bool user_remove;
+	void BecomeDead()
+	{
+		A_Die("prop");
+		A_NoBlocking(FALSE);
+		if(user_XDeath)
+		{
+			for(int i = 0; i < radius/3; i++)
+				A_SpawnItemEx("skp_PlacedXdeathGib",0,0,45,frandom(-4,4),frandom(-4,4),frandom(3,8),random(0,360),SXF_USEBLOODCOLOR|SXF_ABSOLUTEVELOCITY);
+			if(FindState("XDeath.Prop", true))
+				SetStateLabel("XDeath.Prop");
+		}
+		if(user_remove)
+			self.destroy();
+	}
+}
+
 class skp_DeadZombieMan : skp_ZombieMan replaces DeadZombieMan
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Zombie"
@@ -7,14 +28,14 @@ class skp_DeadZombieMan : skp_ZombieMan replaces DeadZombieMan
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadShotgunGuy : skp_ShotgunGuy replaces DeadShotgunGuy
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Shotgun Guy"
@@ -22,14 +43,14 @@ class skp_DeadShotgunGuy : skp_ShotgunGuy replaces DeadShotgunGuy
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadDoomImp : skp_DoomImp replaces DeadDoomImp
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Imp"
@@ -37,14 +58,14 @@ class skp_DeadDoomImp : skp_DoomImp replaces DeadDoomImp
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadChaingunGuy : skp_ChaingunGuy
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Chaingun Guy"
@@ -52,14 +73,14 @@ class skp_DeadChaingunGuy : skp_ChaingunGuy
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadDemon : skp_Demon replaces DeadDemon
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Pinkey Demon"
@@ -67,14 +88,14 @@ class skp_DeadDemon : skp_Demon replaces DeadDemon
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadSpectre : skp_Spectre
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Pinkey Spectre"
@@ -82,14 +103,14 @@ class skp_DeadSpectre : skp_Spectre
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }
 
 class skp_DeadCacodemon : skp_Cacodemon replaces DeadCacodemon
 {
+	mixin DeadEnemyFunctions;
 	Default
 	{
 		//$title "Dead Cacodemon"
@@ -97,8 +118,7 @@ class skp_DeadCacodemon : skp_Cacodemon replaces DeadCacodemon
 	}
 	Override Void PostBeginPlay()
 	{
-		A_Die("prop");
-		A_NoBlocking(FALSE);
+		BecomeDead();
 		super.PostBeginPlay();
 	}
 }

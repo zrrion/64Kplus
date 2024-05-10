@@ -31,6 +31,7 @@ class skp_Zombieman : Zombieman replaces Zombieman
 		POSS N 5 A_XScream;
 		POSS O 5 A_NoBlocking;
 		POSS PQRST 5;
+	Xdeath.Prop:
 		POSS U -1;
 		Stop;
 	Raise:
