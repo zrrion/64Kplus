@@ -61,9 +61,9 @@ class BehaviorTree : actor abstract
 		if(!group && children.size())
 		{
 			int FavChild = children.size()-1;
-			if(children[FavChild].TreeStatus = TREE_READY)
+			if(children[FavChild].TreeStatus == TREE_READY)
 				children[FavChild].Activate(self);
-			else if(children[FavChild].TreeStatus = TREE_DONE)
+			else if(children[FavChild].TreeStatus == TREE_DONE)
 				children.Pop();
 		}
 		else if(!group && !children.size())
