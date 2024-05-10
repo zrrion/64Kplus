@@ -8,7 +8,8 @@ class skp_ExplosiveBarrel : ExplosiveBarrel replaces ExplosiveBarrel
 	States
 	{
 	Death:
-		BEXP A 5 BRIGHT;
+		BEXP A 2	{	self.LightLevel = (self.LightLevel < 160) ? 160 : self.LightLevel;	}
+		BEXP A 3	{	self.LightLevel = (self.LightLevel < 192) ? 192 : self.LightLevel;	}
 		BEXP B 5 BRIGHT A_Scream;
 		BEXP C 5 BRIGHT;
 		BEXP D 5 BRIGHT
