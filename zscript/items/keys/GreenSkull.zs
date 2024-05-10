@@ -98,6 +98,7 @@ class GreenButton : SwitchBase
 	{
 		if(inventory(DroppedKey) && !inventory(DroppedKey).Owner && Flipper)
 		{
+			spawn("skp_PickupFlash", DroppedKey.pos);
 			inventory(DroppedKey).Touch(Flipper);
 		}
 	}

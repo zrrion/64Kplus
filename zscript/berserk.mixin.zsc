@@ -19,7 +19,10 @@ mixin class BerserkHoover//mixin BerserkHoover;
 		if(playerpawn(target) == NULL)//check to see if the target is a player and if they exist
 			return;
 		if(GetAge() > 70 && CanPickup(target))//waits 2 seconds before getting picked up but only if in range and only if able to be picked up
+		{
+			spawn("skp_PickupFlash", self.pos);
 			Touch(target);
+		}
 	}
 	override void Touch (Actor toucher)
 	{
