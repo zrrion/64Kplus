@@ -112,6 +112,7 @@ class skp_EnemySpawner : actor
 				}
 			}
 			YerDude.bDROPPED = false;
+			Yerdude.bAMBUSH = self.bAMBUSH;
 		}
 	}
 	Override void Deactivate(Actor activator)

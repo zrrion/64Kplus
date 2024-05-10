@@ -32,6 +32,16 @@ extend class skp_DoomPlayer
 					let YerGun = Weapon(item);
 					SayTheLine = StringTable.Localize(YerGun.PickupMessage());
 					if(item.bSUMMONEDMONSTER)
+					{
+						DropItem di = item.GetDropItems();
+						actor OpenedItem;
+						if(di)
+							OpenedItem = A_DropItem(di.Name);
+						if(OpenedItem && OpenedItem.Obituary.CodePointCount())
+							SayTheLine = OpenedItem.Obituary;
+						else
+							SayTheLine = "You unloaded a weapon.";;
+					}
 						SayTheLine = "You unloaded a weapon.";
 					if(YerGun.AmmoGive1)
 						Ammo1 = string.Format(" (+%i)", YerGun.AmmoGive1);
@@ -41,13 +51,31 @@ extend class skp_DoomPlayer
 				else if(Ammo(item))//the flags do whatever I tell them to do okay
 				{
 					if(item.bSUMMONEDMONSTER)
-						SayTheLine = "You opened a box of ammo.";
+					{
+						DropItem di = item.GetDropItems();
+						actor OpenedItem;
+						if(di)
+							OpenedItem = A_DropItem(di.Name);
+						if(OpenedItem && OpenedItem.Obituary.CodePointCount())
+							SayTheLine = OpenedItem.Obituary;
+						else
+							SayTheLine = "You opened a box of ammo.";
+					}
 					Ammo1 = string.Format(" (+%i)", item.Amount);
 				}
 				else if(Health(item))
 				{
 					if(item.bSUMMONEDMONSTER)
-						SayTheLine = "You opened an aid kit.";
+					{
+						DropItem di = item.GetDropItems();
+						actor OpenedItem;
+						if(di)
+							OpenedItem = A_DropItem(di.Name);
+						if(OpenedItem && OpenedItem.Obituary.CodePointCount())
+							SayTheLine = OpenedItem.Obituary;
+						else
+							SayTheLine = "You opened an aid kit.";
+					}
 					Ammo1 = string.Format(" (+%i)", item.Amount);
 				}
 				else if(BasicArmorBonus(item))

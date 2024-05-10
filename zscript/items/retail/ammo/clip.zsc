@@ -31,6 +31,10 @@ class skp_Clip : Clip replaces Clip
 
 class skp_ClipBox : ClipBox replaces ClipBox
 {
+	default
+	{
+		DropItem "EmptyClipBox";
+	}
 	States
 	{
 	Spawn:
@@ -57,5 +61,33 @@ class skp_ClipBox : ClipBox replaces ClipBox
 		else
 			bWALLSPRITE = FALSE;
 		Super.Tick();
+	}
+}
+
+class EmptyClipBox : EmptyPackaging
+{
+	default
+	{
+		Obituary "You opened a box of bullets.";
+	}
+	States
+	{
+	Spawn:
+		AMMO Z 0 NODELAY A_DropItem("ClipBoxLid");
+		Goto Death;
+	}
+}
+
+class ClipBoxLid : EmptyPackaging
+{
+	default
+	{
+		Obituary "You opened a box of bullets.";
+	}
+	States
+	{
+	Spawn:
+		AMOL Z 0;
+		Goto Death;
 	}
 }

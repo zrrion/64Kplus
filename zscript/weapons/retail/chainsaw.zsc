@@ -1,3 +1,11 @@
+class UnloadedChainsaw : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You emptied the fuel from a chainsaw.";
+	}
+}
+
 class skp_Chainsaw : skp_Weapon replaces Chainsaw
 {
 	Default
@@ -13,6 +21,7 @@ class skp_Chainsaw : skp_Weapon replaces Chainsaw
 		Weapon.Slotnumber 1;
 		Weapon.AmmoGive2 5;
 		+WEAPON.ALT_AMMO_OPTIONAL;
+		DropItem "UnloadedChainsaw";
 	}
 	States
 	{

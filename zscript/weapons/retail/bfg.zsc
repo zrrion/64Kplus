@@ -1,3 +1,11 @@
+class UnloadedBFG : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You ejected the extra cells from a BFG 9000.";
+	}
+}
+
 class skp_BFG9000 : skp_Weapon replaces BFG9000
 {
 	Default
@@ -12,6 +20,7 @@ class skp_BFG9000 : skp_Weapon replaces BFG9000
 		+WEAPON.NOAUTOFIRE;
 		Inventory.PickupMessage "$GOTBFG9000";
 		Tag "$TAG_BFG9000";
+		DropItem "UnloadedBFG";
 	}
 	States
 	{

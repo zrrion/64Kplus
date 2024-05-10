@@ -1,3 +1,11 @@
+class UnloadedSuperShotgun : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You unloaded the extra shells from a Super Shotgun.";
+	}
+}
+
 class skp_SuperShotgun : skp_Weapon replaces SuperShotgun
 {
 	Default
@@ -11,6 +19,7 @@ class skp_SuperShotgun : skp_Weapon replaces SuperShotgun
 		Inventory.PickupMessage "$GOTSHOTGUN2";
 		Obituary "$OB_MPSSHOTGUN";
 		Tag "$TAG_SUPERSHOTGUN";
+		DropItem "UnloadedSuperShotgun";
 	}
 	States
 	{

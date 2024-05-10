@@ -31,6 +31,10 @@ class skp_Cell : Cell replaces Cell
 
 class skp_CellPack : CellPack replaces CellPack
 {
+	default
+	{
+		DropItem "EmptyCellPack";
+	}
 	States
 	{
 	Spawn:
@@ -57,5 +61,19 @@ class skp_CellPack : CellPack replaces CellPack
 		else
 			bWALLSPRITE = FALSE;
 		Super.Tick();
+	}
+}
+
+class EmptyCellPack : EmptyPackaging
+{
+	default
+	{
+		Obituary "You discharged a cell pack.";
+	}
+	States
+	{
+	Spawn:
+		CELP Z 0;
+		Goto Death;
 	}
 }

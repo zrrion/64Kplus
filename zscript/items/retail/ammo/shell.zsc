@@ -37,6 +37,10 @@ class skp_Shell : Shell replaces Shell
 
 class skp_ShellBox : ShellBox replaces ShellBox
 {
+	default
+	{
+		DropItem "EmptyShellBox";
+	}
 	States
 	{
 	Spawn:
@@ -63,5 +67,19 @@ class skp_ShellBox : ShellBox replaces ShellBox
 		else
 			bWALLSPRITE = FALSE;
 		Super.Tick();
+	}
+}
+
+class EmptyShellBox : EmptyPackaging
+{
+	default
+	{
+		Obituary "You opened a box of shotgun shells.";
+	}
+	States
+	{
+	Spawn:
+		SBOX Z 0;
+		Goto Death;
 	}
 }

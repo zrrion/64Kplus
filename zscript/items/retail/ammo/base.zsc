@@ -1,23 +1,44 @@
-/*class ThriftyAmmo : ammo
+class EmptyPackaging : actor abstract
 {
-	Override void PostBeginPlay()
+	default
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
-			bWALLSPRITE = TRUE;
-		A_SetAngle(Random(0,360));
-	Super.PostBeginPlay();
+		Obituary "Opened a generic pickup";
+		-solid;
 	}
-	Override void Tick()
+	States
 	{
-		if(isFrozen())
-			return;
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
-		{
-			bWALLSPRITE = TRUE;
-			self.angle += fRandom(3.0,4.0);
-		}
-		else
-			bWALLSPRITE = FALSE;
-		Super.Tick();
+		Spawn:
+		Death:
+			"####" Z 256
+			{
+				tics += random(0,tics);
+			}
+			"####" XZZZZZZZZXZZZZZZZZ 1;
+			"####" XZZZZZXZZZZZXZZZZZ 1;
+			"####" XZZXZZXZZXZZXZZXZZ 1;
+			"####" XZXZXZXZXZXZXZXZXZ 1;
+			"####" XXZXXZXXZXXXZXXXXZ 1;
+			Stop;
+		Frame.Holder:
+			AMMO Z -1;
+			SBOX Z -1;
+			BROK Z -1;
+			CELP Z -1;
+			Goto Spawn;
 	}
-}*/
+}
+
+class UnloadedWeapon : EmptyPackaging abstract
+{
+	default
+	{
+		Obituary "Opened a generic pickup";
+		-solid;
+	}
+	States
+	{
+		Spawn:
+			TNT1 AA 1	{	self.destroy();	}
+			Stop;
+	}
+}

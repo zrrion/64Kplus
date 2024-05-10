@@ -1,3 +1,11 @@
+class UnloadedRocketLauncher : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You unloaded the extra rockets from a Rocket Launcher.";
+	}
+}
+
 class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
 {
 	Default
@@ -11,6 +19,7 @@ class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
 		+WEAPON.NOAUTOFIRE
 		Inventory.PickupMessage "$GOTLAUNCHER";
 		Tag "$TAG_ROCKETLAUNCHER";
+		DropItem "UnloadedRocketLauncher";
 	}
 	States
 	{

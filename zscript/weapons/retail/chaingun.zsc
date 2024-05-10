@@ -1,3 +1,11 @@
+class UnloadedChaingun : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You unloaded the extra bullets from a chaingun.";
+	}
+}
+
 class skp_Chaingun : skp_Weapon replaces Chaingun
 {
 	Default
@@ -11,6 +19,7 @@ class skp_Chaingun : skp_Weapon replaces Chaingun
 		Inventory.PickupMessage "$GOTCHAINGUN";
 		Obituary "$OB_MPCHAINGUN";
 		Tag "$TAG_CHAINGUN";
+		DropItem "UnloadedChaingun";
 	}
 	States
 	{

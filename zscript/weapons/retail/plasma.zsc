@@ -1,3 +1,11 @@
+class UnloadedPlasmaRifle : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You ejected the extra cells from a Plasma Rifle.";
+	}
+}
+
 class skp_PlasmaRifle  : skp_Weapon replaces PlasmaRifle 
 {
 	Default
@@ -10,6 +18,7 @@ class skp_PlasmaRifle  : skp_Weapon replaces PlasmaRifle
 		Weapon.AmmoType "Cell";
 		Inventory.PickupMessage "$GOTPLASMA";
 		Tag "$TAG_PLASMARIFLE";
+		DropItem "UnloadedPlasmaRifle";
 	}
 	States
 	{

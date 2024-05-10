@@ -31,6 +31,10 @@ class skp_RocketAmmo : RocketAmmo replaces RocketAmmo
 
 class skp_RocketBox : RocketBox replaces RocketBox
 {
+	default
+	{
+		DropItem "EmptyRocketBox";
+	}
 	States
 	{
 	Spawn:
@@ -57,5 +61,19 @@ class skp_RocketBox : RocketBox replaces RocketBox
 		else
 			bWALLSPRITE = FALSE;
 		Super.Tick();
+	}
+}
+
+class EmptyRocketBox : EmptyPackaging
+{
+	default
+	{
+		Obituary "You opened a box of rockets.";
+	}
+	States
+	{
+	Spawn:
+		BROK Z 0;
+		Goto Death;
 	}
 }

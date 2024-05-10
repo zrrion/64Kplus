@@ -251,7 +251,7 @@ class ProximitySwitch : SwitchBase
 	}
 	Override bool DoCallSpecial(Actor activator)
 	{
-		if(args[2])
+		if(args[2] && activator)
 		{
 			if(activator.special == 70)
 				activator.A_Stop();

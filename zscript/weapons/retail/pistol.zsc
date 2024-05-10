@@ -1,3 +1,11 @@
+class UnloadedPistol : UnloadedWeapon
+{
+	default
+	{
+		Obituary "You unloaded the extra bullets from a pistol.";
+	}
+}
+
 class skp_Pistol : skp_Weapon replaces Pistol
 {
 	Default
@@ -12,6 +20,7 @@ class skp_Pistol : skp_Weapon replaces Pistol
 		+WEAPON.WIMPY_WEAPON
 		Inventory.Pickupmessage "$PICKUP_PISTOL_DROPPED";
 		Tag "$TAG_PISTOL";
+		DropItem "UnloadedPistol";
 	}
 	States
 	{
