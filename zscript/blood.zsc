@@ -195,12 +195,12 @@ class skp_PlacedXdeathGib : skp_XdeathGib
 	Default
 	{
 	//$Category Gore
-	radius 16;
+	radius 4;
 	}
 	States
 	{
 		Death:
-			XDGP A 0;
+			XDGP "#" 0;
 			XDGP "#" -1;
 			stop;
 	}
