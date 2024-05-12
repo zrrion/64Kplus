@@ -2,7 +2,7 @@ class UnloadedShotgun : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You unloaded the extra shells from a Shotgun.";
+		Obituary "You unloaded a Shotgun.";
 	}
 }
 

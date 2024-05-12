@@ -1,5 +1,3 @@
-
-
 extend class skp_DoomPlayer
 {
 	override bool CanReceive(Inventory item)
@@ -42,7 +40,6 @@ extend class skp_DoomPlayer
 						else
 							SayTheLine = "You unloaded a weapon.";;
 					}
-						SayTheLine = "You unloaded a weapon.";
 					if(YerGun.AmmoGive1)
 						Ammo1 = string.Format(" (+%i)", YerGun.AmmoGive1);
 					if(YerGun.AmmoGive2)
@@ -54,10 +51,15 @@ extend class skp_DoomPlayer
 					{
 						DropItem di = item.GetDropItems();
 						actor OpenedItem;
-						if(di)
+						if(di && di.Probability == -1)
+							OpenedItem = spawn(di.name, item.pos);
+						else if(di)
 							OpenedItem = A_DropItem(di.Name);
 						if(OpenedItem && OpenedItem.Obituary.CodePointCount())
+						{
+							OpenedItem.target = self;
 							SayTheLine = OpenedItem.Obituary;
+						}
 						else
 							SayTheLine = "You opened a box of ammo.";
 					}
@@ -72,7 +74,10 @@ extend class skp_DoomPlayer
 						if(di)
 							OpenedItem = A_DropItem(di.Name);
 						if(OpenedItem && OpenedItem.Obituary.CodePointCount())
+						{
+							OpenedItem.target = self;
 							SayTheLine = OpenedItem.Obituary;
+						}
 						else
 							SayTheLine = "You opened an aid kit.";
 					}

@@ -76,6 +76,11 @@ class EmptyShellBox : EmptyPackaging
 	{
 		Obituary "You opened a box of shotgun shells.";
 	}
+	override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		bXFLIP = random(0,1);
+	}
 	States
 	{
 	Spawn:

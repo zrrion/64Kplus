@@ -33,7 +33,7 @@ class skp_RocketBox : RocketBox replaces RocketBox
 {
 	default
 	{
-		DropItem "EmptyRocketBox";
+		DropItem "EmptyRocketBox", -1;
 	}
 	States
 	{

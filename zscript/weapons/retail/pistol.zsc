@@ -2,7 +2,7 @@ class UnloadedPistol : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You unloaded the extra bullets from a pistol.";
+		Obituary "You unloaded a pistol.";
 	}
 }
 

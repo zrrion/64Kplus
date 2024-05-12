@@ -2,7 +2,7 @@ class UnloadedRocketLauncher : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You unloaded the extra rockets from a Rocket Launcher.";
+		Obituary "You unloaded a Rocket Launcher.";
 	}
 }
 

@@ -33,6 +33,11 @@ class EmptyStimpack : EmptyPackaging
 	{
 		Obituary "You opened a Stimpack.";
 	}
+	override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		bXFLIP = random(0,1);
+	}
 	States
 	{
 	Spawn:

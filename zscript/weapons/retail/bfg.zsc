@@ -2,7 +2,7 @@ class UnloadedBFG : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You ejected the extra cells from a BFG 9000.";
+		Obituary "You ejected the cells from a BFG 9000.";
 	}
 }
 

@@ -43,6 +43,11 @@ class EmptyMedikit : EmptyPackaging
 
 class MedikitLid : EmptyPackaging
 {
+	override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		bXFLIP = random(0,1);
+	}
 	States
 	{
 	Spawn:

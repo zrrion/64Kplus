@@ -5,20 +5,20 @@ class EmptyPackaging : actor abstract
 		Obituary "Opened a generic pickup";
 		-solid;
 	}
+	override void Tick()
+	{
+		if(isFrozen())
+			return;
+		if(GetAge() > 256 + random(0,256) && target && Distance2D(target) > 1024 && !CheckSight(target, SF_IGNOREVISIBILITY|SF_SEEPASTSHOOTABLELINES|SF_SEEPASTBLOCKEVERYTHING|SF_IGNOREWATERBOUNDARY))
+			destroy();
+		Super.Tick();
+	}
 	States
 	{
 		Spawn:
 		Death:
-			"####" Z 256
-			{
-				tics += random(0,tics);
-			}
-			"####" XZZZZZZZZXZZZZZZZZ 1;
-			"####" XZZZZZXZZZZZXZZZZZ 1;
-			"####" XZZXZZXZZXZZXZZXZZ 1;
-			"####" XZXZXZXZXZXZXZXZXZ 1;
-			"####" XXZXXZXXZXXXZXXXXZ 1;
-			Stop;
+			"####" Z 1;
+			loop;
 		Frame.Holder:
 			AMMO Z -1;
 			SBOX Z -1;

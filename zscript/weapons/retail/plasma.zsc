@@ -2,7 +2,7 @@ class UnloadedPlasmaRifle : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You ejected the extra cells from a Plasma Rifle.";
+		Obituary "You ejected the cells from a Plasma Rifle.";
 	}
 }
 

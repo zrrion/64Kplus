@@ -2,7 +2,7 @@ class UnloadedChaingun : UnloadedWeapon
 {
 	default
 	{
-		Obituary "You unloaded the extra bullets from a chaingun.";
+		Obituary "You unloaded a chaingun.";
 	}
 }
 
