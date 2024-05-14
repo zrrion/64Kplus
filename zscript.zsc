@@ -43,6 +43,8 @@ version "4.5"
 #include "zscript/effects/liquidfizz.zsc"
 #include "zscript/effects/teleport.zsc"
 
+
+#include "zscript/props/retail/TechLamps.zsc"
 #include "zscript/props/candle.zsc"
 #include "zscript/props/PlasmaOffer.zsc"
 #include "zscript/props/Skulls.zsc"
