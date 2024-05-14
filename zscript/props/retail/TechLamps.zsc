@@ -1,0 +1,307 @@
+class skp_TechLamp : Actor replaces TechLamp
+{
+	Default
+	{
+        //$Arg0 "Damage amount"
+        //$Arg0Type 11
+        //$Arg0Enum { 0 = "Undamaged"; 1 = "Damaged but working"; 2 = "Destroyed";}
+        //$Arg0Default 0
+
+		//$Arg1 "Undamaged Light mode"
+        //$Arg1Type 11
+        //$Arg1Enum { 0 = "Lamp on"; 1 = "Lamp off"; 2 = "Lamp matches sector"; 3 = "Lamp Flicker";}
+        //$Arg1Default 0
+
+		//$Arg2 "Damaged Light mode"
+        //$Arg2Type 11
+        //$Arg2Enum { 0 = "Lamp off"; 1 = "Lamp Flicker";}
+        //$Arg2Default 0
+		Radius 16;
+		Height 80;
+		ProjectilePassHeight -16;
+		+SOLID
+	}
+	Override void PostBeginPlay()
+	{
+		if(args[0] == 0)
+			Switch(args[1])
+			{
+				default:
+				case 0:
+					SetStateLabel("Spawn.Undamaged.On");
+					break;
+				case 1:
+					SetStateLabel("Spawn.Undamaged.Off");
+					break;
+				case 2:
+					SetStateLabel("Spawn.Undamaged.Match");
+					break;
+				case 3:
+					SetStateLabel("Spawn.Undamaged.Flicker");
+					break;
+			}
+		else if(args[0] == 1)
+			Switch(args[2])
+			{
+				default:
+				case 0:
+					SetStateLabel("Spawn.Damaged.Off");
+					break;
+				case 1:
+					SetStateLabel("Spawn.Damaged.Flicker");
+					break;
+			}
+		else
+			SetStateLabel("Spawn.Destroyed");
+		Super.PostBeginPlay();	
+	}
+	States
+	{
+	Spawn:
+		TLMP A 0;
+	Spawn.Undamaged.On:
+		TLMP ABCD 4 BRIGHT;
+		Loop;
+	Spawn.Undamaged.Off:
+		TLMP E -1;
+		Stop;
+	Spawn.Undamaged.Match:
+		TLMP AAAABBBBCCCCDDDD 1
+		{
+			if(CurSector.lightlevel < 128)
+			{
+				frame = 4;
+				self.LightLevel = 160;
+			}
+			else
+				self.LightLevel = 256;
+		}
+		Loop;
+	Spawn.Undamaged.Flicker:
+		TLMP A 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				frame = 4;
+			}
+			else if(random(0,1) == 0)
+			{
+				frame = random(0,4);
+			}
+
+			if(frame < 4)
+				self.LightLevel = 256;
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Damaged.Off:
+		TLMP F -1;
+		Stop;
+	Spawn.Damaged.Flicker:
+		TLMP F 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				if(random(0,1) == 0)
+					A_StartSound("world/spark", CHAN_WEAPON, CHANF_OVERLAP, 0.125, 4);
+				frame = 5;
+			}
+			else if(random(0,1) == 0)
+			{
+				A_StopSound(CHAN_WEAPON);
+				frame = random(5,6);
+			}
+
+			if(frame == 6)
+				self.LightLevel = random(160,256);
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Destroyed:
+		TLMP H -1;
+		Stop;
+	}
+}
+
+class skp_TechLamp2 : skp_TechLamp replaces TechLamp2
+{
+	
+	Default
+	{
+		//$Arg0 "Damage amount"
+        //$Arg0Type 11
+        //$Arg0Enum { 0 = "Undamaged"; 1 = "Damaged but working"; 2 = "Destroyed";}
+        //$Arg0Default 0
+
+		//$Arg1 "Undamaged Light mode"
+        //$Arg1Type 11
+        //$Arg1Enum { 0 = "Lamp on"; 1 = "Lamp off"; 2 = "Lamp matches sector"; 3 = "Lamp Flicker";}
+        //$Arg1Default 0
+
+		//$Arg2 "Damaged Light mode"
+        //$Arg2Type 11
+        //$Arg2Enum { 0 = "Lamp off"; 1 = "Lamp Flicker";}
+        //$Arg2Default 0
+		Height 60;
+	}
+	States
+	{
+	Spawn:
+		TLP2 A 0;
+	Spawn.Undamaged.On:
+		TLP2 ABCD 4 BRIGHT;
+		Loop;
+	Spawn.Undamaged.Off:
+		TLP2 E -1;
+		Stop;
+	Spawn.Undamaged.Match:
+		TLP2 AAAABBBBCCCCDDDD 1
+		{
+			if(CurSector.lightlevel < 128)
+			{
+				frame = 4;
+				self.LightLevel = 160;
+			}
+			else
+				self.LightLevel = 256;
+		}
+		Loop;
+	Spawn.Undamaged.Flicker:
+		TLP2 A 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				frame = 4;
+			}
+			else if(random(0,1) == 0)
+			{
+				frame = random(0,4);
+			}
+
+			if(frame < 4)
+				self.LightLevel = 256;
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Damaged.Off:
+		TLP2 F -1;
+		Stop;
+	Spawn.Damaged.Flicker:
+		TLP2 F 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				if(random(0,1) == 0)
+					A_StartSound("world/spark", CHAN_WEAPON, CHANF_OVERLAP, 0.125, 4);
+				frame = 5;
+			}
+			else if(random(0,1) == 0)
+			{
+				A_StopSound(CHAN_WEAPON);
+				frame = random(5,6);
+			}
+
+			if(frame == 6)
+				self.LightLevel = random(160,256);
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Destroyed:
+		TLP2 H -1;
+		Stop;
+	}
+}
+
+class skp_Column : skp_TechLamp replaces Column
+{
+	Default
+	{
+		//$Arg0 "Damage amount"
+        //$Arg0Type 11
+        //$Arg0Enum { 0 = "Undamaged"; 1 = "Damaged but working"; 2 = "Destroyed";}
+        //$Arg0Default 0
+
+		//$Arg1 "Undamaged Light mode"
+        //$Arg1Type 11
+        //$Arg1Enum { 0 = "Lamp on"; 1 = "Lamp off"; 2 = "Lamp matches sector"; 3 = "Lamp Flicker";}
+        //$Arg1Default 0
+
+		//$Arg2 "Damaged Light mode"
+        //$Arg2Type 11
+        //$Arg2Enum { 0 = "Lamp off"; 1 = "Lamp Flicker";}
+        //$Arg2Default 0
+		Height 48;
+	}
+	States
+	{
+	Spawn:
+		COLU A 0;
+	Spawn.Undamaged.On:
+		COLU A -1 BRIGHT;
+		Stop;
+	Spawn.Undamaged.Off:
+		COLU B -1;
+		Stop;
+	Spawn.Undamaged.Match:
+		COLU A 1
+		{
+			if(CurSector.lightlevel < 128)
+			{
+				frame = 1;
+				self.LightLevel = 160;
+			}
+			else
+				self.LightLevel = 256;
+		}
+		Loop;
+	Spawn.Undamaged.Flicker:
+		COLU A 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				frame = 1;
+			}
+			else if(random(0,1) == 0)
+			{
+				frame = random(0,1);
+			}
+
+			if(frame < 1)
+				self.LightLevel = 256;
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Damaged.Off:
+		COLU C -1;
+		Stop;
+	Spawn.Damaged.Flicker:
+		COLU C 4
+		{
+			if(level.totaltime % 16 == 0 && Random(0,2) == 0)
+			{
+				if(random(0,1) == 0)
+					A_StartSound("world/spark", CHAN_WEAPON, CHANF_OVERLAP, 0.125, 4);
+				frame = 2;
+			}
+			else if(random(0,1) == 0)
+			{
+				A_StopSound(CHAN_WEAPON);
+				frame = random(2,3);
+			}
+
+			if(frame == 3)
+				self.LightLevel = random(160,256);
+			else
+				self.LightLevel = CurSector.lightlevel;
+		}
+		Loop;
+	Spawn.Destroyed:
+		COLU E -1;
+		Stop;
+	}
+}
