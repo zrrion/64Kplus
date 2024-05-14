@@ -1,6 +1,7 @@
 class CacoSwitch : SwitchBase
 {
 	//$Category Switches
+	actor NoShootMe;
 	Default
 	{
 		//$Category Switches
@@ -13,6 +14,7 @@ class CacoSwitch : SwitchBase
 		+NOICEDEATH;
 		+DONTGIB;
 		+DONTTHRUST;
+		+SOLID;
 		Bloodcolor "Blue";
 		PainSound "caco/pain";
 	}
@@ -24,12 +26,28 @@ class CacoSwitch : SwitchBase
 	}
 	Override bool CanCollideWith(Actor other, bool passive)
 	{
+		if(playerpawn(other))
+			NoShootMe = other;
 		if(self.bSHOOTABLE && other.bMISSILE && !other.bRIPPER)
 		{
 			self.DamageMobj(other, other, 666, "none", 0, 0);
 			return false;
 		}
-		return super.CanCollideWith(other, passive);
+		return false;
+	}
+	Override void Tick()
+	{
+		super.Tick();
+		if(NoShootMe)
+		{
+			if(Distance2D(NoShootMe) > 256)
+				NoShootMe = NULL;
+			bSHOOTABLE = (NoShootMe && Distance2D(NoShootMe) > 72);
+		}
+		else
+		{
+			bSHOOTABLE = true;
+		}
 	}
 	States
 	{
@@ -48,7 +66,7 @@ class CacoSwitch : SwitchBase
 	NoFlip:
 		//TNT1 A 0	{	bNOPAIN = true;	}
 		SWCD B 70;
-		SWCD B 0 {	bSHOOTABLE = false;	}
+		//SWCD B 0 {	bSHOOTABLE = false;	}
 		SWCD B -1;
 		Stop;
 	Pain:
