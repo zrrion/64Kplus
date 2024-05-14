@@ -1,5 +1,6 @@
 class skp_EnemySpawner : actor
 {
+	bool user_RadRespawn;
 	static const string MOBJ_TYPES_RETAIL[] = 
 	{
 		"NULL",
@@ -78,13 +79,23 @@ class skp_EnemySpawner : actor
 		YerDude = spawn(MobjToSpawn, self.pos, ALLOW_REPLACE);
 		if(YerDude)
 		{
+			if(RadSuit(YerDude) && !user_RadRespawn)
+				RadSuit(YerDude).bALWAYSRESPAWN = false;
 			YerDude.Angle = self.angle;
 			if(args[2] == 0)
 				spawn("TeleportFog", self.pos, ALLOW_REPLACE);
 			if(args[2] == 1)
 			{
-				self.bSUMMONEDMONSTER = true;
-				YerDude.SpriteOffset.Y += YerDude.height/2;
+				if(GetAge() % 3 == 0)
+				{
+					self.bSUMMONEDMONSTER = true;
+					YerDude.SpriteOffset.Y += YerDude.height * 0.25;
+				}
+				else if(GetAge() % 2 == 0)
+				{
+					self.bSUMMONEDMONSTER = true;
+					YerDude.SpriteOffset.Y += YerDude.height * 0.5;
+				}
 				A_StartSound("plats/pt1_stop");
 			}
 
@@ -195,7 +206,8 @@ class skp_ItemSpawner : skp_EnemySpawner
 		"skp_GreenSkull",//keys
 		"PurpleCard",
 		"SKP_JumpBoots",//powerups
-		"SKP_JumpBoots_Perm"//10
+		"SKP_JumpBoots_Perm",//10
+		"skp_PlasmaOffer"
 	};
 	default
 	{
@@ -208,7 +220,7 @@ class skp_ItemSpawner : skp_EnemySpawner
 
 		//$Arg1 "Item Spawn Type (64K+)"
         //$Arg1Type 11
-        //$Arg1Enum { 0 = "None"; 1 = "Mini Stimpack"; 2 = "Large Health Bonus"; 3 = "Green Boots"; 4 = "Red Armor"; 5 = "Chainsaw Fuel"; 6 = "Unmaker"; 7 = "Green Skull Key"; 8 = "Purple Keycard"; 9 = "Double-Jump Boots (end of map/hub)"; 10 = "Double-Jump Boots (permanent)";}
+        //$Arg1Enum { 0 = "None"; 1 = "Mini Stimpack"; 2 = "Large Health Bonus"; 3 = "Green Boots"; 4 = "Red Armor"; 5 = "Chainsaw Fuel"; 6 = "Unmaker"; 7 = "Green Skull Key"; 8 = "Purple Keycard"; 9 = "Double-Jump Boots (end of map/hub)"; 10 = "Double-Jump Boots (permanent)"; 11 = "Plasma Offer";}
         //$Arg1Default 0
 
 		//$Arg2 "Spawn Style"
