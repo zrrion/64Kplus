@@ -26,6 +26,12 @@ class EmptyPackaging : actor abstract
 			CELP Z -1;
 			Goto Spawn;
 	}
+	void Lid(class<Actor> item)
+	{
+		let YerLid = A_DropItem(item);
+		if(YerLid && target)
+			YerLid.target = self.target;
+	}
 }
 
 class UnloadedWeapon : EmptyPackaging abstract
