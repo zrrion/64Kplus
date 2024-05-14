@@ -36,7 +36,7 @@ class EmptyMedikit : EmptyPackaging
 	States
 	{
 	Spawn:
-		MEDI Z 0 NODELAY A_DropItem("MedikitLid");
+		MEDI Z 0 NODELAY Lid("MedikitLid");
 		Goto Death;
 	}
 }

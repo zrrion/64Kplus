@@ -79,10 +79,10 @@ class EmptyClipBox : EmptyPackaging
 	States
 	{
 	Spawn:
-		AMMO Z 0 NODELAY A_DropItem("ClipBoxLid");
+		AMMO Z 0 NODELAY Lid("ClipBoxLid");
 		Goto Death;
 	Spawn2:
-		AMMU Z 0 NODELAY A_DropItem("ClipBoxLid");
+		AMMU Z 0 NODELAY Lid("ClipBoxLid");
 		Goto Death;
 	}
 }
