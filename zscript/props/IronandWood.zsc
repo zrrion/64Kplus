@@ -1,0 +1,264 @@
+class SKP_WoodandIronPillar_Short : Column
+{
+	Default
+	{
+		//$Title "Short Wood Pillar"
+		//$Category Iron and wood
+		Radius 13;
+		Height 37;
+	}
+	States
+	{
+	Spawn:
+		WIPL A -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_Bloody : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+		//$Title "Short Wood Pillar bloody"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL B -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_BeatingHeart : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+		//$Title "Short Wood Pillar beating heart"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL CD 14;
+		Loop;
+	}
+}
+
+class SKP_WoodandIronPillar_Short_BloodyMess : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+		//$Title "Short Wood Pillar bloody mess"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL E -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall : SKP_WoodandIronPillar_Short
+{
+	Default
+	{
+		//$Title "Tall Wood Pillar"
+		//$Category Iron and wood
+	}
+	Default
+	{
+		Radius 17;
+		Height 56;
+	}
+	States
+	{
+	Spawn:
+		WIPL F -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_RedBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+		//$Title "Tall Wood Pillar red"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL G -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_BlackBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+		//$Title "Tall  Wood Pillar black"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL H -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_BlueBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+		//$Title "Tall Wood Pillar blue"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL I -1;
+		Stop;
+	}
+}
+
+class SKP_WoodandIronPillar_Tall_PurpleBan : SKP_WoodandIronPillar_Tall
+{
+	Default
+	{
+		//$Title "Tall Wood Pillar purple"
+		//$Category Iron and wood
+	}
+	States
+	{
+	Spawn:
+		WIPL J -1;
+		Stop;
+	}
+}
+
+extend class skp_DoomPlayer
+{
+	SKP_WoodSignFront LastSign;
+}
+
+class SKP_WoodSignFront : actor
+{
+	string user_Msg;
+	int user_MsgTime;
+	bool user_RepeatSpecial;
+	int oldspecial;
+	Default
+	{
+		//$Title "Wooden sign"
+		//$Category Iron and wood
+		+WALLSPRITE;
+		+MASKROTATION;
+		+SOLID;
+		+USESPECIAL;
+		Radius 12;
+		Height 35;
+		VisibleAngles 90, -90;
+		VisiblePitch -180,180;
+		Activation THINGSPEC_Switch;
+	}
+
+	Override Void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		oldspecial = special;
+		special = 0;
+		if(!user_MsgTime)
+			user_MsgTime = -1;
+		else
+			user_MsgTime *= 35;
+		target = spawn("SKP_WoodSignBack", self.Pos);
+	}
+	Override Void Tick()
+	{
+		super.Tick();
+		if(target)
+		{
+			target.SetOrigin(self.Pos, TRUE);
+			target.angle = self.angle + 180;
+		}
+	}
+	Override void Activate(actor activator)
+	{
+		if(!activator)
+			return;
+		int MsgTime;
+		string MsgTxt;
+
+		if(user_Msg.CodePointCount())
+			MsgTxt = string.format("%i\r%s", user_MsgTime, user_Msg);
+		else
+			MsgTxt = string.format("%i\r%s", user_MsgTime, "this sign doesn't say anything important");
+		if(user_MsgTime == -1)
+			MsgTxt = string.format("%s%s", MsgTxt, "\n\n\crUse this sign again to dismiss this message.");
+
+		
+		if(user_MsgTime == -1 && skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign == self)
+		{
+			MsgTxt = "\r";
+			skp_DoomPlayer(activator).LastSign = NULL;
+		}
+		else if(skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign != self)
+		{
+			skp_DoomPlayer(activator).LastSign = self;
+		}
+
+		activator.A_Print(MsgTxt);
+		if(oldspecial)
+			SetStateLabel("CallSpecial");
+	}
+	Override void Deactivate(actor activator)
+	{
+		Activate(activator);
+	}
+	States
+	{
+	CallSpecial:
+		WSGN A 1
+		{
+			if(user_MsgTime)
+				A_SetTics(user_MsgTime);
+		}
+		WSGN A 0
+		{
+			A_CallSpecial(oldspecial, args[0], args[1], args[2], args[3], args[4]);
+			if(!user_RepeatSpecial)
+				oldspecial = 0;
+		}
+	Spawn:
+		WSGN A -1;
+		stop;
+	}
+}
+
+class SKP_WoodSignBack : SKP_WoodSignFront
+{
+	Default
+	{
+		-SOLID;
+		-USESPECIAL;
+	}
+
+	Override Void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+	}
+	Override Void Tick()
+	{
+		Actor.Tick();
+	}
+	States
+	{
+	Spawn:
+		WSGN B -1;
+		Stop;
+	}
+}

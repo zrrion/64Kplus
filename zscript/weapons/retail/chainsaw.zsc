@@ -19,7 +19,9 @@ class skp_Chainsaw : skp_Weapon replaces Chainsaw
 		+WEAPON.MELEEWEAPON
 		
 		Weapon.Slotnumber 1;
+		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive2 5;
+		Weapon.AmmoType2 "SKP_SawFuel";
 		+WEAPON.ALT_AMMO_OPTIONAL;
 		DropItem "UnloadedChainsaw";
 	}

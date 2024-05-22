@@ -21,7 +21,8 @@ class skp_EnemySpawner : actor
 		"BaronOfHell",
 		"Cyberdemon",
 		"SpiderMastermind",
-		"Wolfenstein SS"
+		"Wolfenstein SS",
+		"ExplosiveBarrel"
 	};
 
 	static const string MOBJ_TYPES_SKP[] = 
@@ -40,7 +41,7 @@ class skp_EnemySpawner : actor
 		//$title "Enemy Spawner"
         //$Arg0 "Enemy Spawn Type (retail)"
         //$Arg0Type 11
-        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "WolfensteinSS";}
+        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "WolfensteinSS"; 19 = "Explosive Barrel";}
         //$Arg0Default 0
 
 		//$Arg1 "Enemy Spawn Type (64K+)"
@@ -87,15 +88,12 @@ class skp_EnemySpawner : actor
 			if(args[2] == 1)
 			{
 				if(GetAge() % 3 == 0)
-				{
-					self.bSUMMONEDMONSTER = true;
 					YerDude.SpriteOffset.Y += YerDude.height * 0.25;
-				}
 				else if(GetAge() % 2 == 0)
-				{
-					self.bSUMMONEDMONSTER = true;
 					YerDude.SpriteOffset.Y += YerDude.height * 0.5;
-				}
+				else
+					YerDude.SpriteOffset.Y += YerDude.height * 0.75;
+				self.bSUMMONEDMONSTER = true;
 				A_StartSound("plats/pt1_stop");
 			}
 

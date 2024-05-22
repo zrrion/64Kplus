@@ -1,72 +1,60 @@
-class skp_CheckpointBase : switchabledecoration
+extend class skp_DoomPlayer
+{
+	skp_SavepointBase LastCheckPoint;
+}
+
+class skp_CheckpointBase : skp_SavepointBase
 {
 int user_TPDestTID;
-bool Flip;
 	Default
 	{
 		//$Category Savepoints
-		+USESPECIAL
-		+SOLID
-		Activation THINGSPEC_Switch;
-		radius 16;
-		height 50;
-	}
-	Override void PostBeginPlay()
-	{
-		Flip = FALSE;
-		super.PostBeginPlay();
 	}
 	Override void Activate(Actor activator)
 	{
-		if(!Flip)
+		let Doom = skp_DoomPlayer(activator);
+		if(Doom && !flip)
 		{
-			A_StartSound("Checkpoint/save", CHAN_AUTO, CHANF_UI);
-			Savepoint(activator);
-			SetStateLabel("Close");
+			target = Doom;
+			if(Doom.LastCheckPoint)
+				Doom.LastCheckPoint.Reactivate();
+			Doom.LastCheckPoint = self;
+			Savepoint();
 		}
 		else
 		{
 			A_StartSound("*usefail", CHAN_AUTO, CHANF_UI);
 		}
 	}
-	Override void Deactivate (Actor activator)
-	{
-		Activate(activator);
-	}
-	
-	void Reactivate()
+	Override void Reactivate()
 	{
 		self.Flip = FALSE;
 		SetStateLabel("Open");
 	}
-	void Savepoint(Actor activator)
+	Override void Savepoint()
 	{
 		self.Flip = TRUE;
-		activator.A_Print("Checkpoint reached.");
-		A_Warp(self.user_TPDestTID,activator.pos.x,activator.pos.y,activator.pos.z,activator.angle,WARPF_ABSOLUTEANGLE|WARPF_ABSOLUTEPOSITION|WARPF_NOCHECKPOSITION|WARPF_STOP|WARPF_MOVEPTR|WARPF_USETID);
-		
+		target.A_Print("Checkpoint reached.");
+		A_StartSound("Checkpoint/save", CHAN_AUTO, CHANF_UI);
+		A_Warp(self.user_TPDestTID,target.pos.x,target.pos.y,target.pos.z,target.angle,WARPF_ABSOLUTEANGLE|WARPF_ABSOLUTEPOSITION|WARPF_NOCHECKPOSITION|WARPF_STOP|WARPF_MOVEPTR|WARPF_USETID);
 		ActorIterator it = level.CreateActorIterator(self.user_TPDestTID);
 		Actor mo = it.Next();
 		if (mo)
-			self.target = mo;
+			self.tracer = mo;
+
+		SetStateLabel("Close");
 	}
-	Override void Tick()
+	Override void ResetWait()
 	{
-		if(Flip && user_TPDestTID > 0 && target != NULL)
+		if(tracer && level.totaltime % 4 == 0)
 		{
-			if((abs(target.pos.x - self.pos.x) > 96) || (abs(target.pos.y - self.pos.y) > 96) || (abs(target.pos.z - self.pos.z) > 96))//reset the checkpoint if the teleport destination moves too far away
-				Reactivate();
-			else if(level.totaltime % 4 == 0)
-			{
-				Vector3 tfxpos;
-				tfxpos.x = target.pos.x + frandom(-16,16);
-				tfxpos.y += target.pos.y + frandom(-16,16);
-				tfxpos.z += target.pos.z + 0.125;
-				let tfx = Spawn("Zar_TeleGlitter1",tfxpos);
-				tfx.vel.z += 0.25;
-			}
+			Vector3 tfxpos;
+			tfxpos.x = tracer.pos.x + frandom(-16,16);
+			tfxpos.y += tracer.pos.y + frandom(-16,16);
+			tfxpos.z += tracer.pos.z + 0.125;
+			let tfx = Spawn("Zar_TeleGlitter1",tfxpos);
+			tfx.vel.z += 0.25;
 		}
-		super.Tick();
 	}
 }
 
@@ -83,7 +71,7 @@ class GreenCheckpoint : skp_CheckpointBase
 			GBCP I 1;
 			Wait;
 		Close:
-			GBCP H 1;
+			GBCP H 1 ResetWait();
 			Wait;
 	}
 }
@@ -101,7 +89,7 @@ class RedCheckpoint : skp_CheckpointBase
 			RBCP I 1;
 			Wait;
 		Close:
-			RBCP H 1;
+			RBCP H 1 ResetWait();
 			Wait;
 	}
 }
@@ -119,7 +107,7 @@ class YellowCheckpoint : skp_CheckpointBase
 			YBCP I 1;
 			Wait;
 		Close:
-			YBCP H 1;
+			YBCP H 1 ResetWait();
 			Wait;
 	}
 }

@@ -2,14 +2,14 @@ class skp_Weapon : Weapon
 {
 	int AmountHolder;
 	int ReadySprite;
+	bool SawHasHit;
 	Default
 	{
 		Weapon.Kickback 100;
-		
-		Weapon.AmmoUse2 1;
-		Weapon.AmmoGive2 0;
-		Weapon.AmmoType2 "SKP_SawFuel";
 		+Weapon.ALT_USES_BOTH;
+		//Weapon.AmmoUse2 1;
+		//Weapon.AmmoGive2 0;
+		//Weapon.AmmoType2 "SKP_SawFuel";
 	}
 	
 	States
@@ -91,17 +91,26 @@ class skp_Weapon : Weapon
 			SAWD I 1
 				{
 					A_Overlay(666,"Saw.Idle.End");
-					A_Saw("weapons/sawfull","weapons/sawhit",40,"ChainsawZerkPuff",SF_NORANDOM|SF_NOUSEAMMOMISS,65,2.8125,0,0.25);
+					if(SKP_Saw("weapons/sawfull","weapons/sawhit",40,"ChainsawZerkPuff",SF_NORANDOM,65,2.8125,0,0.25) && !invoker.SawHasHit)
+					{
+						A_TakeInventory("SKP_SawFuel", 1);
+						invoker.SawHasHit = TRUE;
+					}
 					A_SpawnItemEx("ChainsawSmoke",2,fRandom(2,6),(height/2)-2,0,fRandom(1,3),fRandom(-2,0));
 				}
 			SAWD IIII 1 
 				{
-					A_Saw("","",40,"ChainsawZerkPuff",SF_NORANDOM|SF_NOUSEAMMO);
+					if(SKP_Saw("","weapons/sawhit",40,"ChainsawZerkPuff",SF_NORANDOM,65,2.8125,0,0.25) && !invoker.SawHasHit)
+					{
+						A_TakeInventory("SKP_SawFuel", 1);
+						invoker.SawHasHit = TRUE;
+					}
 					A_OverlayOffset(1,-32,16,WOF_ADD);
 					A_SpawnItemEx("ChainsawSmoke",2,fRandom(2,6),(height/2)-2,0,fRandom(1,3),fRandom(-2,0));
 				}
 			SAWD III 1 
 				{
+					invoker.SawHasHit = FALSE;
 					A_OverlayOffset(1,-32,16,WOF_ADD);
 					A_SpawnItemEx("ChainsawSmoke",2,fRandom(2,6),(height/2)-2,0,fRandom(1,3),fRandom(-2,0));
 				}
@@ -139,8 +148,6 @@ class skp_Weapon : Weapon
 		if(CountInv("skp_chainsaw") > 0)
 			A_SetInventory("skp_fist",0);//if you have the chainsaw then you don't need the fist
 		player.WeaponState &= WF_WEAPONBOBBING;
-		invoker.bALT_AMMO_OPTIONAL = TRUE;//this is true for how ammo is used, but not for how selection is determined so we set it here instead of as a default
-		invoker.bALT_USES_BOTH = FALSE;//this is true for how selection is determined, but not for how ammo is used so we clear it here
 		A_Raise(6*3);//the default speed it 6, presented as 6*x to be clear about selection speed vs the default
 	}
 	Action void skp_Lower()
@@ -149,8 +156,6 @@ class skp_Weapon : Weapon
 		if(!YerGun && player.ReadyWeapon)
 		{
 			player.WeaponState &= WF_WEAPONBOBBING;
-			invoker.bALT_AMMO_OPTIONAL = FALSE;//reset to default
-			invoker.bALT_USES_BOTH = TRUE;//reset to default
 			A_Overlay(666,"Saw.Idle.End");//kill the chainsaw idle overlay that handles the chainsaw smoke and sound
 			A_Lower(6*5);
 		}
@@ -177,6 +182,118 @@ class skp_Weapon : Weapon
 
 			//player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState(flash));
 		}
+	}
+	action bool SKP_Saw(sound fullsound = "weapons/sawfull", sound hitsound = "weapons/sawhit", int damage = 2, class<Actor> pufftype = "BulletPuff", int flags = 0, double range = 0, double spread_xy = 2.8125, double spread_z = 0, double lifesteal = 0, int lifestealmax = 0, class<BasicArmorBonus> armorbonustype = "ArmorBonus")
+	{
+		FTranslatedLineTarget t;
+
+		if (!player)
+			return false;
+
+		if (!pufftype)
+			pufftype = 'BulletPuff';
+		if (!damage)
+			damage = 2;
+		if (!(flags & SF_NORANDOM))
+			damage *=  random[Saw](1, 10);
+		if (range == 0)
+			range = MeleeRange + MELEEDELTA + (1. / 65536.); // MBF21 SAWRANGE;
+
+		double ang = angle + spread_xy * (Random2[Saw]() / 255.);
+		double slope = AimLineAttack (ang, range, t) + spread_z * (Random2[Saw]() / 255.);
+		Weapon weap = player.ReadyWeapon;
+
+		int puffFlags = (flags & SF_NORANDOMPUFFZ) ? LAF_NORANDOMPUFFZ : 0;
+
+		Actor puff;
+		int actualdamage;
+		[puff, actualdamage] = LineAttack (ang, range, slope, damage, 'Melee', pufftype, puffFlags, t);
+
+		if (!t.linetarget)
+		{
+			if ((flags & SF_RANDOMLIGHTMISS) && (Random[Saw]() > 64))
+			{
+				player.extralight = !player.extralight;
+			}
+			A_StartSound (fullsound, CHAN_WEAPON);
+			return false;
+		}
+
+		if (flags & SF_RANDOMLIGHTHIT)
+		{
+			int randVal = Random[Saw]();
+			if (randVal < 64)
+			{
+				player.extralight = 0;
+			}
+			else if (randVal < 160)
+			{
+				player.extralight = 1;
+			}
+			else
+			{
+				player.extralight = 2;
+			}
+		}
+
+		if (lifesteal && !t.linetarget.bDontDrain)
+		{
+			if (flags & SF_STEALARMOR)
+			{
+				if (armorbonustype == null)
+				{
+					armorbonustype = "ArmorBonus";
+				}
+				if (armorbonustype != null)
+				{
+					BasicArmorBonus armorbonus = BasicArmorBonus(Spawn(armorbonustype));
+					armorbonus.SaveAmount = int(armorbonus.SaveAmount * actualdamage * lifesteal);
+					armorbonus.MaxSaveAmount = lifestealmax <= 0 ? armorbonus.MaxSaveAmount : lifestealmax;
+					armorbonus.bDropped = true;
+					armorbonus.ClearCounters();
+
+					if (!armorbonus.CallTryPickup (self))
+					{
+						armorbonus.Destroy ();
+					}
+				}
+			}
+
+			else
+			{
+				GiveBody (int(actualdamage * lifesteal), lifestealmax);
+			}
+		}
+
+
+		A_StartSound (hitsound, CHAN_WEAPON);
+			
+		// turn to face target
+		if (!(flags & SF_NOTURN))
+		{
+			double anglediff = deltaangle(angle, t.angleFromSource);
+
+			if (anglediff < 0.0)
+			{
+				if (anglediff < -4.5)
+					angle = t.angleFromSource + 90.0 / 21;
+				else
+					angle -= 4.5;
+			}
+			else
+			{
+				if (anglediff > 4.5)
+					angle = t.angleFromSource - 90.0 / 21;
+				else
+					angle += 4.5;
+			}
+		}
+		if (!(flags & SF_NOPULLIN))
+			bJustAttacked = true;
+
+		if(t.linetarget)
+			return true;
+		return false;
 	}
 	Override void PostBeginPlay()
 	{

@@ -5,6 +5,17 @@ int User_Colour;
 	Default
 	{
 		//$Category Gold props
+		//$title "Key Gizmo"
+        //$Arg0 "Type"
+        //$Arg0Type 11
+        //$Arg0Enum { 0 = "Tall"; 1 = "Short";}
+        //$Arg0Default 0
+
+		//$Arg1 "Type"
+        //$Arg1Type 11
+        //$Arg1Enum { 0 = "Blue"; 1 = "Green"; 2 = "Red"; 3 = "Yellow"; }
+        //$Arg1Default 0
+		+BRIGHT;
 	}
 	States
 	{
@@ -12,11 +23,16 @@ int User_Colour;
 		GLDB A -1 Nodelay
 		{
 			if(User_Type)
+				args[0] = User_Type;
+			if(User_Colour)
+				args[1] = User_Colour;
+
+			if(args[0])
 				Frame = 1; //B
 			else
 				Frame = 0; //A
-				
-			Switch (User_Colour)
+
+			Switch (args[1])
 			{
 				Default:
 				Case (0)://Blue

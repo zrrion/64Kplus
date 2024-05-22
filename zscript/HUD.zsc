@@ -1,25 +1,288 @@
-protected void Draw_Meatspace_Compass()
+class SKP_Toast : Object
 {
-	string CompassUnwrapped = "N........:........|........:........E........:........|........:........S........:........|........:........W........:........|........:........";
-	int CompassDisplaySize = (CompassUnwrapped.CodePointCount()/4) + 5;//roughly sizes the display based on the size of the compass string
-	int CompassDisplayHalf = (CompassDisplaySize - (CompassDisplaySize % 2))/2;
-	
-	double SDeg = double(CompassUnwrapped.CodePointCount())/360.0;
-	string CompassWrapped;
-	//takes the player's angle and converts it to a unit where every "degree" represents one character of the CompassUnwrapped string, then offsets the angle by half a degree for alignment reasons
-	double CompassAngle = CPlayer.mo.angle;	CompassAngle %= 360;	if(CompassAngle <0) CompassAngle += 360;	CompassAngle *= SDeg;	CompassAngle += 0.5; 	CompassAngle %= CompassUnwrapped.CodePointCount();
-	
-	//shifts the CompassUnwrapped string so that the character that represents the player's direction is centered when the string is drawn later
-	CompassUnwrapped.AppendFormat("%s",CompassUnwrapped);
-	CompassUnwrapped.Remove(0,(CompassUnwrapped.CodePointCount()/2) - CompassDisplayHalf);
-	CompassUnwrapped.Remove((CompassUnwrapped.CodePointCount() - CompassDisplayHalf), CompassDisplayHalf);
-	//if the string needed to be offset the other direction you'd use the following code
-	//CompassUnwrapped.AppendFormat("%s",CompassUnwrapped.Mid(0,CompassDisplayHalf));
-	//CompassUnwrapped.Remove(0,CompassDisplayHalf);
+	int duration;
+	string message;
 
-	//generates the string that gets displayed on the HUD
-	While(CompassWrapped.CodePointCount() < CompassDisplaySize)
-		CompassWrapped.AppendFormat("%s",CompassUnwrapped.Mid((int(CompassAngle) + CompassWrapped.CodePointCount()) % CompassUnwrapped.CodePointCount(),1));
+	static SKP_Toast Create(string msg, int dur)
+	{
+		let v = new("SKP_Toast");
+		v.duration = dur;
+		v.message = msg;
+		return v;
+	}
+	void Reset()
+	{
+		self.destroy();
+	}
+	void Update()
+	{
+		if(duration < 0)
+			return;
+		duration--;
+		if(duration == 0)
+			self.Reset();
+	}
+}
 
-	DrawString(HSmallfont, string.format("%s", CompassWrapped), (0, -7), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+class SKP_HUD : BaseStatusBar
+{
+	LinearValueInterpolator CrosshairBlender, HealthBlender, ArmorBlender;
+	InventoryBarState diparms;
+
+	SKP_Toast Toast;
+
+	HUDFont mHUDFont, mIndexFont, mAmountFont, mSmallFont, mConFont;
+	HUDFont mALPHAFONTRed, mALPHAFONTRedSmall, mALPHAFONTBlue, mALPHAFONTGreen, mChainsawFuel;
+	HUDFont mSmolFont;
+
+	override void Init()
+	{
+		Super.Init();
+		SetSize(0, 320, 240);
+		Font fnt = "HUDFONT_DOOM";
+		mHUDFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 1, 1);
+		mSmallFont = HUDFont.Create(smallfont);
+		mConFont = HUDFont.Create(CONFONT);
+		fnt = "INDEXFONT_DOOM";
+		mIndexFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		mAmountFont = HUDFont.Create("INDEXFONT");
+
+		fnt = "ALPHAFONTRed";
+		mALPHAFONTRed = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		fnt = "ALPHAFONTRedSmall";
+		mALPHAFONTRedSmall = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		fnt = "ALPHAFONTBlue";
+		mALPHAFONTBlue = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		fnt = "ALPHAFONTGreen";
+		mALPHAFONTGreen = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		fnt = "ChainsawFuel";
+		mChainsawFuel = HUDFont.Create(fnt, fnt.GetCharWidth("X"), Mono_CellLeft);
+		fnt = "tinyfont";
+		mSmolFont = HUDFont.Create(fnt, fnt.GetCharWidth("A")+1, true);
+
+		diparms = InventoryBarState.Create();
+
+		CrosshairBlender = LinearValueInterpolator.Create(0, 1);
+		HealthBlender = LinearValueInterpolator.Create(0, 5);
+		ArmorBlender = LinearValueInterpolator.Create(0, 5);
+	}
+
+	override void Draw (int state, double TicFrac)
+	{
+		BeginHUD();
+		if (state == HUD_StatusBar)
+		{
+			DrawSKP_Alpha();
+			if(Toast)
+				DrawAlphaToast();
+		}
+		else if (state == HUD_Fullscreen)
+		{
+			DrawSKP_64();
+			if(Toast)
+				Draw64Toast();
+		}
+		else if(Toast)
+			Draw64Toast();
+		DrawXhair();
+		Super.Draw (state, TicFrac);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		//CrosshairBlender.update(0);
+		HealthBlender.update(players[consoleplayer].health);
+		ArmorBlender.update(GetArmorAmount());
+		if(Toast)
+		{
+			/*if(players[consoleplayer].health < HealthBlender.GetValue())
+			{
+				if(skp_DoomPlayer(CPlayer.mo))
+					skp_DoomPlayer(CPlayer.mo).LastSign = NULL;
+				Toast.Reset();
+			}
+			else*/
+				Toast.Update();
+		}
+	}
+	protected void DrawSKP_Alpha ()
+	{
+
+		vector2 Lpos = (-214,0);
+		vector2 Rpos = (214,0);
+		DrawImage("ST_TOM_L", Lpos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage("ST_TOM_M", Lpos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawString(mALPHAFONTBlue, string.format("%i",int(HealthBlender.GetValue())), Lpos + (23, -26) , DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
+			DrawString(mALPHAFONTGreen, string.format("%i",int(ArmorBlender.GetValue())), Lpos + (23, -12) , DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
+		Vector2 keypos = (69, -7);
+		bool locks[6];
+		for(int i = 0; i < 6; i++)
+			locks[i] = CPlayer.mo.CheckKeys(i + 1, false, true);
+		DrawImage(locks[1] ? "STKEYS0" : "", Lpos + ( 69, -7), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage(locks[2] ? "STKEYS1" : "", Lpos + ( 79, -7), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage(locks[0] ? "STKEYS2" : "", Lpos + ( 89, -7), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage(locks[4] ? "STKEYS3" : "", Lpos + ( 99, -8), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage(locks[5] ? "STKEYS4" : "", Lpos + (109, -8), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage(locks[3] ? "STKEYS5" : "", Lpos + (119, -8), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+
+
+		switch(CPlayer.mo.Countinv("PurpleCard"))
+		{
+			case 2:
+			DrawImage("STKEYSP", Lpos + (99, -16), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+			case 1:
+			DrawImage("STKEYSP", Lpos + (89, -16), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+			break;
+		}
+		switch(CPlayer.mo.Countinv("skp_GreenSkull"))
+		{
+			case 2:
+			DrawImage("STKEYSG", Lpos + (119, -17), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+			case 1:
+			DrawImage("STKEYSG", Lpos + (109, -17), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+			break;
+		}
+
+		DrawImage("ST_TOM_R", Rpos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		DrawImage("ST_TOM_S", Rpos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_OFFSETS);
+		let yergun = weapon(players[consoleplayer].ReadyWeapon);
+		if(yergun)
+		{
+			ammo ammotype1, ammotype2;
+			int amnt1, amnt2;
+			[ammotype1, ammotype2, amnt1, amnt2] = GetCurrentAmmo();
+			if(ammotype1 && !yergun.bAMMO_OPTIONAL)
+			{
+				DrawString(mALPHAFONTRed, string.format("%i",amnt1), Rpos + (-23, -19) , DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
+				DrawString(mALPHAFONTRedSmall, string.format("%i",ammotype1.MaxAmount), Rpos + (-21, -7) , DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
+				DrawString(mALPHAFONTRedSmall, "S", Rpos + (-23, -7) , DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
+				DrawString(mALPHAFONTRedSmall, string.format("%i",amnt1), Rpos + (-27, -7) , DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
+			}
+		}
+		DrawImage(CPlayer.HasWeaponsInSlot(2)? "ST_TNR2" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		DrawImage(CPlayer.HasWeaponsInSlot(3)? "ST_TNR3" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		DrawImage(CPlayer.HasWeaponsInSlot(4)? "ST_TNR4" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		DrawImage(CPlayer.HasWeaponsInSlot(5)? "ST_TNR5" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		DrawImage(CPlayer.HasWeaponsInSlot(6)? "ST_TNR6" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		DrawImage(CPlayer.HasWeaponsInSlot(7)? "ST_TNR7" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		bool HasSlot; int Slot; int SlotPos;
+		[HasSlot, Slot, SlotPos] = players[consoleplayer].weapons.LocateWeapon(yergun.GetClass());
+		if(HasSlot && slot > 1 && slot < 8)
+		{
+			
+			DrawImage(string.format("%s%i","ST_TNG", Slot), Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+			DrawImage("ST_ASB0", Rpos - (70 - (10 * Slot), 0), DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
+		}
+		DrawString(mChainsawFuel, "x", Rpos + (-120, -16) , DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
+		DrawString(mChainsawFuel, string.format("%i",CPlayer.mo.Countinv("SKP_SawFuel")), Rpos + (-120, -16) , DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
+	}
+	protected void DrawSKP_64()
+	{
+		let yergun = weapon(players[consoleplayer].ReadyWeapon);
+		if(yergun)
+		{
+			ammo ammotype1, ammotype2;
+			int amnt1, amnt2;
+			[ammotype1, ammotype2, amnt1, amnt2] = GetCurrentAmmo();
+			if(ammotype1 && !yergun.bAMMO_OPTIONAL)
+			{
+				int FontHeight = mSmallFont.mFont.GetGlyphHeight("0");
+				int AmntWidth = mSmallFont.mFont.StringWidth(string.format("%i",amnt1));
+				vector2 AmmoPos = (0, -18);
+				DrawInventoryIcon(ammotype1, AmmoPos + (0, -0.25 * FontHeight), DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER_BOTTOM, alpha:0.5);
+				DrawString(mSmallFont, string.format("%i",amnt1), AmmoPos + (-1, 0), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+			}
+		}
+		int FontHeight = mHUDFont.mFont.GetGlyphHeight("0");
+		DrawString(mHUDFont, string.format("%i",CPlayer.health), (-133, -10) - (0, FontHeight), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+		let armor = CPlayer.mo.FindInventory("BasicArmor");
+		if(armor)
+			DrawString(mHUDFont, string.format("%i",armor.Amount), (133, -10) - (0, FontHeight), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+		FontHeight += mConFont.mFont.GetGlyphHeight("0");
+		DrawString(mConFont, string.format("\c[grey]Health"), (-133, -12) - (0, FontHeight), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+		DrawString(mConFont, string.format("\c[grey]Armor"), (133, -12) - (0, FontHeight), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER_BOTTOM);
+
+		Vector2 keypos = (0, -2);
+		int KeyAreaWidth;
+		for(let i = CPlayer.mo.Inv; i != null; i = i.Inv)
+		{
+			if (i is "Key" && i.Icon.IsValid())
+			{
+				Vector2 size = TexMan.GetScaledSize(i.Icon);
+				KeyAreaWidth += size.X + 2;
+				if(i.amount > 1)
+					KeyAreaWidth += size.X + 2;
+			}
+		}
+		keypos.X = KeyAreaWidth * -0.5;
+		for(let i = CPlayer.mo.Inv; i != null; i = i.Inv)
+		{
+			if (i is "Key" && i.Icon.IsValid())
+			{
+				DrawTexture(i.Icon, keypos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_LEFT_BOTTOM,  alpha:0.75);
+				Vector2 size = TexMan.GetScaledSize(i.Icon);
+				keypos.X += size.X + 2;
+				if(i.amount > 1)
+				{
+					DrawTexture(i.Icon, keypos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_LEFT_BOTTOM,  alpha:0.75);
+					keypos.X += size.X + 2;
+				}
+			}
+		}
+	}
+	protected void DrawAlphaToast()
+	{
+		vector2 Tpos = (0, -91);
+		DrawImage("ST_TOAST", Tpos, DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER|DI_ITEM_TOP);
+		
+		Tpos = (-108, -83);
+		string ToastToaster = Toast.message;
+		BrokenLines lines = mSmolFont.mFont.BreakLines(ToastToaster, 216);
+        for (int i = 0; i < lines.Count() && i < 7; i++)
+        {
+			DrawString(mSmolFont, lines.stringAt(i), Tpos + (0, i * (mSmolFont.mFont.GetGlyphHeight("0") + 1)), DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
+        }
+        lines.destroy();
+	}
+	void Draw64Toast()
+	{
+		string ToastToaster = Toast.message;
+		BrokenLines lines = mSmallFont.mFont.BreakLines(ToastToaster, 600);
+		int linesheight = (mSmallFont.mFont.GetGlyphHeight("0") + 1) * lines.Count() * 0.5;
+        for (int i = 0; i < lines.Count(); i++)
+        {
+			DrawString(mSmallFont, lines.stringAt(i), (0, 0) + (0, -linesheight + i * (mSmallFont.mFont.GetGlyphHeight("0") + 1)), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER, scale: (0.5, 0.5));
+        }
+        lines.destroy();
+	}
+	void DrawXhair()
+	{
+	}
+	override bool ProcessNotify(EPrintLevel printlevel, String outline)
+	{		
+		return super.ProcessNotify(printlevel, outline);
+	}
+	override bool ProcessMidPrint(Font fnt, String msg, bool bold)
+	{
+		int numstop = msg.IndexOf("\r");
+		if(numstop != -1)
+		{
+			if(Toast)
+				Toast.Reset();
+			if(numstop == 0)//if the string is empty except the escape char just stop
+				return true;
+			string TimerString = msg.left(numstop);
+			int TimerInt = TimerString.ToInt();
+
+			msg.Remove(0, numstop + 1);
+			//int timer = msg.Mid(
+			Toast = SKP_Toast.Create(msg, TimerInt);
+			msg.Replace("\n\n", "\n");
+			console.PrintfEx(PRINT_NONOTIFY, msg);
+			return true;
+		}
+		if(Toast)
+				Toast.Reset();
+		return false;
+	}
 }

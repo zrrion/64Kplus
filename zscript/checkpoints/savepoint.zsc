@@ -42,7 +42,7 @@ int PostFlipTimer;
 	{
 		Activate(activator);
 	}
-	void ResetWait()
+	virtual void ResetWait()
 	{
 		PostFlipTimer++;
 		if(target && PostFlipTimer > 512 && Distance2D(target) > 1024 && !CheckSight(target, SF_IGNOREVISIBILITY|SF_SEEPASTSHOOTABLELINES|SF_SEEPASTBLOCKEVERYTHING|SF_IGNOREWATERBOUNDARY))
@@ -54,13 +54,13 @@ int PostFlipTimer;
 			Reactivate();
 		}
 	}
-	void Reactivate()
+	virtual void Reactivate()
 	{
 		Flip = FALSE;
 		PostFlipTimer = 0;
 		SetStateLabel("Open");	
 	}
-	void Savepoint()
+	virtual void Savepoint()
 	{
 		Flip = TRUE;
 		Autosave();

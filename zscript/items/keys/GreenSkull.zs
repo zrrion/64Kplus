@@ -5,7 +5,7 @@ class skp_GreenSkull : SingelUseKeyBase
 		//$Category "Single Use Keys"
         //$Title "Green skull key"
 		Inventory.Pickupmessage "You picked up a green skull key.";
-		Inventory.Icon "STKEYS7";
+		Inventory.Icon "STKEYSG";
 	}
 	States
 	{
