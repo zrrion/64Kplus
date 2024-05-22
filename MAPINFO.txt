@@ -1,6 +1,7 @@
 GameInfo
 {
 	PlayerClasses = "skp_DoomPlayer"
+	StatusbarClass = "SKP_HUD"
 	borderflat = "hudflat"
 	border = HereticBorder
 }
