@@ -142,7 +142,7 @@ class SKP_WoodandIronPillar_Tall_PurpleBan : SKP_WoodandIronPillar_Tall
 
 extend class skp_DoomPlayer
 {
-	SKP_WoodSignFront LastSign;
+	actor LastSign;
 }
 
 class SKP_WoodSignFront : actor
@@ -199,12 +199,12 @@ class SKP_WoodSignFront : actor
 			MsgTxt = string.format("%i\r%s", user_MsgTime, "this sign doesn't say anything important");
 		if(user_MsgTime == -1)
 			MsgTxt = string.format("%s%s", MsgTxt, "\n\n\crUse this sign again to dismiss this message.");
-
 		
-		if(user_MsgTime == -1 && skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign == self)
+		if(skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign == self)
 		{
 			MsgTxt = "\r";
 			skp_DoomPlayer(activator).LastSign = NULL;
+			SetStateLabel("DoCallSpecial");
 		}
 		else if(skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign != self)
 		{
@@ -227,6 +227,7 @@ class SKP_WoodSignFront : actor
 			if(user_MsgTime)
 				A_SetTics(user_MsgTime);
 		}
+	DoCallSpecial:
 		WSGN A 0
 		{
 			A_CallSpecial(oldspecial, args[0], args[1], args[2], args[3], args[4]);
