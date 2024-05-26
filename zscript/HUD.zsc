@@ -240,22 +240,42 @@ class SKP_HUD : BaseStatusBar
 		BrokenLines lines = mSmolFont.mFont.BreakLines(ToastToaster, 216);
         for (int i = 0; i < lines.Count() && i < 7; i++)
         {
-			DrawString(mSmolFont, lines.stringAt(i), Tpos + (0, i * (mSmolFont.mFont.GetGlyphHeight("0") + 1)), DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
+			string ToPrint = lines.stringAt(i);
+			if(i == 6 && ToPrint == "\n")
+			{
+				ToPrint = lines.stringAt(lines.Count());
+			}
+			DrawString(mSmolFont, ToPrint, Tpos + (0, i * (mSmolFont.mFont.GetGlyphHeight("0") + 1)), DI_TEXT_ALIGN_LEFT|DI_SCREEN_CENTER_BOTTOM);
         }
         lines.destroy();
 	}
-	void Draw64Toast()
+	protected void Draw64Toast()
 	{
 		string ToastToaster = Toast.message;
 		BrokenLines lines = mSmallFont.mFont.BreakLines(ToastToaster, 600);
 		int linesheight = (mSmallFont.mFont.GetGlyphHeight("0") + 1) * lines.Count() * 0.5;
+		int FillWidth;
+		int FillHeight;
         for (int i = 0; i < lines.Count(); i++)
         {
+			FillHeight += (mSmallFont.mFont.GetGlyphHeight("0") + 1);
+			if(lines.StringWidth(i)/2 > FillWidth)
+				FillWidth = mSmallFont.mFont.StringWidth(lines.stringAt(i))/2;
+        }
+		FillHeight += 8 +(mSmallFont.mFont.GetGlyphHeight("0") + 1)/2;
+		FillWidth += 8 + (mSmallFont.mFont.GetGlyphHeight("0") + 1)/2;
+
+		Fill(color(192, 0, 0, 0), -FillWidth/2, -FillHeight/2 - (mSmallFont.mFont.GetGlyphHeight("0") + 1)/4, FillWidth, FillHeight, DI_SCREEN_CENTER);
+		for (int i = 0; i < lines.Count(); i++)
+        {
+			FillHeight += (mSmallFont.mFont.GetGlyphHeight("0") + 1);
+			if(mSmallFont.mFont.StringWidth(lines.stringAt(i))/2 > FillWidth)
+				FillWidth = mSmallFont.mFont.StringWidth(lines.stringAt(i))/2;
 			DrawString(mSmallFont, lines.stringAt(i), (0, 0) + (0, -linesheight + i * (mSmallFont.mFont.GetGlyphHeight("0") + 1)), DI_TEXT_ALIGN_CENTER|DI_SCREEN_CENTER, scale: (0.5, 0.5));
         }
         lines.destroy();
 	}
-	void DrawXhair()
+	protected void DrawXhair()
 	{
 	}
 	override bool ProcessNotify(EPrintLevel printlevel, String outline)
