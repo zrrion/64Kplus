@@ -4,7 +4,8 @@ class HexenTombstoneRIP : SwitchableDecoration
 	{
 	//$Category Hexen
 	}
-	string  Msg;
+	string Msg;
+	int timer;
 	Default
 	{
 		Radius 10;
@@ -21,16 +22,41 @@ class HexenTombstoneRIP : SwitchableDecoration
 	}
 	Override void PostBeginPlay()
 	{
-		Msg = "R. I. P.";
+		Msg = "140\rR. I. P.";
 		Super.PostBeginPlay();
 	}
 	Override void Activate(Actor activator)
 	{
-		activator.A_Print(Msg);
+		if(skp_DoomPlayer(activator) && skp_DoomPlayer(activator).LastSign == self)
+		{
+			skp_DoomPlayer(activator).LastSign = NULL;
+			activator.A_Print("\r");
+		}
+		else
+		{
+			skp_DoomPlayer(activator).LastSign = self;
+			activator.A_Print(Msg);
+			target = activator;
+			timer = 140;
+		}
 	}
 	Override void Deactivate(Actor activator)
 	{
 		Activate(activator);
+	}
+	override void Tick()
+	{
+		super.Tick();
+		if(skp_DoomPlayer(target))
+		{
+			timer--;
+			if(!timer)
+			{
+				skp_DoomPlayer(target).LastSign = NULL;
+				target = NULL;
+			}
+			
+		}
 	}
 }
 
@@ -53,70 +79,71 @@ class HexenTombstone : HexenTombstoneRIP
 		bXFLIP = Random(TRUE, FALSE);
 		self.frame = random(1,7);
 		Super.PostBeginPlay();
-		string MsgList[96];
-		MsgList[0] = "Rex has seen you";
-		MsgList[1] = "He is hunting for you";
-		MsgList[2] = "Rex lies in wait";
-		MsgList[3] = "You're gonna carry that weight";
-		MsgList[4] = "Your trains";//CRAN TIME
-		MsgList[5] = "Fondly regard crustacean";//Problem sleuth
-		MsgList[6] = "Ace Dick";
-		MsgList[7] = "ata ata hoglo hulu";//? an old dos game, IIRC
-		MsgList[8] = "MEMORY IS TREACHERY";//memento
-		MsgList[9] = "You naive fool. Nothing can ever unmake this";//cracked
-		MsgList[10] = "No, It's not a cookie!";//Kermit
-		MsgList[11] = "Of course it's an orange!\nI just told you it was an orange!";
-		MsgList[12] = "Sam Slade";//Robo Hunter
-		MsgList[13] = "Crescent Fresh";//Sifl and Olly
-		MsgList[14] = "R.I.P. Lemonsnout";
-		MsgList[15] = "I have a love-hate relationship with rng";//Red Rogue
-		MsgList[16] = "Death holds my flesh to random";
-		MsgList[17] = "Elbereth";
-		MsgList[18] = "Vlad was here";
-		MsgList[19] = "ad aerarium";
-		MsgList[20] = "Owlbreath";
-		MsgList[21] = "Galadriel";//Character in Tolkien's books
-		MsgList[22] = "Kilroy was here";
-		MsgList[23] = "A.S. ->";
-		MsgList[24] = "<- A.S.";//Journey to the Center of the Earth
-		MsgList[25] = "You won't get it up the steps";//The original Adventure game
-		MsgList[26] = "Lasciate ogni speranza o voi ch'entrate";//Dante's Inferno: Abandon hope all ye who enter here
-		MsgList[27] = "Well Come";//Engraving from the TV show The Prisoner
-		MsgList[28] = "We apologize for the inconvenience";//So Long, and Thanks for All the Fish
-		MsgList[29] = "See you next Wednesday";
-		MsgList[30] = "notary sojak";//Smokey Stover comic
-		MsgList[31] = "For a good time call 867-5309";
-		MsgList[32] = "Please don't feed the animals";
-		MsgList[33] = "Madam, in Eden, I'm Adam";
-		MsgList[34] = "Two thumbs up!";//Siskel & Ebert
-		MsgList[35] = "Hello, World!";
-		MsgList[36] = "As if!";//Clueless
-		MsgList[37] = "For a good time call 606-4311, ask for Candy";//a National Lampoon(?) song
-		MsgList[38] = "Part of this malicious breakfast";//from the internet somewhere
-		MsgList[39] = "It's terminal!";//dr. cat
-		MsgList[40] = "Hryre wong gecrong";//The place has fallen to ruin.
-		MsgList[41] = "Hreosan heofonsteorran";//the star of heaven shall fall
-		MsgList[42] = "Crom help me I have ascended a tourist";//yet another stupid decade
-		MsgList[43] = "I. Freeley";//rott
-		MsgList[44] = "E. Oscuro";//rott
-		MsgList[45] = "F. Taggert";
-		MsgList[46] = "Kirt";//shadowcaster
-		MsgList[47] = "All on track, all arriving\nThey all sing, and they are one";//stairway to heaven backmasked
-		MsgList[48] = "Turn me on dead man";//beatles backmasked
-		MsgList[49] = "Bite it you scum";//gg allen
-		MsgList[50] = "Pick me up on your way down";//gg allen
-		MsgList[51] = "All this beauty and just anough time\nto figure out how to destroy it";
-		MsgList[52] = "Come inside and meet the Mrs";//labyrinth
-		MsgList[53] = "You are neither of these things";//homestuck
-		MsgList[54] = "be the pony";
-		MsgList[55] = "Nothing happens.\nWhat a huge letdown";
-		MsgList[56] = "cockroaches are never adorable";//college humor(?)
-		MsgList[57] = "Congratulations! You've just won the ''jef and paul award for excellence in shopping centers.''";//nightshade
-		MsgList[58] = "Eat not the blood rune";//Red Rogue
-		MsgList[59] = "Precious Roy";
-		MsgList[60] = "Don't compare Bjork to anyone!\nShe is OFF! LIMITS!";
-		MsgList[61] = "If we outlaw cloning only outlaws will have clones";
-		Msg = MsgList[random(0,61)];
+		static const string MsgList[] = 
+		{
+		"Rex has seen you",
+		"He is hunting for you",
+		"Rex lies in wait",
+		"You're gonna carry that weight",
+		"Your trains",//CRAN TIME
+		"Fondly regard crustacean",//Problem sleuth
+		"Ace Dick",
+		"ata ata hoglo hulu",//? an old dos game, IIRC
+		"MEMORY IS TREACHERY",//memento
+		"You naive fool. Nothing can ever unmake this",//cracked
+		"No, It's not a cookie!",//Kermit
+		"Of course it's an orange!\nI just told you it was an orange!",
+		"Sam Slade",//Robo Hunter
+		"Crescent Fresh",//Sifl and Olly
+		"R.I.P. Lemonsnout",
+		"I have a love-hate relationship with rng",//Red Rogue
+		"Death holds my flesh to random",
+		"Elbereth",
+		"Vlad was here",
+		"ad aerarium",
+		"Owlbreath",
+		"Galadriel",//Character in Tolkien's books
+		"Kilroy was here",
+		"A.S. ->",
+		"<- A.S.",//Journey to the Center of the Earth
+		"You won't get it up the steps",//The original Adventure game
+		"Lasciate ogni speranza o voi ch'entrate",//Dante's Inferno: Abandon hope all ye who enter here
+		"Well Come",//Engraving from the TV show The Prisoner
+		"We apologize for the inconvenience",//So Long, and Thanks for All the Fish
+		"See you next Wednesday",
+		"notary sojak",//Smokey Stover comic
+		"For a good time call 867-5309",
+		"Please don't feed the animals",
+		"Madam, in Eden, I'm Adam",
+		"Two thumbs up!",//Siskel & Ebert
+		"Hello, World!",
+		"As if!",//Clueless
+		"For a good time call 606-4311, ask for Candy",//a National Lampoon(?) song
+		"Part of this malicious breakfast",//from the internet somewhere
+		"It's terminal!",//dr. cat
+		"Hryre wong gecrong",//The place has fallen to ruin.
+		"Hreosan heofonsteorran",//the star of heaven shall fall
+		"Crom help me I have ascended a tourist",//yet another stupid decade
+		"I. Freeley",//rott
+		"E. Oscuro",//rott
+		"F. Taggert",
+		"Kirt",//shadowcaster
+		"All on track, all arriving\nThey all sing, and they are one",//stairway to heaven backmasked
+		"Turn me on dead man",//beatles backmasked
+		"Bite it you scum",//gg allen
+		"Pick me up on your way down",//gg allen
+		"All this beauty and just anough time\nto figure out how to destroy it",
+		"Come inside and meet the Mrs",//labyrinth
+		"You are neither of these things",//homestuck
+		"be the pony",
+		"Nothing happens.\nWhat a huge letdown",
+		"cockroaches are never adorable",//college humor(?)
+		"Congratulations! You've just won the ''jef and paul award for excellence in shopping centers.''",//nightshade
+		"Eat not the blood rune",//Red Rogue
+		"Precious Roy",
+		"Don't compare Bjork to anyone!\nShe is OFF! LIMITS!",
+		"If we outlaw cloning only outlaws will have clones"	};
+		Msg = string.format("140\r%s", MsgList[random(0,61)]);
 		
 	}
 }
