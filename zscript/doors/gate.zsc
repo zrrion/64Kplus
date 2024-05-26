@@ -197,7 +197,7 @@ class skp_RollerGate_Proximity : skp_RollerGate
 	{
 		Spawn:
 			RLDR F 0;
-			RLDR F -1;
+			RLDR # -1;
 			Stop;
 	}
 }
