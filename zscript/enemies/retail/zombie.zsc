@@ -26,7 +26,7 @@ class skp_Zombieman : Zombieman replaces Zombieman
 				}
 		}
 	Xdeath:
-		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, self.height * 0.75, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
 		POSS M 5;
 		POSS N 5 A_XScream;
 		POSS O 5 A_NoBlocking;

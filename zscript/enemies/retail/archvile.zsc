@@ -18,7 +18,7 @@ class skp_Archvile : Archvile replaces Archvile
 				}
 		}
 	Xdeath:
-		TNT1 AA 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		TNT1 AA 0 A_SpawnItemEx("skp_BloodMist", 0, 0, self.height * 0.75, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
 	Death:
 		VILE Q 7;
 		VILE R 7 A_Scream;

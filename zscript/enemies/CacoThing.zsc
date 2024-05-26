@@ -139,7 +139,7 @@ class Cacomera : Cacodemon
 		CORB C 6;
 		Goto See;
 	Xdeath:
-		TNT1 AA 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		TNT1 AA 0 A_SpawnItemEx("skp_BloodMist", 0, 0, self.height * 0.75, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
 	Death:
 		CORB D 8;
 		CORB E 8 A_Scream();
@@ -148,6 +148,7 @@ class Cacomera : Cacodemon
 		CORB H 0 A_NoBlocking();
 		CORB H 8 A_CheckSolidFooting("Death.Land");
 		wait;
+	Death.Prop:
 	Death.Land:
 		CORB I -1
 		{

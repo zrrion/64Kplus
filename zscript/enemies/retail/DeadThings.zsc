@@ -23,6 +23,7 @@ class skp_DeadZombieMan : skp_ZombieMan replaces DeadZombieMan
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Zombie"
 		-ISMONSTER
 	}
@@ -38,6 +39,7 @@ class skp_DeadShotgunGuy : skp_ShotgunGuy replaces DeadShotgunGuy
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Shotgun Guy"
 		-ISMONSTER
 	}
@@ -53,6 +55,7 @@ class skp_DeadDoomImp : skp_DoomImp replaces DeadDoomImp
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Imp"
 		-ISMONSTER
 	}
@@ -68,7 +71,24 @@ class skp_DeadChaingunGuy : skp_ChaingunGuy
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Chaingun Guy"
+		-ISMONSTER
+	}
+	Override Void PostBeginPlay()
+	{
+		BecomeDead();
+		super.PostBeginPlay();
+	}
+}
+
+class skp_DeadCacomera : Cacomera
+{
+	mixin DeadEnemyFunctions;
+	Default
+	{
+		//$category "Dead Things"
+		//$title "Dead Cacomera"
 		-ISMONSTER
 	}
 	Override Void PostBeginPlay()
@@ -83,6 +103,7 @@ class skp_DeadDemon : skp_Demon replaces DeadDemon
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Pinkey Demon"
 		-ISMONSTER
 	}
@@ -98,6 +119,7 @@ class skp_DeadSpectre : skp_Spectre
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Pinkey Spectre"
 		-ISMONSTER
 	}
@@ -113,6 +135,7 @@ class skp_DeadCacodemon : skp_Cacodemon replaces DeadCacodemon
 	mixin DeadEnemyFunctions;
 	Default
 	{
+		//$category "Dead Things"
 		//$title "Dead Cacodemon"
 		-ISMONSTER
 	}

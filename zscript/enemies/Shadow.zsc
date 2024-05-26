@@ -61,7 +61,7 @@ class Shadow : actor
 				}
 		}
 	Xdeath:
-		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, 0, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
+		TNT1 A 0 A_SpawnItemEx("skp_BloodMist", 0, 0, self.height * 0.75, random(-2,2), random(-2,2), 5, 0, SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERALPHA);
 		SHDX A 8;
 		SHDX B 6 A_XScream();
 		SHDX C 6;
