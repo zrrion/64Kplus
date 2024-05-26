@@ -21,7 +21,7 @@ class skp_EnemySpawner : actor
 		"BaronOfHell",
 		"Cyberdemon",
 		"SpiderMastermind",
-		"Wolfenstein SS",
+		"WolfensteinSS",
 		"ExplosiveBarrel"
 	};
 
@@ -31,7 +31,8 @@ class skp_EnemySpawner : actor
 		"DemonDog",
 		"Shadow",
 		"ZombieSS",
-		"Cacomera"
+		"Cacomera",
+		"GoreNest"
 	};
 	string user_SpawnType;
 	actor YerDude;
@@ -41,12 +42,12 @@ class skp_EnemySpawner : actor
 		//$title "Enemy Spawner"
         //$Arg0 "Enemy Spawn Type (retail)"
         //$Arg0Type 11
-        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "WolfensteinSS"; 19 = "Explosive Barrel";}
+        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "Wolfenstein SS"; 19 = "Explosive Barrel";}
         //$Arg0Default 0
 
 		//$Arg1 "Enemy Spawn Type (64K+)"
         //$Arg1Type 11
-        //$Arg1Enum { 0 = "None"; 1 = "Demon Dog"; 2 = "Shadow"; 3 = "Retro Zombie"; 4 = "Cacomera";}
+        //$Arg1Enum { 0 = "None"; 1 = "Demon Dog"; 2 = "Shadow"; 3 = "Retro Zombie"; 4 = "Cacomera"; 5 = "Gore Nest";}
         //$Arg1Default 0
 
 		//$Arg2 "Spawn Style"
@@ -66,6 +67,8 @@ class skp_EnemySpawner : actor
 	}
 	Virtual string SpawnWhat()
 	{
+		args[0] %= 20;
+		args[1] %= 6;
 		if(user_SpawnType.CodePointCount())
 			return user_SpawnType;
 		else if(args[1])
@@ -77,9 +80,12 @@ class skp_EnemySpawner : actor
 	Override void Activate(Actor activator)
 	{
 		string MobjToSpawn = SpawnWhat();
-		YerDude = spawn(MobjToSpawn, self.pos, ALLOW_REPLACE);
-		if(YerDude)
+		if(MobjToSpawn == "NULL" || MobjToSpawn == "")
+			return;
+		let YD = spawn(MobjToSpawn, self.pos, ALLOW_REPLACE);
+		if(YD)
 		{
+			YerDude = YD;
 			if(RadSuit(YerDude) && !user_RadRespawn)
 				RadSuit(YerDude).bALWAYSRESPAWN = false;
 			YerDude.Angle = self.angle;
@@ -126,6 +132,8 @@ class skp_EnemySpawner : actor
 	}
 	Override void Deactivate(Actor activator)
 	{
+		if(!activator)
+			return;
 		super.Activate(activator);
 	}
 	Override Void Tick()
@@ -237,6 +245,8 @@ class skp_ItemSpawner : skp_EnemySpawner
 	}
 	Override string SpawnWhat()
 	{
+		args[0] %= 38;
+		args[1] %= 12;
 		if(user_SpawnType.CodePointCount())
 			return user_SpawnType;
 		else if(args[1])
