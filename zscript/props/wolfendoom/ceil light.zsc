@@ -1,5 +1,6 @@
 class WolfCeilingLight : Actor
 {
+	mixin SurfaceFinder;
 	class<actor> shine;
 	property shine:shine;
 	int ceilingOffset;
@@ -8,9 +9,8 @@ class WolfCeilingLight : Actor
 		//$Category Wolfendoom
 		//$title "wolf lamp green"
 		WolfCeilingLight.shine "WolfLampLight";
-		+SPAWNCEILING
+		-SPAWNCEILING
 		+MOVEWITHSECTOR
-		+CEILINGHUGGER
 		+NOGRAVITY
 		radius 16;
 		height 10;
@@ -23,12 +23,8 @@ class WolfCeilingLight : Actor
 	}
 	Override void PostBeginPlay()
 	{
+		self.SetOrigin(GetCeilingPos(), FALSE);
 		Super.PostBeginPlay();
-		ceilingOffset = abs(CurSector.CenterCeiling() - self.pos.z);
-		if(ceilingOffset < self.height)
-			ceilingOffset = self.height;
-
-
 		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
 		{
@@ -39,10 +35,8 @@ class WolfCeilingLight : Actor
 	Override void Tick()
 	{
 		super.Tick();
-		self.SetOrigin((self.pos.x, self.pos.y, CurSector.CenterCeiling() - ceilingOffset), TRUE);
-
-
-		if(CurSector.lightlevel < 128)
+		self.SetOrigin(GetCeilingPos(), TRUE);	
+		if(S && S.lightlevel < 128)
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
@@ -66,6 +60,7 @@ class WolfCeilingLight_Red : WolfCeilingLight
 
 class WolfFloorLight : Actor
 {
+	mixin SurfaceFinder;
 	class<actor> shine;
 	property shine:shine;
 	Default
@@ -86,6 +81,7 @@ class WolfFloorLight : Actor
 	Override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
+		GetFloorPos();
 		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
 		{
@@ -96,8 +92,7 @@ class WolfFloorLight : Actor
 	Override void Tick()
 	{
 		super.Tick();
-
-		if(CurSector.lightlevel < 128)
+		if(S.lightlevel < 128)
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
@@ -121,10 +116,11 @@ class WolfFloorLight_Red : WolfFloorLight
 
 Class WolfLampLight : Actor
 {
+	mixin SurfaceFinder;
 	Default
 	{
 		Radius 8;
-		Height 16;
+		Height 0.25;
 		+NOBLOCKMAP
 		+MOVEWITHSECTOR
 		+BRIGHT
@@ -133,22 +129,16 @@ Class WolfLampLight : Actor
 		RenderStyle "ADD";
 		Alpha 0.125;
 	}
-	double D;
-	Sector S;
-	//F3DFLoor F;
 	Override Void PostBeginPlay()
 	{
+		self.SetOrigin(GetFloorPos(), FALSE);
 		Actor.PostBeginPlay();
-		[D, S] = CurSector.NextLowestFloorAt(self.pos.x, self.pos.y, self.pos.z, FFCF_NODROPOFF);
-		if(TexMan.GetName(S.GetTexture(0)) == "F_SKY1")
-			self.destroy();
-		vector3 LightPos = (self.pos.x, self.pos.y, D);
-		SetOrigin(LightPos, false);
 	}
 
 	Override void Tick()
 	{
 		super.Tick();
+		self.SetOrigin(GetFloorPos(), TRUE);
 		if(S.lightlevel < 128 || (master && (self.pos-master.pos).length() > 128))
 			self.Alpha = 0.125/2;
 		else
@@ -165,6 +155,7 @@ Class WolfLampLight : Actor
 
 Class WolfLampCeilingLight : WolfLampLight
 {
+	
 	Default
 	{
 		-MOVEWITHSECTOR
@@ -175,16 +166,11 @@ Class WolfLampCeilingLight : WolfLampLight
 	Override Void PostBeginPlay()
 	{
 		Actor.PostBeginPlay();
-		[D, S] = CurSector.NextHighestCeilingAt(self.pos.x, self.pos.y, self.pos.z, self.pos.z + 2048);
-		if(TexMan.GetName(S.GetTexture(1)) == "F_SKY1")
-			self.destroy();
-		vector3 LightPos = (self.pos.x, self.pos.y, D);
-		LightPos = Vec3Offset(0, 0, D - self.pos.z, false);
-		SetOrigin(LightPos, true);
+		self.SetOrigin(GetCeilingPos(), FALSE);
 	}
 	Override void Tick()
 	{
 		super.Tick();
-			self.SetOrigin((self.pos.x, self.pos.y, S.CenterCeiling() - 0.125), TRUE);
+		self.SetOrigin(GetCeilingPos(), TRUE);
 	}
 }
