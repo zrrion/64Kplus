@@ -17,6 +17,7 @@ OptionValue "TeleporterOption"
 	2, "Smoke"
 	3, "Raven"
 	4, "Strife"
+	5, "HACX"
 }
 /*
 server bool arg_GoreRotation = True;
