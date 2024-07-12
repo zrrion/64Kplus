@@ -12,6 +12,7 @@ class SKP_TeleportFog : TeleportFog replaces TeleportFog
 		HeightOffset = 0;
 		switch (CallACS("CVarCheck",5))
 		{
+			default:
 			case 0:
 				A_StartSound("misc/teleportREAL",CHAN_BODY);
 				Break;
@@ -27,9 +28,12 @@ class SKP_TeleportFog : TeleportFog replaces TeleportFog
 				SetStateLabel("Spawn.Raven");
 				Break;
 			case 4:
-			default:
 				A_StartSound("misc/teleport/strife",CHAN_BODY);
 				SetStateLabel("Spawn.Strife");
+				Break;
+			case 5:
+				A_StartSound("misc/teleport/hacx",CHAN_BODY);
+				SetStateLabel("Spawn.Hacx");
 				Break;
 		}
 	}
@@ -72,6 +76,9 @@ class SKP_TeleportFog : TeleportFog replaces TeleportFog
 				Stop;
 			Spawn.Strife:
 				STFG ABCDEFEDCB 3;
+				Stop;
+			Spawn.Hacx:
+				XTFG ABCDEFGHIJ 4;
 				Stop;
 		}
 }
