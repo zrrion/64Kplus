@@ -166,7 +166,8 @@ class SKP_HUD : BaseStatusBar
 		DrawImage(CPlayer.HasWeaponsInSlot(6)? "ST_TNR6" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
 		DrawImage(CPlayer.HasWeaponsInSlot(7)? "ST_TNR7" : "", Rpos, DI_ITEM_OFFSETS|DI_SCREEN_CENTER_BOTTOM);
 		bool HasSlot; int Slot; int SlotPos;
-		[HasSlot, Slot, SlotPos] = players[consoleplayer].weapons.LocateWeapon(yergun.GetClass());
+		if(yergun)
+			[HasSlot, Slot, SlotPos] = players[consoleplayer].weapons.LocateWeapon(yergun.GetClass());
 		if(HasSlot && slot > 1 && slot < 8)
 		{
 			
