@@ -80,3 +80,96 @@ class PickupMsgFaker : Inventory
 		return FakeMsg;
 	}
 }
+
+class PistolStart : inventory
+{
+	default
+	{
+		+INVENTORY.PERSISTENTPOWER;
+		inventory.InterHubAmount 1;
+		inventory.amount 1;
+		inventory.maxamount 1;
+	}
+	array<inventory> OwnersStuff;
+	inventory inv2;
+
+	override void AttachToOwner(Actor other)
+	{
+		if(other && other.inv)
+		{
+			let TempInv = other.inv;
+			while(TempInv)
+			{
+				if(!(TempInv is "health") && !(TempInv is "PistolStart"))//add it to the list so long as it's not health, this inventory item again, or a key
+				{
+					OwnersStuff.Push(TempInv);
+				}
+				TempInv = TempInv.inv;
+			}
+			for(int i = 0; i < OwnersStuff.Size(); i++)
+				self.AddInventory(OwnersStuff[i]);
+			OwnersStuff.Clear();
+			if(PlayerPawn(other))
+			{
+				let player = PlayerPawn(other);
+				player.DestroyAllInventory();
+				DropItem di;
+				if(self.GetDropItems())
+					di = self.GetDropItems();
+				else
+					di = player.GetDropItems();
+				while(di)
+				{
+					player.A_GiveInventory(di.Name);//first we give the player the stuff
+					di = di.next;
+				}
+				if(self.GetDropItems())
+					di = self.GetDropItems();
+				else
+					di = player.GetDropItems();
+				while(di)
+				{
+					player.A_SetInventory(di.Name, di.Amount);//then we make sue they've got the correct amount
+					di = di.next;
+				}
+			}
+		}
+		if(inv)
+			inv2 = inv;
+		super.AttachToOwner(other);
+	}
+
+	override void PreTravelled()
+	{
+		if(owner)
+		{
+			let TempInv = self.inv2;
+			while(TempInv)
+			{
+				if(!(TempInv is "key"))
+					OwnersStuff.Push(TempInv);
+				TempInv = TempInv.inv;
+			}
+			for(int i = 0; i < OwnersStuff.Size(); i++)
+				owner.AddInventory(OwnersStuff[i]);
+		}
+		self.Destroy();
+	}
+}
+
+class FistStart : PistolStart
+{
+	default
+	{
+		DropItem "skp_fist", 255, 1;
+	}
+}
+
+class RocketStart : FistStart
+{
+	default
+	{
+		DropItem "skp_rocketlauncher", 255, 1;
+		DropItem "rocketammo", 255, 100;
+	}
+}
