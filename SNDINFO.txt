@@ -13,6 +13,7 @@ weapons/UnmakerFire	DSLASER
 misc/teleportREAL	dstelept
 misc/teleport/strife stele
 misc/teleport/raven rtele
+misc/teleport/hacx XTELE
 
 weapons/plasmaidle		DSPLSIDL
 $limit weapons/plasmaidle 1
