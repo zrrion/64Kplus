@@ -13,9 +13,9 @@ class skp_DoomPlayer : DoomPlayer
 	double OldPitch, CurPO, JumpOffset, LandOffset, HardLandOffset, Ang, AngOld, AngVeryOld, ScaleOld, ScaleVeryOld, Oldvelz;
 	Default
 	{
-	Player.StartItem "skp_Pistol";
-	Player.StartItem "skp_Fist";
-	Player.StartItem "Clip", 50;
+	DropItem "skp_Pistol", 255, 1;//this is startitem lol
+	DropItem "skp_Fist", 255, 1;
+	DropItem "Clip", 255, 50;
 	//Player.ForwardMove 1.0;
 	//Player.SideMove 1.0;
 	}
@@ -95,7 +95,7 @@ class skp_DoomPlayer : DoomPlayer
 				CurPO += -1 * LandOffset;
 				A_SetPitch(self.pitch + LandOffset, SPF_INTERPOLATE);
 			}
-			else
+			else if(FallTimer >= 1)
 			{
 				A_StartSound("*SoftStep", CHAN_BODY, CHANF_OVERLAP, SoftVol/2, ATTN_NORM, 1 + frandom(0.3, -0.3));//softstep
 			}
