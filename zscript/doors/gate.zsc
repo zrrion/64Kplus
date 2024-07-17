@@ -33,7 +33,7 @@ class GateInterpolator : Object
 class skp_RollerGate : actor 
 {
 	bool user_SpawnOpen, havetoggled, AtDest;
-	int user_Frame, user_navA, user_navB, user_navJoinerA, user_navJoinerB;
+	int user_Frame;
 	int user_Radius, user_Reset, Reset;
 	double user_height, offsetTarget, user_rollspeed;
 	vector3 BasePos;
@@ -120,10 +120,9 @@ class skp_RollerGate : actor
 	virtual void DoorMove()
 	{
 		AtDest = GateMover.Update(offsetTarget, user_rollspeed);
-		double GateDist =  abs(self.pos.Z - BasePos.Z);
-		if(GateDist < user_height/2 && !havetoggled)
+		if(ABS(GateMover.GetValue()) > user_height/2 && !havetoggled)
 		{
-			if(offsetTarget < 0)
+			if(offsetTarget != 0)
 				LockSectorLines(CurSector, false);
 			else
 			{
