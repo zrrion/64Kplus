@@ -3,7 +3,6 @@ Class SingelUseKeyBase : Key abstract//this is different from a puzzle item
 	Default
 	{
 		Inventory.MaxAmount 2;//IDK why you would have more than 5 honestly, but any more than 2 and I'd need more room on the hud
-		Inventory.InterHubAmount 2;
 	}
 	override bool HandlePickup (Inventory item)//this is the same as the inventory class
 	{
