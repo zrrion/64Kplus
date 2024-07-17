@@ -6,8 +6,9 @@ enum ETreeStatus
 	TREE_DONE = 3//this node is done, it is not waiting for anything, it cannot do anything
 }
 
-class BehaviorTree : actor abstract
+class BehaviorTree : actor
 {
+	bool user_wave;
 	BehaviorTree root;
 	BehaviorTree parent;
 	array<BehaviorTree> children;
@@ -108,7 +109,7 @@ class BehaviorTree : actor abstract
 	{
 		super.Tick();
 		if(TreeStatus == TREE_ACTIVATED)
-			if(ActivateChildren())
+			if(ActivateChildren(user_wave))
 				TreeStatus = TREE_DONE;
 		if(TreeStatus == TREE_DONE)
 		{
