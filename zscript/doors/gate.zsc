@@ -12,7 +12,7 @@ class GateInterpolator : Object
 	{
 		mValue.Y = mValue.X;
 	}
-	void Update(float destvalue, float mMaxChange = 1.0)
+	bool Update(float destvalue, float mMaxChange = 1.0)
 	{
 		float dif = abs(mValue.X - destvalue);
 		if(mMaxChange > dif)
@@ -21,6 +21,8 @@ class GateInterpolator : Object
 			mValue.X = destvalue;
 		else if(mValue.X != destvalue)//if we aren't at the dest val we need to go there
 			mValue.X += mValue.X > destvalue ? -mMaxChange : mMaxChange;
+
+		return (mValue.X == destvalue);
 	}
 	float GetValue()
 	{
@@ -30,13 +32,11 @@ class GateInterpolator : Object
 
 class skp_RollerGate : actor 
 {
-	bool user_SpawnOpen;
-	double user_height;
-	double user_rollspeed;
-	int user_Frame;
-
-	double offsetTarget;
-	bool havetoggled;
+	bool user_SpawnOpen, havetoggled, AtDest;
+	int user_Frame, user_navA, user_navB, user_navJoinerA, user_navJoinerB;
+	int user_Radius, user_Reset, Reset;
+	double user_height, offsetTarget, user_rollspeed;
+	vector3 BasePos;
 	
 	GateInterpolator GateMover;
 	Default 
@@ -78,24 +78,18 @@ class skp_RollerGate : actor
 	override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
+		BasePos = self.pos;
 		GateMover = GateInterpolator.Create(0);
 		if(user_Frame)
 			frame = user_Frame;
 		if(!user_rollspeed)
-			user_rollspeed = 1.25;
-		if(!user_height)
-			user_height = Abs(CurSector.CenterFloor() - CurSector.CenterCeiling()) - 8;
+			user_rollspeed = 1.5;
+		if (!user_height) 
+			user_height = Abs(CurSector.CenterFloor() - CurSector.CenterCeiling()) - 6;
 		if(user_SpawnOpen)
 			self.activate(self);
 		else
 			LockSectorLines(CurSector, true);
-	}
-	virtual void DoorWait()
-	{
-	}
-	virtual void DoorMove()
-	{
-		A_SpriteOffset(0, GateMover.GetValue());
 	}
 	override void activate(actor activator)
 	{
@@ -103,48 +97,54 @@ class skp_RollerGate : actor
 		if(int(offsetTarget) == 0)
 		{
 			offsetTarget = -1 * user_height;
-			if(SpriteOffset.Y != offsetTarget)
-				A_StartSound("doors/dr1_open");
+			SetStateLabel("Opening");
 		}
 		else
 		{
 			offsetTarget = 0;
-			if(SpriteOffset.Y != offsetTarget)
-				A_StartSound("doors/dr1_clos", CHAN_BODY);
+			SetStateLabel("Closing");
 			LockSectorLines(CurSector, true);
 		}
 	}
-
 	override void deactivate(actor activator)
 	{
 		if(offsetTarget == 0)
 		{
 			havetoggled = false;
 			offsetTarget = 0;
-			if(SpriteOffset.Y != offsetTarget)
-				A_StartSound("doors/dr1_clos", CHAN_BODY);
+			if(!AtDest)
+				A_StartSound("powerdoor9/close", CHAN_BODY);
 			LockSectorLines(CurSector, true);
 		}
 	}
-
-	override void tick()
+	virtual void DoorMove()
 	{
-		super.tick();
-		GateMover.Update(offsetTarget, user_rollspeed);
-		double GateDist =  abs(SpriteOffset.Y - offsetTarget);
+		AtDest = GateMover.Update(offsetTarget, user_rollspeed);
+		double GateDist =  abs(self.pos.Z - BasePos.Z);
 		if(GateDist < user_height/2 && !havetoggled)
 		{
-			LockSectorLines(CurSector, !(offsetTarget < 0));
+			if(offsetTarget < 0)
+				LockSectorLines(CurSector, false);
+			else
+			{
+				LockSectorLines(CurSector, true);
+				self.bSOLID = !self.bNOBLOCKMAP;
+			}
 			havetoggled = true;
 		}
-		if(GateDist == 0 && offsetTarget < 0)
-			DoorWait();
-
-		DoorMove();
+		SetOrigin((BasePos.X, BasePos.Y, BasePos.Z - GateMover.GetValue()), TRUE);
 	}
 
 	States 
 	{
+		Opening:
+			RLDR # 0 A_StartSound("doors/dr1_open", CHAN_BODY);
+			RLDR # 1 DoorMove();
+			Wait;
+		Closing:
+			RLDR # 0 A_StartSound("doors/dr1_clos", CHAN_BODY);
+			RLDR # 1 DoorMove();
+			Wait;
 		Spawn:
 			RLDR A 0;
 			RLDR # -1;
@@ -154,12 +154,11 @@ class skp_RollerGate : actor
 
 class skp_RollerGate_Proximity : skp_RollerGate
 {
-	int user_Radius, user_Reset, Reset;
 	Default 
 	{
 		//$Title "Thing Gate - Proximity"
 		//$Category "Thing Gates"
-		+SPECIAL;
+		+SOLID;
 		-NOBLOCKMAP;
 	}
 	Override Void PostBeginPlay()
@@ -171,30 +170,51 @@ class skp_RollerGate_Proximity : skp_RollerGate
 			user_Reset = 150;
 		A_SetSize(user_Radius, user_height);
 	}
-	Override void Touch(Actor toucher)
+	Override bool CanCollideWith(Actor other, bool passive)
 	{
-		if(Reset || OffsetTarget != 0)
-			return;
-		self.Activate(self);
-	}
-	Override void DoorWait()
-	{
-		if(!Reset)
-			Reset = user_Reset;
-	}
-	Override void DoorMove()
-	{
-		if(Reset)
+		if(other is "PlayerPawn")
 		{
-			Reset--;
-			if(Reset == 0)
-				self.Activate(self);
-			return;
+			bSOLID = FALSE;
+			self.Activate(self);
 		}
-		super.DoorMove();
+		return false;
 	}
 	States 
 	{
+		Opening:
+			RLDR # 0 A_StartSound("doors/dr1_open", CHAN_BODY);
+			RLDR # 1
+			{
+				DoorMove();
+				if(AtDest && self.pos.Z != BasePos.Z)
+					SetStateLabel("Open");
+			}
+			Wait;
+		Open:
+			RLDR # 0
+			{
+				Reset = user_Reset;
+			}
+			RLDR # 1
+			{
+				DoorMove();
+				reset--;
+				if(user_Reset > 0 && reset <= 0)
+					Activate(self);
+			}
+			Wait;
+		Closing:
+			RLDR # 0 A_StartSound("doors/dr1_clos", CHAN_BODY);
+			RLDR # 1
+			{
+				DoorMove();
+				if(AtDest && self.pos.Z != BasePos.Z)
+					SetStateLabel("Closed");
+			}
+			Wait;
+		Closed:
+			RLDR # 1 DoorMove();
+			Wait;
 		Spawn:
 			RLDR F 0;
 			RLDR # -1;
@@ -218,10 +238,6 @@ class skp_RollerGate_Decoration : skp_RollerGate
 		else if(user_height > 72)
 			frame = 1;
 		LockSectorLines(CurSector, !user_NoBlock);
-	}
-	override void tick()
-	{
-		actor.tick();
 	}
 	override void activate(actor activator)
 	{
