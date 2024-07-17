@@ -89,54 +89,113 @@ class PistolStart : inventory
 		inventory.InterHubAmount 1;
 		inventory.amount 1;
 		inventory.maxamount 1;
+		obituary "This level is played from a pistol start.";
+		PistolStart.Perm FALSE;
 	}
 	array<inventory> OwnersStuff;
 	inventory inv2;
+	bool NoReset, Perm;
+	actor OwnerPerm;
+	property Perm : Perm;
 
 	override void AttachToOwner(Actor other)
 	{
+		if(other && PlayerPawn(other))
+		{
+			PlayerPawn(other).bonushealth = 0;
+			other.A_SetHealth(GetDefaultByType(other.GetClass()).Health);
+		}
+		if(other && self.Perm)
+			OwnerPerm = other;
 		if(other && other.inv)
 		{
-			let TempInv = other.inv;
-			while(TempInv)
-			{
-				if(!(TempInv is "health") && !(TempInv is "PistolStart"))//add it to the list so long as it's not health, this inventory item again, or a key
-				{
-					OwnersStuff.Push(TempInv);
-				}
-				TempInv = TempInv.inv;
-			}
-			for(int i = 0; i < OwnersStuff.Size(); i++)
-				self.AddInventory(OwnersStuff[i]);
-			OwnersStuff.Clear();
-			if(PlayerPawn(other))
+			PistolStart PistolStarted = PistolStart(other.FindInventory("PistolStart", TRUE));
+			if(PistolStarted && PistolStarted.Perm)
 			{
 				let player = PlayerPawn(other);
-				player.DestroyAllInventory();
-				DropItem di;
-				if(self.GetDropItems())
-					di = self.GetDropItems();
-				else
-					di = player.GetDropItems();
-				while(di)
+				if(player)
 				{
-					player.A_GiveInventory(di.Name);//first we give the player the stuff
-					di = di.next;
+					DropItem di;
+					if(PistolStarted.GetDropItems())
+						di = PistolStarted.GetDropItems();
+					else
+						di = player.GetDropItems();
+					while(di)
+					{
+						player.A_TakeInventory(di.Name, 0);
+						di = di.next;
+					}
+					if(self.GetDropItems())
+						di = self.GetDropItems();
+					else
+						di = player.GetDropItems();
+					while(di)
+					{
+						player.A_GiveInventory(di.Name, di.amount);
+						di = di.next;
+					}
+
+					if(self.GetDropItems())
+						di = self.GetDropItems();
+					else
+						di = player.GetDropItems();
+					while(di)
+					{
+						player.A_SetInventory(di.Name, di.amount);
+						di = di.next;
+					}
+					player.player.mo.PickNewWeapon(NULL);
 				}
-				if(self.GetDropItems())
-					di = self.GetDropItems();
-				else
-					di = player.GetDropItems();
-				while(di)
+				self.Destroy();
+			}
+			else
+			{
+				let TempInv = other.inv;
+				while(TempInv)
 				{
-					player.A_SetInventory(di.Name, di.Amount);//then we make sue they've got the correct amount
-					di = di.next;
+					if(!(TempInv is "health"))//add it to the list so long as it's not health
+						OwnersStuff.Push(TempInv);
+					TempInv = TempInv.inv;
 				}
+				for(int i = 0; i < OwnersStuff.Size(); i++)
+					self.AddInventory(OwnersStuff[i]);
+				OwnersStuff.Clear();
+				if(PlayerPawn(other))
+				{
+					let player = PlayerPawn(other);
+					player.DestroyAllInventory();
+					DropItem di;
+					if(self.GetDropItems())
+						di = self.GetDropItems();
+					else
+						di = player.GetDropItems();
+					while(di)
+					{
+						player.A_GiveInventory(di.Name);//first we give the player the stuff
+						di = di.next;
+					}
+					if(self.GetDropItems())
+						di = self.GetDropItems();
+					else
+						di = player.GetDropItems();
+					while(di)
+					{
+						player.A_SetInventory(di.Name, di.Amount);//then we make sue they've got the correct amount
+						di = di.next;
+					}
+				
+				player.player.mo.PickNewWeapon(NULL);
+				}
+				if(inv)
+					inv2 = inv;
+				if(self.obituary && other.GetAge())
+					other.A_Print(string.format("245\r%s\n\nYou'll get all your stuff back when you start the next level.", self.obituary));
+				if(!other.GetAge())
+					self.Destroy();
+				else
+					super.AttachToOwner(other);
 			}
 		}
-		if(inv)
-			inv2 = inv;
-		super.AttachToOwner(other);
 	}
 
 	override void PreTravelled()
@@ -154,6 +213,17 @@ class PistolStart : inventory
 				owner.AddInventory(OwnersStuff[i]);
 		}
 		self.Destroy();
+		if(OwnerPerm)
+			OwnerPerm.A_GiveInventory(self.GetClassName(), 1);
+	}
+}
+
+class PistolStartPermanent  : PistolStart
+{
+	default
+	{
+		obituary "";
+		PistolStart.Perm TRUE;
 	}
 }
 
@@ -161,6 +231,7 @@ class FistStart : PistolStart
 {
 	default
 	{
+		obituary "This level is played from fist-only start.";
 		DropItem "skp_fist", 255, 1;
 	}
 }
@@ -169,6 +240,7 @@ class RocketStart : FistStart
 {
 	default
 	{
+		obituary "This level is played from a rocket launcher start.";
 		DropItem "skp_rocketlauncher", 255, 1;
 		DropItem "rocketammo", 255, 100;
 	}
