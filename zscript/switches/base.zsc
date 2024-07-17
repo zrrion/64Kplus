@@ -9,15 +9,15 @@ class Locksmith : Object
 			let l = new("Locksmith");
 			l.KeyMarker[0] = "TNT1A0";	l.KeyMarker[1] = "BKMM";		l.KeyMarker[2] = "YKMM";		l.KeyMarker[3] = "RKMM";		l.KeyMarker[4] = "BSMM";		l.KeyMarker[5] = "YSMM";		l.KeyMarker[6] = "RSMM";		l.KeyMarker[7] = "PKMM";		l.KeyMarker[8] = "GSMM";
 			l.KeyType[0] = "";			l.KeyType[1] = "bluecard";	l.KeyType[2] = "yellowcard";	l.KeyType[3] = "redcard";		l.KeyType[4] = "blueskull";	l.KeyType[5] = "yellowskull";	l.KeyType[6] = "redskull";	l.KeyType[7] = "purplecard";	l.KeyType[8] = "skp_GreenSkull";
-			l.KeyString[0] = "This is an error";
-			l.KeyString[1] = "\c[gray]you need a \c[blue]blue card \c[gray]to activate this switch";
-			l.KeyString[2] = "\c[gray]you need a \c[yellow]yellow card \c[gray]to activate this switch";
-			l.KeyString[3] = "\c[gray]you need a \c[red]red card \c[gray]to activate this switch";
-			l.KeyString[4] = "\c[gray]you need a \c[blue]blue skull \c[gray]to activate this switch";
-			l.KeyString[5] = "\c[gray]you need a \c[yellow]yellow skull \c[gray]to activate this switch";
-			l.KeyString[6] = "\c[gray]you need a \c[red]red skull \c[gray]to activate this switch";
-			l.KeyString[7] = "\c[gray]you need a \c[purple]purple card \c[gray]to activate this switch";
-			l.KeyString[8] = "\c[gray]you need a \c[green]green skull \c[gray]to activate this switch";
+			l.KeyString[0] = "175\rThis is an error";
+			l.KeyString[1] = "175\r\c[gray]you need a \c[blue]blue card \c[gray]to activate this switch";
+			l.KeyString[2] = "175\r\c[gray]you need a \c[yellow]yellow card \c[gray]to activate this switch";
+			l.KeyString[3] = "175\r\c[gray]you need a \c[red]red card \c[gray]to activate this switch";
+			l.KeyString[4] = "175\r\c[gray]you need a \c[blue]blue skull \c[gray]to activate this switch";
+			l.KeyString[5] = "175\r\c[gray]you need a \c[yellow]yellow skull \c[gray]to activate this switch";
+			l.KeyString[6] = "175\r\c[gray]you need a \c[red]red skull \c[gray]to activate this switch";
+			l.KeyString[7] = "175\r\c[gray]you need a \c[purple]purple card \c[gray]to activate this switch";
+			l.KeyString[8] = "175\r\c[gray]you need a \c[green]green skull \c[gray]to activate this switch";
 			return l;
 		}
 		string GetType(int type)
