@@ -236,6 +236,16 @@ class FistStart : PistolStart
 	}
 }
 
+class FistStartPermanent  : PistolStart
+{
+	default
+	{
+		obituary "";
+		PistolStart.Perm TRUE;
+		DropItem "skp_fist", 255, 1;
+	}
+}
+
 class RocketStart : FistStart
 {
 	default
