@@ -1,53 +1,39 @@
+Class FloorTracer : LineTracer
+{
+	actor owner;
+	override ETraceStatus TraceCallback()
+    {
+		if(results.HitType == TRACE_HitFloor || results.HitType == TRACE_HitCeiling)
+			return TRACE_Stop;
+		return TRACE_Skip;
+	}
+}
+
 mixin class SurfaceFinder
 {
-	sector S;
-	vector3 ShootAtSector(bool floor, int flatheight)
+	vector3 TraceAtSector(bool floor = false)
 	{
-		vector3 H;
-		flinetracedata L;
-		let P = LineAttack(0, 32768, floor ? 90 : -90, 0, 'none', null, LAF_NORANDOMPUFFZ|LAF_NOIMPACTDECAL|LAF_NOINTERACT|LAF_OVERRIDEZ, NULL, height/2);
-		if(P)
-		{
-			P.destroy();
-			S = P.Cursector;
-			H = P.Pos;
-			H += (0,0, (floor ? -1 : +1) * (P.height)/4);
-		}
-		else
-		{
-			S = self.Cursector;
-			H = (self.pos.X, self.pos.Y, flatheight);
-		}
-		H += (0,0, (floor ? 1 : -1) * self.height);
-		return H;
+		let tracer = new('FloorTracer');
+		tracer.owner = self;
+		tracer.trace(self.pos, self.CurSector, (0, 0, floor ? -1 : 1), 32768, 0);
+		return tracer.Results.HitPos;
 	}
-	vector3 TraceAtSector(bool floor, int flatheight)
+	bool CheckForSky(bool floor = false)
 	{
-		vector3 H;
-		flinetracedata L;
-		LineTrace (0, 32768, floor ? 90 : -90, TRF_THRUACTORS|TRF_THRUHITSCAN|TRF_THRUBLOCK, height/2, data:L);
-		if(L.HitType != TRACE_HitNone)
-		{
-			S = L.Hit3DFloor ? L.Hit3DFloor.model : L.HitSector;
-			H = L.HitLocation;
-		}
-		else
-		{
-			S = self.Cursector;
-			H = (self.pos.X, self.pos.Y, flatheight);
-		}
-		H += (0,0, (floor ? 1 : -1) * self.height);
-		return H;
+		let tracer = new('FloorTracer');
+		tracer.owner = self;
+		tracer.trace(self.pos, self.CurSector, (0, 0, floor ? -1 : 1), 32768, TRACE_HitSky);
+		if(tracer.Results.HitType == TRACE_HasHitSky)
+			return true;
+		return false;
 	}
-
-
 	vector3 GetCeilingPos()
 	{
-		return ShootAtSector(false, cursector.CenterCeiling());
+		return TraceAtSector(false);
 	}
 	vector3 GetFloorPos()
 	{
-		return ShootAtSector(true, cursector.CenterFloor());
+		return TraceAtSector(true);
 	}
 }
 
@@ -100,13 +86,13 @@ class skp_Keen : CommanderKeen replaces CommanderKeen
 	}
 	Override void PostBeginPlay()
 	{	
-		self.SetOrigin(GetCeilingPos(), FALSE);
+		self.SetOrigin(GetCeilingPos() - (0, 0, self.height), FALSE);
 		super.PostBeginPlay();
 	}
 	Override void Tick()
 	{
-		if(!getAge() || S.PlaneMoving(1))
-			self.SetOrigin(GetCeilingPos(), TRUE);
+		if(!getAge() || CurSector.PlaneMoving(1))
+			self.SetOrigin(GetCeilingPos() - (0, 0, self.height), TRUE);
 		super.Tick();
 	}
 }

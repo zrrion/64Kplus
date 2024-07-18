@@ -9,7 +9,7 @@ class WolfCeilingLight : Actor
 		//$Category Wolfendoom
 		//$title "wolf lamp green"
 		WolfCeilingLight.shine "WolfLampLight";
-		-SPAWNCEILING
+		+SPAWNCEILING
 		+MOVEWITHSECTOR
 		+NOGRAVITY
 		radius 16;
@@ -23,7 +23,9 @@ class WolfCeilingLight : Actor
 	}
 	Override void PostBeginPlay()
 	{
-		self.SetOrigin(GetCeilingPos(), FALSE);
+		vector3 C = GetCeilingPos();
+		ceilingOffset = abs((self.pos.Z) - C.Z);
+		self.SetOrigin(C - (0, 0, ceilingOffset), FALSE);
 		Super.PostBeginPlay();
 		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
@@ -35,8 +37,8 @@ class WolfCeilingLight : Actor
 	Override void Tick()
 	{
 		super.Tick();
-		self.SetOrigin(GetCeilingPos(), TRUE);	
-		if(S && S.lightlevel < 128)
+		self.SetOrigin(GetCeilingPos() - (0, 0, ceilingOffset), TRUE);	
+		if(CurSector && CurSector.lightlevel < 128)
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
@@ -81,7 +83,6 @@ class WolfFloorLight : Actor
 	Override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		GetFloorPos();
 		let Light = Spawn(self.shine, self.pos);
 		if(Light != NULL)
 		{
@@ -92,7 +93,7 @@ class WolfFloorLight : Actor
 	Override void Tick()
 	{
 		super.Tick();
-		if(S.lightlevel < 128)
+		if(CurSector && CurSector.lightlevel < 128)
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
@@ -131,15 +132,17 @@ Class WolfLampLight : Actor
 	}
 	Override Void PostBeginPlay()
 	{
-		self.SetOrigin(GetFloorPos(), FALSE);
+		if(CheckForSky(TRUE))
+			self.Destroy();
+		self.SetOrigin(GetFloorPos() + (0, 0, self.height), FALSE);
 		Actor.PostBeginPlay();
 	}
 
 	Override void Tick()
 	{
 		super.Tick();
-		self.SetOrigin(GetFloorPos(), TRUE);
-		if(S.lightlevel < 128 || (master && (self.pos-master.pos).length() > 128))
+		self.SetOrigin(GetFloorPos() + (0, 0, self.height), TRUE);
+		if(CurSector.lightlevel < 128 || (master && (self.pos-master.pos).length() > 128))
 			self.Alpha = 0.125/2;
 		else
 			self.Alpha = 0.125;
@@ -166,11 +169,13 @@ Class WolfLampCeilingLight : WolfLampLight
 	Override Void PostBeginPlay()
 	{
 		Actor.PostBeginPlay();
-		self.SetOrigin(GetCeilingPos(), FALSE);
+		if(CheckForSky())
+			self.Destroy();
+		self.SetOrigin(GetCeilingPos() - (0, 0, self.height), FALSE);
 	}
 	Override void Tick()
 	{
 		super.Tick();
-		self.SetOrigin(GetCeilingPos(), TRUE);
+		self.SetOrigin(GetCeilingPos() - (0, 0, self.height), TRUE);
 	}
 }
