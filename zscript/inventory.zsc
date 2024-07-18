@@ -255,3 +255,14 @@ class RocketStart : FistStart
 		DropItem "rocketammo", 255, 100;
 	}
 }
+
+class RocketStartPermanent  : PistolStart
+{
+	default
+	{
+		obituary "";
+		PistolStart.Perm TRUE;
+		DropItem "skp_rocketlauncher", 255, 1;
+		DropItem "rocketammo", 255, 100;
+	}
+}
