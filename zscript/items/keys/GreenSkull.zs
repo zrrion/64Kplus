@@ -123,14 +123,23 @@ class GreenButton : SwitchBase
 		SPRE ## 35;
 		SPRE # 0 A_TryTouch();
 		SPRE ## 35;
-		TNT1 A 0 {	bUSESPECIAL = true;	}
+		TNT1 A 0
+		{
+			bUSESPECIAL = true;
+			A_StartSound("switch/reset");
+		}
 	Taken.Anim:
 		SPGE # 1;
 		wait;
 	Placed:
 		TNT1 A 0 A_GiveInventory(Key.GetType(user_MarkerType), 1);
 		SPRG #### 35 { bUSESPECIAL = false;	}
-		TNT1 A 0 {	LightLevel = -1;	bUSESPECIAL = true;	}
+		TNT1 A 0
+		{
+			LightLevel = -1;
+			bUSESPECIAL = true;
+			A_StartSound("switch/reset");
+		}
 	Placed.Anim:
 		SPGA # 10;
 		SPGB # 10 bright;
