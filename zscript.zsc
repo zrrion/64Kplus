@@ -31,6 +31,7 @@ version "4.5"
 
 #include "zscript/weapons/base.zsc"
 #include "zscript/weapons/unmaker.zsc"
+#include "zscript/weapons/clam blade.zsc"
 
 #include "zscript/enemies/AreaHazard.zsc"
 #include "zscript/enemies/CacoThing.zsc"

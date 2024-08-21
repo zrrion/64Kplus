@@ -1,0 +1,96 @@
+class UnloadedClamBlade : UnloadedWeapon
+{
+	default
+	{
+		Obituary "Unloaded a calamity blade.";
+	}
+}
+
+class skp_ClamBlade : skp_Weapon
+{
+	Default
+	{
+		//$Category Weapons
+		Weapon.Slotnumber 7;
+		
+		Weapon.SelectionOrder 100;
+		Weapon.AmmoUse 20;
+		Weapon.AmmoGive 80;
+		Weapon.AmmoType "Cell";
+		+WEAPON.NOAUTOFIRE;
+		Obituary "%o was unmade by %k.";
+		Inventory.Pickupmessage "Clam Time B)";
+		Tag "Calamity Blade";
+		DropItem "UnloadedClamBlade";
+	}
+	States
+	{
+	Ready:
+		CLAM A 1 skp_WeaponReady();
+		Loop;
+	Deselect:
+		CLAM A 1 skp_Lower;
+		Wait;
+	Select:
+		CLAM A 1 skp_Raise;
+		Wait;
+	Fire:
+		CLAM A 2
+		{
+			A_OverlayScale(PSP_WEAPON, 1.0);
+			A_WeaponOffset(0, 32);
+		}
+		CLAM A 0 A_Refire("Fire.1");
+		Goto Fire.ForReal;
+	Fire.1:
+		TNT1 A 0 A_GunFlash("ClamTime.1");
+		CLAM AAAA 3 Bright;
+		TNT1 A 0 A_Refire("Fire.2");
+		Goto Fire.ForReal;
+	Fire.2:
+		TNT1 A 0 A_GunFlash("ClamTime.2");
+		CLAM AAAA 3 Bright;
+		TNT1 A 0 A_Refire("Fire.3");
+		Goto Fire.ForReal;
+	Fire.3:
+		TNT1 A 0 A_GunFlash("ClamTime.3");
+		CLAM AAAA 3 Bright;
+		TNT1 A 0 A_Refire("Fire.4");
+		Goto Fire.ForReal;
+	Fire.4:
+		TNT1 A 0 A_GunFlash("ClamTime.4");
+		CLAM AAAA 3 Bright;
+		TNT1 A 0 A_Refire("Fire.5");
+		Goto Fire.ForReal;
+	Fire.5:
+		TNT1 A 0 A_GunFlash("ClamTime.5");
+		CLAM AAAA 3 Bright;
+		TNT1 A 0 A_Refire("Fire.5");
+	Fire.ForReal:
+		CLAM BCD 4 Bright;
+		CLAM E 5;
+		CLAM F 4;
+		CLAM G 3 A_Refire("Fire");
+		CLAM A 3 Offset(0, 36) A_Refire("Fire");
+		CLAM A 3 Offset(0, 34) A_Refire("Fire");
+		Goto Ready;
+	ClamTime.1:
+		CBF1 ABCD 3 Bright;
+		Stop;
+	ClamTime.2:
+		CBF2 ABCD 3 Bright;
+		Stop;
+	ClamTime.3:
+		CBF3 ABCD 3 Bright;
+		Stop;
+	ClamTime.4:
+		CBF4 ABCD 3 Bright;
+		Stop;
+	ClamTime.5:
+		CBF5 ABCD 3 Bright;
+		Stop;
+ 	Spawn:
+		LSGR A -1;
+		Stop;
+	}
+}
