@@ -73,3 +73,7 @@ $pitchset cacomera/death 1.2
 misc/toss	toss
 
 switch/reset	reset
+
+clam/charge		DSHETCHG
+clam/fire		DSHETSHT
+clam/explode	DSHETXPL
