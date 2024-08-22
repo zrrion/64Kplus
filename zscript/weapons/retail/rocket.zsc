@@ -71,17 +71,50 @@ class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
 	}
 }
 
+class skp_rocketTrail : Actor
+{
+	Default
+	{
+		+NOINTERACTION;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		bXFLIP = random(0,1);
+		bYFLIP = random(0,1);
+	}
+	States
+	{
+		Spawn:
+			RPUF ABC 2;
+			RPUF DE 2 A_FadeOut();
+			RPUF F 1 A_FadeOut();
+			Wait;
+	}
+}
+
 class skp_rocket : Rocket replaces Rocket
 {
 	Default
 	{
 		Decal "Scorch";
-		+EXTREMEDEATH
+		+EXTREMEDEATH;
+		-ROCKETTRAIL;
 	}
 	States
 	{
 	Spawn:
-		RCKT A 1 Bright;
+		RCKT A 2 Bright
+		{
+			Spawn("skp_rocketTrail",self.pos);
+		}
+		RCKT A 2 Bright
+		{	
+			Spawn("skp_rocketTrail",self.pos);
+			Spawn("RocketSmokeTrail",self.pos, ALLOW_REPLACE);
+		}
 		Loop;
 	Death:
 		MISL B 8 Bright
