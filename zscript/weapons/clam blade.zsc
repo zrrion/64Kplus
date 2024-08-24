@@ -58,40 +58,40 @@ class skp_HeatBlade : skp_Weapon
 			A_OverlayScale(PSP_WEAPON, 1.0);
 			A_WeaponOffset(0, 32);
 		}
-	Fire.1:
-		TNT1 A 0 A_ClamFlash("ClamTime.1");
+	Fire1:
+		TNT1 A 0 A_ClamFlash("ClamTime1");
 		CLAM A 6 Bright;
 		CLAM AAA 5 Bright;
-		TNT1 A 0 A_RefireHeatWave("Fire.2");
+		TNT1 A 0 A_RefireHeatWave("Fire2");
 		TNT1 A 0 A_FireHeatWave(5);
-		Goto Fire.ForReal;
-	Fire.2:
-		TNT1 A 0 A_ClamFlash("ClamTime.2");
+		Goto FireForReal;
+	Fire2:
+		TNT1 A 0 A_ClamFlash("ClamTime2");
 		CLAM A 6 Bright;
 		CLAM AAA 5 Bright;
-		TNT1 A 0 A_RefireHeatWave("Fire.3");
+		TNT1 A 0 A_RefireHeatWave("Fire3");
 		TNT1 A 0 A_FireHeatWave(12.5);
-		Goto Fire.ForReal;
-	Fire.3:
-		TNT1 A 0 A_ClamFlash("ClamTime.3");
+		Goto FireForReal;
+	Fire3:
+		TNT1 A 0 A_ClamFlash("ClamTime3");
 		CLAM A 6 Bright;
 		CLAM AAA 5 Bright;
-		TNT1 A 0 A_RefireHeatWave("Fire.4");
+		TNT1 A 0 A_RefireHeatWave("Fire4");
 		TNT1 A 0 A_FireHeatWave(20);
-		Goto Fire.ForReal;
-	Fire.4:
-		TNT1 A 0 A_ClamFlash("ClamTime.4");
+		Goto FireForReal;
+	Fire4:
+		TNT1 A 0 A_ClamFlash("ClamTime4");
 		CLAM A 6 Bright;
 		CLAM AAA 5 Bright;
-		TNT1 A 0 A_RefireHeatWave("Fire.5");
+		TNT1 A 0 A_RefireHeatWave("Fire5");
 		TNT1 A 0 A_FireHeatWave(27.5);
-		Goto Fire.ForReal;
-	Fire.5:
-		TNT1 A 0 A_ClamFlash("ClamTime.5");
+		Goto FireForReal;
+	Fire5:
+		TNT1 A 0 A_ClamFlash("ClamTime5");
 		CLAM A 6 Bright;
 		CLAM AAA 5 Bright;
 		TNT1 A 0 A_FireHeatWave(35);
-	Fire.ForReal:
+	FireForReal:
 		CLAM BCD 4 Bright;
 		CLAM E 5;
 		CLAM F 4;
@@ -100,27 +100,27 @@ class skp_HeatBlade : skp_Weapon
 		CLAM A 3 Offset(0, 34) A_RefireHeatWave("Fire");
 		TNT1 A 0 A_CheckReload();
 		Goto Ready;
-	ClamTime.1:
+	ClamTime1:
 		TNT1 A 0 A_StartSound("clam/charge", CHAN_WEAPON);
 		CBF1 A 6 Bright;
 		CBF1 BCD 5 Bright;
 		Stop;
-	ClamTime.2:
+	ClamTime2:
 		TNT1 A 0 A_StartSound("clam/charge", CHAN_WEAPON);
 		CBF2 A 6 Bright;
 		CBF2 BCD 5 Bright;
 		Stop;
-	ClamTime.3:
+	ClamTime3:
 		TNT1 A 0 A_StartSound("clam/charge", CHAN_WEAPON);
 		CBF3 A 6 Bright;
 		CBF3 BCD 5 Bright;
 		Stop;
-	ClamTime.4:
+	ClamTime4:
 		TNT1 A 0 A_StartSound("clam/charge", CHAN_WEAPON);
 		CBF4 A 6 Bright;
 		CBF4 BCD 5 Bright;
 		Stop;
-	ClamTime.5:
+	ClamTime5:
 		TNT1 A 0 A_StartSound("clam/charge", CHAN_WEAPON);
 		CBF5 A 6 Bright;
 		CBF5 BCD 5 Bright;
