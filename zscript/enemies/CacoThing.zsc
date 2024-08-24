@@ -50,7 +50,7 @@ class Cacomera : Cacodemon
 			TeleportTarget = target;
 		bool paul;
 		vector3 blart;
-		if(TeleportTarget is "LostSoul" && CheckTPDest(TeleportTarget.pos))
+		if(TeleportTarget is "LostSoul" /*&& CheckTPDest(TeleportTarget.pos)*/)
 		{
 			paul = true;
 			blart = TeleportTarget.pos;
@@ -166,26 +166,14 @@ class Cacomera : Cacodemon
 	}
 	bool CheckTPDest(vector3 TPDest)//this only checks that there is enough room in the space for the thing to spawn, it does not check if there are actors in the way
 	{
-		double TPSpace;
-		if(level.IsPointInLevel(TPDest))
-		{
-			sector TPsec = level.PointInSector(TPDest.XY);
-			double flr, cel;
-			sector flrsec, celsec;
-			[flr, flrsec] = TPsec.NextHighestCeilingAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
-			[cel, celsec] = TPsec.NextLowestFloorAt(TPDest.X, TPDest.Y,TPDest.Z, TPDest.Z + self.height);
-			TPSpace = abs(flr - cel);
-		}
-		if(TPSpace >= self.height)
-			return true;
-		return false;
+		return (level.IsPointInLevel(TPDest) && self.CheckPosition(TPDest.XY));
 	}
 	bool, vector3 GetTPDest(actor TeleportTarget, int SpawnRad = 512)
 	{
 		if(!TeleportTarget)
 			return false, (0,0,0);
 		bool paul;
-		actor blart;
+		FCheckPosition blart;
 		vector3 mallcop;
 		int i;
 		for(i = 0; i < SpawnRad * 2; i++)//the smaller the radius the less we need to attempt since there is less space to fit into
@@ -194,20 +182,16 @@ class Cacomera : Cacodemon
 			vector2 Dist = (0, self.radius * random(3, radfactor));
 			Dist = RotateVector(Dist, random(0, 360));
 			mallcop = (TeleportTarget.pos.X + Dist.X, TeleportTarget.pos.Y + Dist.Y, TeleportTarget.pos.Z + self.radius * random(-radfactor, radfactor));
-			[paul, blart] = A_SpawnItemEx("CacomeraCheck", mallcop.X, mallcop.Y, mallcop.Z, flags:SXF_ABSOLUTEPOSITION);
-			if(paul && blart && CheckTPDest(mallcop) && blart.CheckPosition(blart.pos.xy))
-				break;
-			paul = false;
-			if(blart)
-				blart.Destroy();
+
+			if(self.CheckPosition(mallcop.XY, false, blart))
+			{
+				if(mallcop.z < blart.floorz)
+					mallcop.z = blart.floorz;
+				if(mallcop.z > blart.ceilingz)
+					mallcop.z = blart.ceilingz - self.height;
+				return true, mallcop;
+			}
 		}
-		if(paul && blart)
-		{
-			blart.Destroy();
-			return true, mallcop;
-		}
-		if(blart)
-			blart.Destroy();
 		return false, (0,0,0);
 	}
 	state A_CheckSolidFooting(StateLabel label)
