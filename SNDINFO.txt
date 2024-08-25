@@ -77,3 +77,14 @@ switch/reset	reset
 clam/charge		DSHETCHG
 clam/fire		DSHETSHT
 clam/explode	DSHETXPL
+
+$random	inc/fire {	inc/fire1	inc/fire2	}
+inc/fire1		DSINCFI1
+inc/fire2		DSINCFI2
+inc/ignite		"sounds/flame/flamlight.ogg"
+
+inc/burn		DSINCBRN
+$random inc/death	{	inc/death1	inc/death2	}
+inc/death1		DSINCHT1
+inc/death2		DSINCHT2
+inc/fizzle		DSINCHT3
