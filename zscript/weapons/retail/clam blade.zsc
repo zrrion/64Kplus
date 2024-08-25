@@ -156,6 +156,13 @@ class skp_HeatWaveRipper : Actor
 			return false;
 		return super.CanCollideWith(other, passive);
 	}
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype)
+	{
+		if(victim)
+			victim.A_GiveInventory("IncOnFire", 1);
+		
+		return Super.DoSpecialDamage(victim, damage, damagetype);
+	}
 	States
 	{
 	Spawn:

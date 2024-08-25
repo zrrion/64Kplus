@@ -31,7 +31,6 @@ version "4.5"
 
 #include "zscript/weapons/base.zsc"
 #include "zscript/weapons/unmaker.zsc"
-#include "zscript/weapons/clam blade.zsc"
 
 #include "zscript/enemies/AreaHazard.zsc"
 #include "zscript/enemies/CacoThing.zsc"
@@ -112,7 +111,9 @@ version "4.5"
 #include "zscript/weapons/retail/chaingun.zsc"
 #include "zscript/weapons/retail/rocket.zsc"
 #include "zscript/weapons/retail/plasma.zsc"
+#include "zscript/weapons/retail/flame.zsc"
 #include "zscript/weapons/retail/BFG.zsc"
+#include "zscript/weapons/retail/clam blade.zsc"
 //ammo ===
 #include "zscript/items/retail/ammo/base.zsc"
 #include "zscript/items/retail/ammo/cell.zsc"
