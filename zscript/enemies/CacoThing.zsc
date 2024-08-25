@@ -1,3 +1,10 @@
+enum ECacomeraExtras
+{
+	MERA_FOG = -1,
+    MERA_HATE = -2,
+    MERA_HIDE = -3
+}
+
 class Cacomera : Cacodemon
 {
 	mixin BerserkDroper;
@@ -24,6 +31,13 @@ class Cacomera : Cacodemon
 		Obituary "%o was killed by a cacomera bite.";
 		HitObituary "%o was killed by a cacomera blast.";
 		Tag "Cacomera";
+
+		DropItem "TeleportFog", MERA_FOG;
+		DropItem "LostSoul", MERA_HATE;
+		DropItem "ExplosiveBarrel", MERA_HIDE;
+		DropItem "Rocket", MERA_HIDE;
+		DropItem "Archvile", MERA_HIDE;
+		DropItem "BaronOfHell", MERA_HIDE;
 	}
 	
 	Override void tick()
@@ -87,6 +101,16 @@ class Cacomera : Cacodemon
 		TeleportTimer = User_TimerReset + random(0, 70);
 		bSUMMONEDMONSTER = random(0,1);
 	}
+	void SpawnFog()
+	{
+		DropItem di = self.GetDropItems();
+		while(di)
+		{
+			if(di.Probability == MERA_FOG)
+				Spawn(di.name, self.pos);
+			di = di.next;
+		}
+	}
 	Override void PostBeginPlay()
 	{
 		if(!User_TimerReset)
@@ -99,13 +123,23 @@ class Cacomera : Cacodemon
 	{
 		int i = super.DamageMobj(inflictor, source, damage, mod, flags, angle);
 		TeleportTimer -= i;
-		if(inflictor is "LostSoul")//they just don't like them
+
+		DropItem di = self.GetDropItems();
+		while(di)
 		{
-			target = inflictor;
-			A_Pain();
+			if(inflictor is di.name && di.Probability == MERA_HATE)
+			{
+				target = inflictor;
+				A_Pain();
+				break;
+			}
+			if(((inflictor is di.name || source is di.name) && di.Probability == MERA_HIDE) || mod == "Crush")
+			{
+				DoTeleport();
+				A_Pain();
+			}
+			di = di.next;
 		}
-		if(inflictor is "ExplosiveBarrel" || inflictor is "Rocket" || source is "Archvile"|| source is "BaronOfHell" || mod == "Crush")//some conditions make them try to teleport right away, fighting an archvile ot a baron, getting hit by an explosion, or getting crushed will do it.
-			DoTeleport();
 		return i;
 	}
 	States
