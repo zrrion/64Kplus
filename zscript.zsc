@@ -1,6 +1,8 @@
 version "4.5"
 //I wish #include could just include entire directories instead of only individual files
 
+#include "zscript/events/level preprocess.zs"
+
 #include "zscript/inventory.zsc"
 #include "zscript/teleport.zsc"
 #include "zscript/player.zsc"
