@@ -197,7 +197,7 @@ class AHOnFire : StatusEffectParticles
 {
 	Default
 	{
-		DropItem "RocketSmokeTrail";
-		DropItem "AH_SmallFlame";
+		DropItem "AH_SmallFlame", -128, -8;
+		DropItem "RocketSmokeTrail", -128, -1;
 	}
 }
