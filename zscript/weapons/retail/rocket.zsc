@@ -103,6 +103,14 @@ class skp_rocket : Rocket replaces Rocket
 		+EXTREMEDEATH;
 		-ROCKETTRAIL;
 	}
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype)
+	{
+		if(victim)
+			victim.A_GiveInventory("RocketSchorcher", 1);
+		
+		return Super.DoSpecialDamage(victim, damage, damagetype);
+	}
+	
 	States
 	{
 	Spawn:
@@ -129,23 +137,12 @@ class skp_rocket : Rocket replaces Rocket
 	}
 }
 
-class skp_player_rocket : skp_rocket
+class RocketSchorcher : StatusEffectParticles
 {
-/*	Default
+	Default
 	{
-		//speed 1;
+		DropItem "RocketSmokeTrail", -192, -1;
 	}
-	Override void tick()
-	{
-		if(isFrozen())
-			return;
-		let Shooter = self.target;
-		if(Shooter != NULL && self.frame < 1)
-		{
-			double P = (self.pitch + (Shooter.pitch * 4)) / 5;
-			double A = (self.angle + (Shooter.angle * 4)) / 5;
-			Vel3DFromAngle(self.vel.Length(), A, P);
-		}
-		super.Tick();
-	}*/
 }
+
+class skp_player_rocket : skp_rocket	{	}

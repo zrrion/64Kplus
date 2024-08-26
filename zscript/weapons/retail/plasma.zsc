@@ -178,6 +178,13 @@ States
 		roll += CallACS("CVarCheck",2) ? random(0,1) * 45 : 0;
 		Super.PostBeginPlay();
 	}
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype)
+	{
+		if(victim)
+			victim.A_GiveInventory("RocketSchorcher", 1);
+		
+		return Super.DoSpecialDamage(victim, damage, damagetype);
+	}
 }
 class skp_PlasmaBallTrail : actor
 {

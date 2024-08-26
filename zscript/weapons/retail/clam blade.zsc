@@ -92,8 +92,11 @@ class skp_HeatBlade : skp_Weapon
 		CLAM AAA 5 Bright;
 		TNT1 A 0 A_FireHeatWave(35);
 	FireForReal:
-		CLAM BCD 4 Bright;
-		CLAM E 5;
+		CLAM B 4 Bright A_Light(1);
+		CLAM C 4 Bright A_Light(3);
+		CLAM D 2 Bright A_Light(2);
+		CLAM D 2 Bright A_Light(1);
+		CLAM E 5 A_Light(0);
 		CLAM F 4;
 		CLAM G 3 A_RefireHeatWave("Fire");
 		CLAM A 3 Offset(0, 36) A_RefireHeatWave("Fire");

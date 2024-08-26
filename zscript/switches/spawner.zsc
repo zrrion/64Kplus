@@ -213,7 +213,8 @@ class skp_ItemSpawner : skp_EnemySpawner
 		"PurpleCard",
 		"SKP_JumpBoots",//powerups
 		"SKP_JumpBoots_Perm",//10
-		"skp_PlasmaOffer"
+		"skp_PlasmaOffer",
+		"skp_IncOffer"
 	};
 	default
 	{
@@ -226,7 +227,7 @@ class skp_ItemSpawner : skp_EnemySpawner
 
 		//$Arg1 "Item Spawn Type (64K+)"
         //$Arg1Type 11
-        //$Arg1Enum { 0 = "None"; 1 = "Mini Stimpack"; 2 = "Large Health Bonus"; 3 = "Green Boots"; 4 = "Red Armor"; 5 = "Chainsaw Fuel"; 6 = "Unmaker"; 7 = "Green Skull Key"; 8 = "Purple Keycard"; 9 = "Double-Jump Boots (end of map/hub)"; 10 = "Double-Jump Boots (permanent)"; 11 = "Plasma Offer";}
+        //$Arg1Enum { 0 = "None"; 1 = "Mini Stimpack"; 2 = "Large Health Bonus"; 3 = "Green Boots"; 4 = "Red Armor"; 5 = "Chainsaw Fuel"; 6 = "Unmaker"; 7 = "Green Skull Key"; 8 = "Purple Keycard"; 9 = "Double-Jump Boots (end of map/hub)"; 10 = "Double-Jump Boots (permanent)"; 11 = "Plasma Offer"; 12 = "Incinerator Offer";}
         //$Arg1Default 0
 
 		//$Arg2 "Spawn Style"
@@ -246,7 +247,7 @@ class skp_ItemSpawner : skp_EnemySpawner
 	Override string SpawnWhat()
 	{
 		args[0] %= 38;
-		args[1] %= 12;
+		args[1] %= 13;
 		if(user_SpawnType.CodePointCount())
 			return user_SpawnType;
 		else if(args[1])
