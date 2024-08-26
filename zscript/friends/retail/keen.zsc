@@ -61,6 +61,18 @@ class skp_Keen : CommanderKeen replaces CommanderKeen
 		PainSound "keen/pain";
 		DeathSound "keen/death";
 	}
+	void DropKeen(name Keen, int pos)
+	{
+		bool paul;
+		actor blart;
+		[paul, blart] = A_SpawnItemEx(Keen,0,0,pos);
+		if(paul && blart)
+		{
+			for(let i = inv; i != null; i = i.inv)
+				i.owner = blart;
+		}
+		bSOLID = false;
+	}
 	States
 	{
 	Spawn:
@@ -71,11 +83,7 @@ class skp_Keen : CommanderKeen replaces CommanderKeen
 		KEEN B	8 A_Pain();
 		Goto Spawn;
 	Death:
-		TNT1 A 0
-		{
-			A_SpawnItemEx("FreeKeen",0,0,8);
-			bSOLID = false;
-		}
+		TNT1 A 0 DropKeen("FreeKeen", 8);
 		KEEN CD	6;
 		KEEN E 6 A_Scream();
 		KEEN FG 6;
@@ -116,11 +124,7 @@ class skp_HellKeen : skp_Keen
 		KEN2 D	8 A_Pain();
 		Goto Spawn;
 	Death:
-		TNT1 A 0
-		{
-			A_SpawnItemEx("FreeHellKeen",0,0,16);
-			bSOLID = false;
-		}
+		TNT1 A 0 DropKeen("FreeHellKeen", 16);
 		KEEN CD	6;
 		KEEN E 6 A_Scream();
 		KEEN FG 6;
