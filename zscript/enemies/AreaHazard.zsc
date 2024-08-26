@@ -193,26 +193,11 @@ class AH_SmallFlame : AH_Flame
 	}
 }
 
-class AHOnFire : IncOnFire
+class AHOnFire : StatusEffectParticles
 {
-	Override void Tick()
+	Default
 	{
-		if(!Owner || EffectTics <= 0)
-			Destroy();
-		
-		if(isFrozen())
-			return;
-		
-		EffectTics--;
-
-		if(Owner && Level.totaltime % 4 == 0)
-		{
-			
-			Owner.A_SpawnItemEx("RocketSmokeTrail", random(self.radius / 2, self.radius * 1.5), random(-3,-3), random(1,3), 0, 0, frandom(2,2.5), frandom(0,360), 0, 128);
-			if(OnlySmoke)
-				return;
-			for(int i = 0; i < 8; i++)
-				Owner.A_SpawnItemEx("AH_SmallFlame", random(self.radius / 2, self.radius * 1.5), random(-3,-3), random(self.height / 3, self.height), 0, 0, frandom(2,2.5), frandom(0,360), 0, 128);
-		}		
+		DropItem "RocketSmokeTrail";
+		DropItem "AH_SmallFlame";
 	}
 }
