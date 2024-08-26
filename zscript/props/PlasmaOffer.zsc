@@ -11,6 +11,7 @@ class skp_PlasmaOffer : SwitchableDecoration
 		Activation THINGSPEC_Deactivate;
 		Radius 16;
 		Height 44;
+		DropItem "PlasmaRifle";
 	}
 	override void PostBeginPlay()
 	{
@@ -27,8 +28,7 @@ class skp_PlasmaOffer : SwitchableDecoration
 	Inactive:
 		WPRF C -1
 		{
-			user_amount;
-			let yergun = A_DropItem("PlasmaRifle");
+			let yergun = A_DropItem(GetDropItems().Name);
 			A_StartSound("misc/toss");
 			if(user_amount && weapon(yergun))
 			{
@@ -41,5 +41,20 @@ class skp_PlasmaOffer : SwitchableDecoration
 			bSOLID = FALSE;
 		}
 		Stop;
+	}
+}
+
+class skp_IncOffer : skp_PlasmaOffer 
+{
+	Default
+	{
+		DropItem "skp_Incinerator";
+	}
+	States
+	{
+	Spawn:
+	Active:
+		WPRF D 1;
+		Loop;
 	}
 }
