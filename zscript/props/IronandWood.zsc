@@ -164,6 +164,7 @@ class SKP_WoodSignFront : actor
 		VisibleAngles 90, -90;
 		VisiblePitch -180,180;
 		Activation THINGSPEC_Switch;
+		Dropitem "SKP_WoodSignBack", -1;
 	}
 
 	Override Void PostBeginPlay()
@@ -175,7 +176,9 @@ class SKP_WoodSignFront : actor
 			user_MsgTime = -1;
 		else
 			user_MsgTime *= 35;
-		target = spawn("SKP_WoodSignBack", self.Pos);
+		DropItem di = GetDropItems();
+		if(di)
+			target = spawn(di.name, self.Pos);
 	}
 	Override Void Tick()
 	{

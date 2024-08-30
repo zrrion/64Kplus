@@ -32,23 +32,38 @@ class GateInterpolator : Object
 
 class skp_RollerGate : actor 
 {
-	bool user_SpawnOpen, havetoggled, AtDest;
+	bool user_SpawnOpen, user_LockMsg, havetoggled, AtDest;
+	string user_LockMsgTxt;
 	int user_Frame;
 	int user_Radius, user_Reset, Reset;
 	double user_height, offsetTarget, user_rollspeed;
 	vector3 BasePos;
+	meta string DefaultMsg;
+	property DefaultMsg : DefaultMsg;
 	
 	GateInterpolator GateMover;
 	Default 
 	{
 		//$Title "Thing Gate"
 		//$Category "Thing Gates"
-		+NOBLOCKMAP;
+		//+NOBLOCKMAP;
 		+NOGRAVITY;
 		+WALLSPRITE;
+		skp_RollerGate.DefaultMsg "This door is opened elsewhere.";
+		radius 48;
+		//+SOLID;
 	}
 
-	static void LockSectorLines (sector CurSec, bool lock = true)
+	Override bool Used(Actor user)
+	{
+		if(!user || !user_LockMsg)
+			return false;
+		user.A_StartSound("*usefail", CHAN_AUTO, CHANF_UI);
+		user.A_Print(string.format("%i\r%s", 3*35, user_LockMsgTxt.Length() ? user_LockMsgTxt : DefaultMsg));
+		return true;
+	}
+
+	void LockSectorLines (sector CurSec, bool lock = true)
 	{
 
 		for (int i = 0; i < CurSec.lines.size(); i++) 
@@ -58,12 +73,18 @@ class skp_RollerGate : actor
 			{
 				if (lock)
 				{
+					A_ChangeLinkFlags(0,0);
+					if(target)
+						target.A_ChangeLinkFlags(0,0);
 					SetLineFlags(ln, Line.ML_BLOCKEVERYTHING);
 					SetLineFlags(ln, Line.ML_SOUNDBLOCK);
 					SetLineFlags(ln, Line.ML_BLOCKSIGHT);
 				}
 				else 
 				{
+					A_ChangeLinkFlags(1,0);
+					if(target)
+						target.A_ChangeLinkFlags(1,0);
 					SetLineFlags(ln, 0, Line.ML_BLOCKEVERYTHING);
 					SetLineFlags(ln, 0, Line.ML_SOUNDBLOCK);
 					SetLineFlags(ln, 0, Line.ML_BLOCKSIGHT);
@@ -71,7 +92,7 @@ class skp_RollerGate : actor
 			}
         }
 	}
-	static void SetLineFlags(line ln, int setflags, int clearflags = 0)
+	void SetLineFlags(line ln, int setflags, int clearflags = 0)
 	{
 		ln.flags = (ln.flags & ~clearflags) | setflags;
 	}
@@ -252,5 +273,132 @@ class skp_RollerGate_Decoration : skp_RollerGate
 			RLDB A 0;
 			RLDB # -1;
 			Stop;
+	}
+}
+
+class skp_RollerGateSign : skp_RollerGate
+{
+	meta string DefaultBackMsg;
+	property DefaultBackMsg : DefaultBackMsg;
+	default
+	{
+		//$Title "Thing Gate"
+		//$Category "Thing Gates One Way"
+		+MASKROTATION;
+		VisibleAngles 90, -90;
+		VisiblePitch -180,180;
+		skp_RollerGate.DefaultMsg "Authorized Personnel \c[red]ONLY!\cl";
+		skp_RollerGateSign.DefaultBackMsg "You can't read the sign from this side.";
+		Dropitem "skp_RollerGateSignBack", -1;
+	}
+	Override Void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		user_LockMsg = true;
+		DropItem di = GetDropItems();
+		if(di)
+			target = spawn(di.name, self.Pos);
+		if(target)
+		{
+			target.SetOrigin((BasePos.X, BasePos.Y, BasePos.Z - GateMover.GetValue()), TRUE);
+			target.angle = self.angle + 180;
+		}
+	}
+	Override bool Used(Actor user)
+	{
+		if(!user)
+			return false;
+		if((DeltaAngle(AngleTo(user), self.angle) + 90) % 360 <= 180)
+			return super.Used(user);
+		else
+		{
+			user.A_StartSound("*usefail", CHAN_AUTO, CHANF_UI);
+			user.A_Print(string.format("%i\r%s", 3*35, DefaultBackMsg));
+			return true;
+		}
+		return false;
+	}
+	Override void DoorMove()
+	{
+		AtDest = GateMover.Update(offsetTarget, user_rollspeed);
+		if(ABS(GateMover.GetValue()) > user_height/2 && !havetoggled)
+		{
+			if(offsetTarget != 0)
+				LockSectorLines(CurSector, false);
+			else
+			{
+				LockSectorLines(CurSector, true);
+				self.bSOLID = !self.bNOBLOCKMAP;
+			}
+			havetoggled = true;
+		}
+
+		SetOrigin((BasePos.X, BasePos.Y, BasePos.Z - GateMover.GetValue()), TRUE);
+		if(target)
+		{
+			target.SetOrigin((BasePos.X, BasePos.Y, BasePos.Z - GateMover.GetValue()), TRUE);
+			target.angle = self.angle + 180;
+		}
+	}
+	States 
+	{
+		Opening:
+			RLOS A 0 A_StartSound("doors/dr1_open", CHAN_BODY);
+			RLOS A 1
+			{
+				DoorMove();
+				if(AtDest && self.pos.Z != BasePos.Z)
+					SetStateLabel("Open");
+			}
+			Wait;
+		Open:
+			RLOS A 0
+			{
+				Reset = user_Reset;
+			}
+			RLOS A 1
+			{
+				DoorMove();
+				reset--;
+				if(user_Reset > 0 && reset <= 0)
+					Activate(self);
+			}
+			Wait;
+		Closing:
+			RLOS A 0 A_StartSound("doors/dr1_clos", CHAN_BODY);
+			RLOS A 1
+			{
+				DoorMove();
+				if(AtDest && self.pos.Z != BasePos.Z)
+					SetStateLabel("Closed");
+			}
+			Wait;
+		Closed:
+			RLOS A 1 DoorMove();
+			Wait;
+		Spawn:
+			RLOS A -1;
+			Stop;
+	}
+}
+
+class skp_RollerGateSignBack : actor
+{
+	default
+	{
+		+NOGRAVITY;
+		+WALLSPRITE;
+		+NOBLOCKMAP;
+		+NOINTERACTION;
+		+MASKROTATION;
+		-SOLID;
+		VisibleAngles 90, -90;
+		VisiblePitch -180,180;
+	}
+	States
+	{
+	Spawn:
+		RLOS B -1;
+		Stop;
 	}
 }
