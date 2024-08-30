@@ -1,0 +1,9 @@
+brightmap sprite RLDRB0
+{
+	map "sprites/map object/doors/RLDRB0.bm.png"
+}
+
+brightmap sprite RLDRC0
+{
+	map "sprites/map object/doors/RLDRC0.bm.png"
+}
