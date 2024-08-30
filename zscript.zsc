@@ -171,6 +171,7 @@ version "4.5"
 #include "zscript/enemies/retail/DeadThings.zsc"//these are used as props, but I have modified them so they can be raised and they now make more sense here
 //friends ===
 #include "zscript/friends/retail/keen.zsc"
+#include "zscript/friends/retail/health station.zs"
 
 //some basic stuff
 class skp_BulletPuff_XDeath : BulletPuff

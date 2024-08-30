@@ -1,3 +1,8 @@
+/*
+swiped this code (and edited it a smidge) from MetaDoom
+So maybe possibly dehacked won't completely fuck things up here
+*/
+
 class PropsReplacer : EventHandler
 {
 	bool safetylock;
@@ -153,5 +158,29 @@ class MonsterReplacer : EventHandler
 				}
 			}
 		}
+    }
+}
+
+class WeaponReplacer : EventHandler
+{
+    override void CheckReplacement(ReplaceEvent e)
+	{
+		static const string oldActor[] =
+		{
+			"fist", "Chainsaw", "Pistol", "Shotgun", "SuperShotgun", "Chaingun", "RocketLauncher", "PlasmaRifle", "BFG9000"
+		};
+		
+		static const string newActor[] =
+		{
+			"skp_Fist", "skp_Chainsaw", "skp_Pistol", "skp_Shotgun", "skp_SuperShotgun", "skp_Chaingun", "skp_RocketLauncher", "skp_PlasmaRifle", "skp_BFG9000"
+		};
+		static const string LoRActor[] =
+		{
+			"skp_Fist", "skp_Chainsaw", "skp_Pistol", "skp_Shotgun", "skp_SuperShotgun", "skp_Chaingun", "skp_RocketLauncher", "skp_Incinerator", "skp_HeatBlade"
+		};
+		
+		for(int i = 0; i < oldActor.size(); i++)
+			if (e.Replacee == oldActor[i] )
+				e.Replacement = LorWeapons ? LoRActor[i] : newActor[i];//add something here to deal with Legacy of Rust weapon stuff
     }
 }
