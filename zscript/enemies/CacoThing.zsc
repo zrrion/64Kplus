@@ -38,6 +38,7 @@ class Cacomera : Cacodemon
 		DropItem "Rocket", MERA_HIDE;
 		DropItem "Archvile", MERA_HIDE;
 		DropItem "BaronOfHell", MERA_HIDE;
+		DropItem "Crush", MERA_HIDE;
 	}
 	
 	Override void tick()
@@ -64,24 +65,32 @@ class Cacomera : Cacodemon
 			TeleportTarget = target;
 		bool paul;
 		vector3 blart;
-		if(TeleportTarget is "LostSoul" /*&& CheckTPDest(TeleportTarget.pos)*/)
+
+		DropItem di = self.GetDropItems();
+		while(di)
 		{
-			paul = true;
-			blart = TeleportTarget.pos;
+			if(TeleportTarget is di.name && di.Probability == MERA_HATE)
+			{
+				paul = true;
+				blart = TeleportTarget.pos;
+				break;
+			}
+			di = di.next;
 		}
-		else
+
+		if(!paul)
 		{
 			[paul, blart] = GetTPDest(TeleportTarget);
 		}
 		
 		if(paul && CheckTPDest(blart))
 		{
-			Spawn("teleportfog", self.pos);
+			SpawnFog();
 			A_Stop();
 			reactiontime += 8;
 			TeleportMove(blart, true, true);
 			self.angle = random(0,360);
-			Spawn("teleportfog", self.pos);
+			SpawnFog();
 			TeleportTimer = User_TimerReset + random(0, 70);
 			bSUMMONEDMONSTER = random(0,1);
 			return true;
@@ -91,13 +100,13 @@ class Cacomera : Cacodemon
 	}
 	void DoFakeTeleport()
 	{
-		Spawn("teleportfog", self.pos);
+		SpawnFog();
 		A_Stop();
 		reactiontime += 8;
 		for(int i = 0; i < 50; i++)//I saw this trick in a movie once
 			A_Wander();
 		self.angle = random(0,360);
-		Spawn("teleportfog", self.pos);
+		SpawnFog();
 		TeleportTimer = User_TimerReset + random(0, 70);
 		bSUMMONEDMONSTER = random(0,1);
 	}
@@ -154,8 +163,16 @@ class Cacomera : Cacodemon
 	Missile:
 		CORB B 0
 		{
-			if(target is "LostSoul" && DoTeleport())
-				SetStateLabel("See");
+			DropItem di = self.GetDropItems();
+			while(di)
+			{
+				if(target is di.name && di.Probability == MERA_HATE && DoTeleport())
+				{
+					SetStateLabel("See");
+					break;
+				}
+				di = di.next;
+			}
 			TeleportTimer += 20;
 		}
 		CORB B 5 A_FaceTarget();
