@@ -102,22 +102,15 @@ class skp_BloodMist : actor
 		+NOTELEPORT
 		Mass 5;
 		renderstyle "translucent";
-		alpha 0.25;
-		scale 0.5;
+		alpha 0.8;
 	}
 	States
 	{
 	Spawn:
-		XDBS AAA 3 NODELAY
-		{
-			if(alpha < 0.75)
-				alpha += 0.125;
-			scale.x += 0.125;
-			scale.y = scale.x;
-		}
+		XDBS A 4;
 		XDBS BCD 4 A_SpawnItemEx("skp_BloodSpurt",0,0,0,0.2*random(-10,10),0.2*random(-10,10),0.3*random(5,15),0, SXF_TRANSFERTRANSLATION | SXF_CLIENTSIDE,192);
 		XDBS EFGH 2;
-		XDBS I 2 A_Fadeout();
+		XDBS I 2;
 		wait;
 	}
 	Override void PostBeginPlay()
@@ -125,17 +118,14 @@ class skp_BloodMist : actor
 		if(CallACS("CVarCheck",2))
 			A_SetRoll(Random(0,359));
 
-		//scale.x = frandom(0.5, 0.75);
-		//scale.y = scale.x;
+		scale.x = frandom(0.5, 0.75);
+		scale.y = scale.x;
 		bXFLIP = random(true,false);
 		bYFLIP = random(true,false);
 
-		for(int i = 0; i < 2; i++)
-		{
-			let B = spawn("skp_BloodMist2", self.pos + (random(16, -16), random(16, -16), random(16, -16)));
-			if(B)
-				B.vel += (random(4, -4), random(4, -4), random(4, 0));
-		}
+		let B = spawn("skp_BloodMist2", self.pos + (random(16, -16), random(16, -16), random(16, -16)));
+		if(B)
+			B.vel += (random(4, -4), random(4, -4), random(4, 0));
 		
 		for(int i = 0; i < 15; i++)
 			{
@@ -149,12 +139,12 @@ class skp_BloodMist : actor
 		
 		Super.PostBeginPlay();
 	}
-	Override void Tick()
+	/*Override void Tick()
 	{
 		if(CallACS("CVarCheck",2))
 			self.roll += bXFLIP ? -1 : 1;
 		super.Tick();
-	}
+	}*/
 }
 
 class skp_BloodMist2 : skp_BloodMist
@@ -169,21 +159,6 @@ class skp_BloodMist2 : skp_BloodMist
 		bXFLIP = random(true,false);
 		bYFLIP = random(true,false);
 		actor.PostBeginPlay();
-	}
-	States
-	{
-	Spawn:
-		XDBS AAA 3 NODELAY
-		{
-			if(alpha < 0.75)
-				alpha += 0.125;
-			scale.x += 0.125;
-			scale.y = scale.x;
-		}
-		XDBS BCD 4;
-		XDBS EFGH 2;
-		XDBS I 2 A_Fadeout();
-		wait;
 	}
 }
 
