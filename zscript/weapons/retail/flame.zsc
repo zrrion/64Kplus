@@ -15,7 +15,7 @@ class skp_Incinerator  : skp_Weapon
 		Weapon.AmmoUse 1;
 		Weapon.AmmoGive 50;
 		Weapon.AmmoType "Cell";
-		Inventory.PickupMessage "You got the incinerator.";
+		Inventory.PickupMessage "You got the incinerator!";
 		Tag "Incinerator";
 		DropItem "UnloadedIncinerator";
 

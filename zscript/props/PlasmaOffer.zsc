@@ -44,7 +44,7 @@ class skp_PlasmaOffer : SwitchableDecoration
 	}
 }
 
-class skp_IncOffer : skp_PlasmaOffer 
+class skp_IncOffer : skp_PlasmaOffer
 {
 	Default
 	{

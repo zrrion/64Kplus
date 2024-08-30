@@ -80,6 +80,8 @@ class skp_EnemySpawner : actor
 	Override void Activate(Actor activator)
 	{
 		string MobjToSpawn = SpawnWhat();
+		if(LorWeapons && MobjToSpawn == "skp_PlasmaOffer")
+			MobjToSpawn = "skp_IncOffer";
 		if(MobjToSpawn == "NULL" || MobjToSpawn == "")
 			return;
 		let YD = spawn(MobjToSpawn, self.pos, ALLOW_REPLACE);
@@ -213,8 +215,7 @@ class skp_ItemSpawner : skp_EnemySpawner
 		"PurpleCard",
 		"SKP_JumpBoots",//powerups
 		"SKP_JumpBoots_Perm",//10
-		"skp_PlasmaOffer",
-		"skp_IncOffer"
+		"skp_PlasmaOffer"
 	};
 	default
 	{

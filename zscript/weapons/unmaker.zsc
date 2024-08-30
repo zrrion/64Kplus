@@ -19,6 +19,7 @@ class skp_unmaker : skp_Weapon
 		Weapon.AmmoGive 80;
 		Weapon.AmmoType "Cell";
 		+WEAPON.NOAUTOFIRE;
+		+WEAPON.CHEATNOTWEAPON;
 		Obituary "%o was unmade by %k.";
 		Inventory.Pickupmessage "What the !@#%* is this!";
 		Tag "Unmaykr";
