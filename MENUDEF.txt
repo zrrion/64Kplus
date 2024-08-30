@@ -35,7 +35,8 @@ OptionMenu "64KMenu"
 	StaticText 	"Gameplay Options"				, 1
 	Option      "Enemy Changes"					, "arg_EnemyChanges"    , "DisabledEnabled"
 	Option      "Boss Item Drops" 				, "arg_EnemyDrops"		, "DisabledEnabled"
-	StaticText 	""
-	StaticText 	"Physics Options"				, 1
-	Option      "Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
+	Option      "Legacy of Rust Weapons"		, "LorWeapons"    , "DisabledEnabled"
+	//StaticText 	""
+	//StaticText 	"Physics Options"				, 1
+	//Option      "Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
 }
