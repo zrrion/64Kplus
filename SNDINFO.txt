@@ -88,3 +88,6 @@ $random inc/death	{	inc/death1	inc/death2	}
 inc/death1		DSINCHT1
 inc/death2		DSINCHT2
 inc/fizzle		DSINCHT3
+
+misc/quaff/some	"sounds/drinkitem.ogg"
+misc/quaff/all	"sounds/drinkallitem.ogg"
