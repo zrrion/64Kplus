@@ -291,10 +291,15 @@ class skp_RollerGateSign : skp_RollerGate
 		skp_RollerGateSign.DefaultBackMsg "You can't read the sign from this side.";
 		Dropitem "skp_RollerGateSignBack", -1;
 	}
+	Override bool CanCollideWith(Actor other, bool passive)
+	{
+		return false;
+	}
 	Override Void PostBeginPlay()
 	{
 		super.PostBeginPlay();
 		user_LockMsg = true;
+		user_Frame = false;
 		DropItem di = GetDropItems();
 		if(di)
 			target = spawn(di.name, self.Pos);
