@@ -36,13 +36,19 @@ class skp_Chaingun : skp_Weapon replaces Chaingun
 		CGIH E 2 Bright skp_FireChaingunCone();
 		CGIH F 1 Bright
 		{
+			A_Light(2);
 			A_ZoomFactor(0.99);
 			A_OverlayOffset(1,0,32,WOF_INTERPOLATE);
 		}
-		CGIH C 1 A_ZoomFactor(1);
+		CGIH C 1
+		{
+			A_Light(1);
+			A_ZoomFactor(1);
+		}
 		CGIH B 0 A_ReFire();
 		CGIH ABCDDAABBCCCDDDD 1
 		{
+			A_Light(0);
 			A_ZoomFactor(1);
 			A_OverlayScale(PSP_WEAPON, player.GetPSprite(PSP_WEAPON).scale.x <= 1 ? 0 : -0.02, 0, WOF_ADD);
 			skp_WeaponReady(WRF_NOSWITCH,false,true);//fine to quick attack but not to swap
