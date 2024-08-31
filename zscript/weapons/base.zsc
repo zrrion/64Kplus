@@ -31,8 +31,17 @@ class skp_Weapon : Weapon
 					A_StartSound("skeleton/swing", CHAN_AUTO, CHANF_DEFAULT, 0.2, ATTN_NORM, 0.8);
 				}
 			HAND C 1;
-			HAND D 1 A_CustomPunch((CountInv("PowerStrength") >= 1 ? 20 : 2) * random(1, 10), TRUE, CPF_NOTURN, CountInv("PowerStrength") >= 1 ? "skp_FistPuff_XDeath" : "skp_FistPuff");
-			HAND D 1 A_OverlayOffset(1,-50, 36);
+			HAND D 1 SKP_Punch();
+			HAND D 1
+			{
+				A_OverlayOffset(1,-50, 36);
+				let pspr = player.FindPSprite(1);
+				if(pspr && invoker.NextTics)
+				{
+					pspr.Tics = invoker.NextTics;
+					invoker.NextTics = 0;
+				}
+			}
 			HAND D 1 A_OverlayOffset(1,-90, 46);
 			HAND D 1 A_OverlayOffset(1,-140, 50);
 			HAND D 1 A_OverlayOffset(1,-180, 53);
@@ -93,7 +102,8 @@ class skp_Weapon : Weapon
 					A_Overlay(666,"Saw.Idle.End");
 					if(SKP_Saw("weapons/sawfull","weapons/sawhit",40,"ChainsawZerkPuff",SF_NORANDOM,65,2.8125,0,0.25) && !invoker.SawHasHit)
 					{
-						A_TakeInventory("SKP_SawFuel", 1);
+						if(!sv_infiniteammo)
+							A_TakeInventory("SKP_SawFuel", 1);
 						invoker.SawHasHit = TRUE;
 					}
 					A_SpawnItemEx("ChainsawSmoke",2,fRandom(2,6),(height/2)-2,0,fRandom(1,3),fRandom(-2,0));
@@ -102,7 +112,8 @@ class skp_Weapon : Weapon
 				{
 					if(SKP_Saw("","weapons/sawhit",40,"ChainsawZerkPuff",SF_NORANDOM,65,2.8125,0,0.25) && !invoker.SawHasHit)
 					{
-						A_TakeInventory("SKP_SawFuel", 1);
+						if(!sv_infiniteammo)
+							A_TakeInventory("SKP_SawFuel", 1);
 						invoker.SawHasHit = TRUE;
 					}
 					A_OverlayOffset(1,-32,16,WOF_ADD);
@@ -183,7 +194,7 @@ class skp_Weapon : Weapon
 			//player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState(flash));
 		}
 	}
-	action bool SKP_Saw(sound fullsound = "weapons/sawfull", sound hitsound = "weapons/sawhit", int damage = 2, class<Actor> pufftype = "BulletPuff", int flags = 0, double range = 0, double spread_xy = 2.8125, double spread_z = 0, double lifesteal = 0, int lifestealmax = 0, class<BasicArmorBonus> armorbonustype = "ArmorBonus")
+	Action bool SKP_Saw(sound fullsound = "weapons/sawfull", sound hitsound = "weapons/sawhit", int damage = 2, class<Actor> pufftype = "BulletPuff", int flags = 0, double range = 0, double spread_xy = 2.8125, double spread_z = 0, double lifesteal = 0, int lifestealmax = 0, class<BasicArmorBonus> armorbonustype = "ArmorBonus")
 	{
 		FTranslatedLineTarget t;
 
@@ -217,6 +228,15 @@ class skp_Weapon : Weapon
 			}
 			A_StartSound (fullsound, CHAN_WEAPON);
 			return false;
+		}
+		else
+		{
+			AdjustPlayerAngle(t);
+			let pspr = player.FindPSprite(1);
+			if(pspr)
+			{
+				pspr.Tics = t.linetarget.health <= 0 ? 4 : 2;
+			}
 		}
 
 		if (flags & SF_RANDOMLIGHTHIT)
@@ -295,6 +315,50 @@ class skp_Weapon : Weapon
 			return true;
 		return false;
 	}
+	int NextTics;
+	Action void SKP_Punch()
+	{
+		if (!player)
+			return;
+		FTranslatedLineTarget t;
+		name DamageType = CountInv("PowerStrength") ? "GloryKill" : "Melee";
+		name PuffType = CountInv("PowerStrength") ? "skp_FistPuff_XDeath" : "skp_FistPuff";
+		int DamageIn = (CountInv("PowerStrength") ? 20 : 2) * random(1, 10);
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 1; j >= -1; j -= 2)
+			{
+				double ang = angle + j*i*(45. / 16);
+				double slope = AimLineAttack(ang, 64, t, 0., ALF_CHECK3D);
+				if (t.linetarget)
+				{
+					LineAttack(ang, 64, slope, DamageIn, DamageType, PuffType, true, t);
+					if (t.linetarget)
+					{
+						AdjustPlayerAngle(t);
+						j = -666;
+						i = 666;
+					}
+				}
+			}
+		}
+		
+		if(!t.linetarget)//if we missed with the arc attack above we need to do another line attack that just shoots forward
+		{
+			double slope = AimLineAttack (angle, 64, null, 0., ALF_CHECK3D);
+			LineAttack (angle, 64, slope, DamageIn, DamageType, PuffType, true, t);
+		}
+
+		if(t.linetarget)
+		{
+			let pspr = player.FindPSprite(1);
+			if(pspr)
+			{
+				pspr.Tics = 4;
+				invoker.NextTics = 2;
+			}
+		}
+	}
 	Override void PostBeginPlay()
 	{
 		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
@@ -302,7 +366,7 @@ class skp_Weapon : Weapon
 			bWALLSPRITE = TRUE;
 			A_SetAngle(Random(0,360));
 		}
-	Super.PostBeginPlay();
+		Super.PostBeginPlay();
 	}
 	Override void Tick()
 	{
