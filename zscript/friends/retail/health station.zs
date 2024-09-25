@@ -28,7 +28,8 @@ class SKP_HealthStation : SwitchBase
 		-NOGRAVITY;
 		-NOCLIP;
 		-FIXMAPTHINGPOS;
-		-USESPECIAL;
+		+USESPECIAL;
+		Activation THINGSPEC_Switch;
 
 		/*+SHOOTABLE;
 		+NEVERTARGET;
@@ -56,9 +57,9 @@ class SKP_HealthStation : SwitchBase
 		StartHealth = args[0] * 5;
 		HalfFull();
 	}
-	Override void Activate(Actor activator)	{	}
-	Override void Deactivate (Actor activator)	{	}
-	Override bool Used(Actor user)
+	Override void Activate(Actor activator)	{	Quaff(activator);	}
+	Override void Deactivate (Actor activator)	{	Quaff(activator);	}
+	bool Quaff(Actor user)
 	{
 		if(!user)
 			return false;
@@ -68,7 +69,7 @@ class SKP_HealthStation : SwitchBase
 			user.A_GiveInventory("HealthBonus", args[0]);
 			if(self.health && args[2])
 				user.A_CallSpecial(130, args[2]);
-			else if(args[3])
+			else if(!self.health && args[3])
 				user.A_CallSpecial(130, args[3]);
 			
 			user.A_StartSound(HalfFull() ? "misc/quaff/some" : "misc/quaff/all", CHAN_AUTO, CHANF_UI);
