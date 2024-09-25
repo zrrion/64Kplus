@@ -14,7 +14,7 @@ class skp_HeatBlade : skp_Weapon
 		Weapon.Slotnumber 7;
 		
 		Weapon.SelectionOrder 100;
-		Weapon.AmmoUse 10;
+		Weapon.AmmoUse 20;
 		Weapon.AmmoGive 100;
 		Weapon.AmmoType "Cell";
 		+WEAPON.NOAUTOFIRE;
