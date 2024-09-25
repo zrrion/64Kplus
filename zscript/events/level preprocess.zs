@@ -184,3 +184,31 @@ class WeaponReplacer : EventHandler
 				e.Replacement = LorWeapons ? LoRActor[i] : newActor[i];//add something here to deal with Legacy of Rust weapon stuff
     }
 }
+
+class skp_Tonemap : EventHandler
+{
+	PlayerInfo p;
+	//ui int OldTone;
+	override void UiTick()
+	{
+		bool DoShade = CVar.GetCvar("arg_tone", p).GetBool();
+		if(p)
+		{
+			//OldTone = CVar.GetCVar("gl_tonemap", p).GetInt();
+			//CVar.GetCVar("gl_tonemap", p).SetInt(0);
+			PPShader.SetEnabled("ExtendedPalLUT", DoShade);
+			//PPShader.SetEnabled("tonemap", false);
+		}
+		/*else if(OldTone)
+		{
+			CVar.GetCVar("gl_tonemap", p).SetInt(OldTone);
+			OldTone = 0;
+		}*/
+	}
+
+	override void PlayerEntered(PlayerEvent e)
+	{
+		p = players[e.PlayerNumber];
+		
+	}
+}

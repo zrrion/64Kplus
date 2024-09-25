@@ -1,6 +1,6 @@
 AddOptionMenu "OptionsMenu"
 {
-	StaticText "64k+ v1.1"
+	StaticText "64k+"
 	Submenu "64k+ Options", "64KMenu"
 }
 
@@ -25,18 +25,21 @@ server bool arg_ItemRotation = True;
 */
 OptionMenu "64KMenu"
 {
-	Title       "64K + Options"
-	StaticText 	""
-	StaticText 	"Special Effects Options"		, 1
-	Option      "Sprite Rotation"				, "arg_GoreRotation"    , "DisabledEnabled"
-	Option      "Dropped Item Rotation"			, "arg_ItemRotation"    , "DisabledEnabled"
-	Option      "Teleport Effect Type"			, "arg_Teleporter"		, "TeleporterOption"
-	StaticText 	""
-	StaticText 	"Gameplay Options"				, 1
-	Option      "Enemy Changes"					, "arg_EnemyChanges"    , "DisabledEnabled"
-	Option      "Boss Item Drops" 				, "arg_EnemyDrops"		, "DisabledEnabled"
-	Option      "Legacy of Rust Weapons"		, "LorWeapons"    , "DisabledEnabled"
-	//StaticText 	""
-	//StaticText 	"Physics Options"				, 1
-	//Option      "Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
+	Title					"64K+ Options"
+	StaticText 				""
+	StaticTextSwitchable	"Display Options", "Disable the Tonemap for these options to work correctly." , gl_tonemap, 1
+	Option					"$GLPREFMNU_TONEMAP"			, gl_tonemap			, "TonemapModes"
+	Option     				"Expanded palette tonemap"		, "arg_tone"    , "DisabledEnabled"
+	StaticText 				"Special Effects Options"		, 1
+	Option      			"Sprite Rotation"				, "arg_GoreRotation"    , "DisabledEnabled"
+	Option      			"Dropped Item Rotation"			, "arg_ItemRotation"    , "DisabledEnabled"
+	Option      			"Teleport Effect Type"			, "arg_Teleporter"		, "TeleporterOption"
+	StaticText 				""
+	StaticText 				"Gameplay Options"				, 1
+	Option      			"Enemy Changes"					, "arg_EnemyChanges"    , "DisabledEnabled"
+	Option      			"Boss Item Drops" 				, "arg_EnemyDrops"		, "DisabledEnabled"
+	Option      			"Legacy of Rust Weapons"		, "LorWeapons"   		 , "DisabledEnabled"
+	//StaticText 			""
+	//StaticText 			"Physics Options"				, 1
+	//Option				"Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
 }
