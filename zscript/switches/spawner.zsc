@@ -22,7 +22,8 @@ class skp_EnemySpawner : actor
 		"Cyberdemon",
 		"SpiderMastermind",
 		"WolfensteinSS",
-		"ExplosiveBarrel"
+		"ExplosiveBarrel",
+		"skp_Ghoul"
 	};
 
 	static const string MOBJ_TYPES_SKP[] = 
@@ -42,7 +43,7 @@ class skp_EnemySpawner : actor
 		//$title "Enemy Spawner"
         //$Arg0 "Enemy Spawn Type (retail)"
         //$Arg0Type 11
-        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "Wolfenstein SS"; 19 = "Explosive Barrel";}
+        //$Arg0Enum { 0 = "None"; 1 = "Zombie Man"; 2 = "Shotgun Guy"; 3 = "Imp"; 4 = "Demon"; 5 = "Spectre"; 6 = "Lost Soul"; 7 = "Chaingun Guy"; 8 = "Cacodemon"; 9 = "Pain Elemental"; 10 = "Revenant"; 11 = "Mancubus"; 12 = "Arachnotron"; 13 = "Archvile"; 14 = "Hell Knight"; 15 = "Baron of Hell"; 16 = "Cyberdemon"; 17 = "Spider Mastermind"; 18 = "Wolfenstein SS"; 19 = "Explosive Barrel"; 20 = "Goul";}
         //$Arg0Default 0
 
 		//$Arg1 "Enemy Spawn Type (64K+)"
@@ -67,7 +68,7 @@ class skp_EnemySpawner : actor
 	}
 	Virtual string SpawnWhat()
 	{
-		args[0] %= 20;
+		args[0] %= 21;
 		args[1] %= 6;
 		if(user_SpawnType.CodePointCount())
 			return user_SpawnType;

@@ -1,0 +1,91 @@
+class skp_Ghoul : actor replaces DEH_Actor_150
+{
+	mixin BerserkDroper;
+	Default
+	{
+		//$Category Monsters
+		//$title "Ghoul"
+		Health 35;
+		Speed 12;
+		Radius 16;
+		Height 40;
+		ReactionTime 8;
+		PainChance 128;
+		Mass 50;
+		+SOLID;
+		+SHOOTABLE;
+		+COUNTKILL;
+		+FLOAT;
+		+NOGRAVITY;
+		+DONTFALL;
+
+		SeeSound "ghoul/see";
+		ActiveSound "ghoul/active";
+		PainSound "ghoul/pain";
+		DeathSound "ghoul/death";
+	}
+	States
+	{
+		spawn:
+			GHUL AB 10 A_Look();
+			loop;
+		see:
+			GHUL AABBCCBB 3 A_Chase();
+			loop;
+		missile:
+			GHUL D 8 Bright A_FaceTarget();
+			GHUL E 6 Bright A_FaceTarget();
+			GHUL F 4 Bright A_GoulFire();
+			GHUL G 4 Bright;
+			goto see;
+		pain:
+			GHUL I 3 Bright;
+			GHUL K 3 Bright A_Pain();
+			goto see;
+		death:
+			GHUL L 5 Bright;
+			GHUL M 5 Bright A_Scream();
+			GHUL NO 5 Bright;
+			GHUL P 5 Bright A_NoBlocking();
+			GHUL QR 5 Bright;
+			//GHUL S -1;
+			stop;
+	}
+	void A_GoulFire()
+	{
+		A_SpawnProjectile("skp_GhoulBall", height/2);
+	}
+}
+
+class skp_GhoulBall : actor
+{
+	Default
+	{
+		//$title "Ghoul Ball"
+		Damage 3;
+		Speed 15;
+		FastSpeed 20;
+		Radius 6;
+		Height 8;
+
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DROPOFF;
+		+MISSILE;
+		SeeSound "imp/attack";
+		DeathSound "imp/shotx";
+	}
+
+	states
+	{
+		spawn:
+			GBAL C 4 Bright;
+		idle:
+			GBAL AB 4 Bright;
+			loop;
+		death:
+			GBAL C 5 Bright;
+			APBX BCDE 5 Bright;
+			stop;
+	}
+}

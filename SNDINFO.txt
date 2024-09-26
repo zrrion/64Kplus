@@ -91,3 +91,9 @@ inc/fizzle		DSINCHT3
 
 misc/quaff/some	"sounds/drinkitem.ogg"
 misc/quaff/all	"sounds/drinkallitem.ogg"
+
+ghoul/see		"sounds/ghoul/DSGHLSIT"
+ghoul/active	"sounds/ghoul/DSGHLACT"
+ghoul/pain		"sounds/ghoul/DSGHLPAI"
+ghoul/death		"sounds/ghoul/DSGHLDTH"
+ghoul/missile	"sounds/ghoul/"
