@@ -1,4 +1,4 @@
-HardwareShader PostProcess Screen
+HardwareShader PostProcess Scene
 {
 	Name "ExtendedPalLUT"
 	shader "shaders/tonesmaps.fp" 330
