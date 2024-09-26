@@ -127,7 +127,7 @@ class MonsterReplacer : EventHandler
 		{
 			// Standard Doom Actors
 			"skp_ZombieMan", "skp_ShotgunGuy", "skp_ChaingunGuy", "skp_DoomImp", "skp_Demon", 
-			"MBFHelperDog", "skp_Spectre", "skp_Cacodemon", "skp_HellKnight", "skp_PainElemental", 
+			"MBFHelperDog", "skp_Spectre", "skp_Cacodemon", "skp_Knight", "skp_PainElemental", 
 			"skp_LostSoul", "skp_ArchVile", "skp_Revenant", "skp_BaronOfHell", "skp_Arachnotron", "skp_Mancubus",
 			"skp_SpiderMastermind", "skp_Cyberdemon",
 			// Traditionally "Optional" Actors
