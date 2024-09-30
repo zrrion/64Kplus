@@ -24,7 +24,7 @@ class skp_Megasphere : Megasphere replaces Megasphere
 	States
 	{
 	Spawn:
-		MEGA ABCD 6 BRIGHT;
+		MEGA AAABBBCCCDDDDEE 2 BRIGHT;
 		Loop;
 	}
 }

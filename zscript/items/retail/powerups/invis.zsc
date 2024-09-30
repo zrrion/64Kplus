@@ -29,7 +29,7 @@ class skp_BlurSphere : BlurSphere replaces BlurSphere
 	States
 	{
 	Spawn:
-		PINS ABCDCB 6 Bright;
+		PINS ABCDEDCB 6 Bright;
 		Loop;
 	}
 }	

@@ -22,7 +22,7 @@ class skp_Soulsphere : Soulsphere replaces Soulsphere
 	States
 	{
 	Spawn:
-		SOUL ABCDCB 6 Bright;
+		SOUL ABCDEDCB 6 Bright;
 		Loop;
 	}
 }

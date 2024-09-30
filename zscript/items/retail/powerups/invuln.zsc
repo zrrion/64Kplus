@@ -25,7 +25,7 @@ class skp_InvulnerabilitySphere : InvulnerabilitySphere replaces Invulnerability
 	States
 	{
 	Spawn:
-		PINV ABCDCB 4 Bright;
+		PINV ABCDCB 6 Bright;
 		Loop;
 	}
 }	
