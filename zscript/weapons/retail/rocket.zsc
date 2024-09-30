@@ -88,9 +88,10 @@ class skp_rocketTrail : Actor
 	States
 	{
 		Spawn:
+			TNT1 A 3;
 			RPUF ABC 2;
 			RPUF DE 2 A_FadeOut();
-			RPUF F 1 A_FadeOut();
+			RPUF FG 1 A_FadeOut();
 			Wait;
 	}
 }
