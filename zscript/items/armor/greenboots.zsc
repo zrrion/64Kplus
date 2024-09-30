@@ -9,35 +9,35 @@ class SKP_GreenBoots : BasicArmorBonus
 		Inventory.Icon "GBTSA0";
 		Armor.Saveamount 10;
 		Armor.Maxsaveamount 200;
-		+COUNTITEM
+		+COUNTITEM;
+		+SYNCHRONIZED;
 	}
 //====
 	States
 	{
 	Spawn:
-		GBTS A 6;
-		GBTS B 7 Bright;
+		GBTS A 12;
+		GBTS B 14 Bright;
 		loop;
 	}
 //====	
 	Override void PostBeginPlay()
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
-			bWALLSPRITE = TRUE;
-		A_SetAngle(Random(0,360));
-	Super.PostBeginPlay();
+		super.PostBeginPlay();
+		if(level.time)
+		{
+			if(!curstate.tics)
+				Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Tick();
+			}
+		}
 	}
 	Override void Tick()
 	{
-		if(isFrozen())
-			return;
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
-		{
-			bWALLSPRITE = TRUE;
-			self.angle += fRandom(3.0,4.0);
-		}
-		else
-			bWALLSPRITE = FALSE;
 		Super.Tick();
 	}
 }

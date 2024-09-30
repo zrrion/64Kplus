@@ -11,9 +11,25 @@ class SKP_JumpBoots : Inventory
 		+INVENTORY.BIGPOWERUP;
 		Inventory.InterHubAmount 0;
 		+SPECIALFLOORCLIP;
+		+SYNCHRONIZED;
 		Inventory.PickupMessage "You picked up the double jump boots";
 		Inventory.PickupSound "misc/p_pkup";
 		SKP_JumpBoots.shine "SKP_JumpBoots_SFX";
+	}
+	Override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		if(level.time)
+		{
+			if(!curstate.tics)
+				Inventory.Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Inventory.Tick();
+			}
+		}
 	}
 	Void skp_BootFx()
 	{
@@ -35,8 +51,8 @@ class SKP_JumpBoots : Inventory
 	States
 	{
 	Spawn:
-		DBLJ B 6;
-		DBLJ A 7 bright;
+		DBLJ B 12;
+		DBLJ A 14 bright;
 		Loop;
 	}
 }

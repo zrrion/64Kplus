@@ -3,6 +3,22 @@ class skp_Berserk : Berserk replaces Berserk//make this heal to max health, inst
 	Default
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
+		+SYNCHRONIZED;
+	}
+	Override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		if(level.time)
+		{
+			if(!curstate.tics)
+				Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Tick();
+			}
+		}
 	}
 	States
 	{

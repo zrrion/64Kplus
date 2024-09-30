@@ -9,13 +9,14 @@ class SKP_RedArmor : CustomCustomInventory
 		//$Category Health and Armor
 		Inventory.Pickupmessage "";
 		Inventory.Icon "RARMA0";
+		+SYNCHRONIZED;
 	}
 //====	
 	States
 	{
 		Spawn:
-			RARM A 6;
-			RARM B 7 Bright;
+			RARM A 12;
+			RARM B 14 Bright;
 			loop;
 		Pickup:
 			TNT1 A 0 A_HealthConvert();
@@ -24,12 +25,18 @@ class SKP_RedArmor : CustomCustomInventory
 //====	
 	Override void PostBeginPlay()
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		super.PostBeginPlay();
+		if(level.time)
 		{
-			bWALLSPRITE = TRUE;
-			A_SetAngle(Random(0,360));
+			if(!curstate.tics)
+				Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Tick();
+			}
 		}
-	Super.PostBeginPlay();
 	}
 	Override void Tick()
 	{

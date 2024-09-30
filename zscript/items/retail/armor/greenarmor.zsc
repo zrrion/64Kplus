@@ -1,18 +1,30 @@
 class SKPGreenArmor : GreenArmor replaces GreenArmor
 {
+	Default
+	{
+		+SYNCHRONIZED;
+	}
 	States
 	{
 	Spawn:
-		GARM A 6;
-		GARM B 7 bright;
+		GARM A 12;
+		GARM B 14 bright;
 		loop;
 	}
 	Override void PostBeginPlay()
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
-			bWALLSPRITE = TRUE;
-		A_SetAngle(Random(0,360));
-	Super.PostBeginPlay();
+		super.PostBeginPlay();
+		if(level.time)
+		{
+			if(!curstate.tics)
+				Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Tick();
+			}
+		}
 	}
 	Override void Tick()
 	{

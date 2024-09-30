@@ -5,6 +5,22 @@ class skp_RadSuit : RadSuit replaces RadSuit
 		Inventory.PickupFlash "skp_PickupFlash";
 		Inventory.RespawnTics 2450;//respawns 10 sec or so after the boots run out
 		+INVENTORY.ALWAYSRESPAWN;
+		+SYNCHRONIZED;
+	}
+	Override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		if(level.time)
+		{
+			if(!curstate.tics)
+				Tick();
+			int DurOffset = level.time % 26;
+			while(DurOffset > 1)
+			{
+				DurOffset--;
+				Tick();
+			}
+		}
 	}
 	States
 	{
