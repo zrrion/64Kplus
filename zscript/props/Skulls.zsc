@@ -25,3 +25,31 @@ class skp_Skull : Actor
 		Stop;
 	}
 }
+
+class skp_GorePile : Actor 
+{
+	Default
+	{
+	//$Category Gore
+	}
+	States
+	{
+	Spawn:
+		GPLE A -1;
+		Stop;
+	}
+}
+
+class skp_VeryDeadImp : Actor 
+{
+	Default
+	{
+	//$Category Gore
+	}
+	States
+	{
+	Spawn:
+		GPLE B -1;
+		Stop;
+	}
+}
