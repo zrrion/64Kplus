@@ -404,16 +404,13 @@ Class skp_BulletPuff : BulletPuff replaces BulletPuff
 		PUFF A 4 Bright;
 		PUFF B 4;
 	Melee:
-		PUFF CDEF 4
+		PUFF CDE 4
 			{
 				A_SetRenderStyle(0.5,STYLE_Translucent);
 			}
-		PUFF F 1 
-			{
-				A_SetScale(Scale.X+0.012);
-				A_Fadeout(0.05);
-			}
-		Wait;
+		PUFF FFFFGGGG 1 A_Fadeout(0.05);
+		PUFF HH 2 A_Fadeout(0.05);
+		Stop;
 	}
 }
 

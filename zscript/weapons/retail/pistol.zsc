@@ -43,7 +43,7 @@ class skp_Pistol : skp_Weapon replaces Pistol
 		}
 		D32P B 3 BRIGHT
 		{
-			A_FireBullets(0,0,-1,Random(7,12),"PistolPuff",FBF_USEAMMO|FBF_NORANDOM);
+			A_FireBullets(0,0,-1,Random(7,12),"BulletPuff",FBF_USEAMMO|FBF_NORANDOM);
 			A_ZoomFactor(0.98);
 			A_StartSound("weapons/pistol",CHAN_WEAPON);
 			A_Light(2);
