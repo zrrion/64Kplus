@@ -185,10 +185,26 @@ class WeaponReplacer : EventHandler
     }
 }
 
-class skp_Tonemap : EventHandler
-{
+
+class skp_Tonemap : StaticEventHandler
+{	
 	PlayerInfo p;
+	array<int> BigPaletteRed;
+	array<int> BigPaletteGreen;
+	array<int> BigPaletteBlue;
 	//ui int OldTone;
+	override void OnEngineInitialize()
+	{
+		/*
+		step 1: import png as lump
+		step 2: get colour data out of png
+		step 2: make list of unique colours from png
+		step 3: add game palette to the list of colours
+		*/
+		GenPal();
+		GenLUT();
+	}
+
 	override void UiTick()
 	{
 		bool DoShade = CVar.GetCvar("arg_tone", p).GetBool();
@@ -205,10 +221,158 @@ class skp_Tonemap : EventHandler
 			OldTone = 0;
 		}*/
 	}
+	/*override void RenderOverlay (RenderEvent e)
+	{
+		super.RenderOverlay(e);
+		Screen.DrawTexture(TexMan.CheckForTexture("skp_LUT"), false, 0, 0);
+	}*/
 
 	override void PlayerEntered(PlayerEvent e)
 	{
-		p = players[e.PlayerNumber];
+		p = players[e.PlayerNumber];	
+	}
+
+	void GenPal()
+	{
+		for(int i = 0; i < 256; i++)
+		{
+			color C = Screen.PaletteColor(i);
+			BigPaletteRed.Push(C.R);
+			BigPaletteGreen.Push(C.G);
+			BigPaletteBlue.Push(C.B);
+		}
+		string PNG_Data;
+		string PNG_IHDR;
+		[PNG_IHDR, PNG_Data] = PNG_Helper.PNGLoader("palLUT");
+		if(PNG_IHDR.Length() > -1 && PNG_Data.Length() > -1)
+		{
+			int width = PNG_Helper.HexByteToInt(PNG_IHDR, 0, 4);
+			int height = PNG_Helper.HexByteToInt(PNG_IHDR, 4, 4);
+			int bitDepth = PNG_Helper.HexByteToInt(PNG_IHDR, 8, 1);
+			int colorType = PNG_Helper.HexByteToInt(PNG_IHDR, 9, 1);
+			//console.printf("width: %i\nheight: %i\nbit depth: %i\ncolour type: %i", width, height, bitDepth, colorType);
+			if(colorType == 3 && bitDepth <= 8)
+			{
+				int PalLength = PNG_Data.Length();
+				for(int i = 0; i < PalLength; i += 3)
+				{
+					BigPaletteRed.Push(PNG_Helper.HexByteToInt(PNG_Data, i, 1));
+					BigPaletteGreen.Push(PNG_Helper.HexByteToInt(PNG_Data, i + 1, 1));
+					BigPaletteBlue.Push(PNG_Helper.HexByteToInt(PNG_Data, i + 2, 1));
+				}
+			}
+		}
+	}
+
+	
+
+	void GenLUT()
+	{
+		TextureID LUTtid = Texman.CheckForTexture("skp_LUT");
+		Canvas LUTcv = TexMan.GetCanvas("skp_LUT");
+		vector2 LUTsize;
+		[LUTsize.X, LUTsize.Y] = TexMan.GetSize(LUTtid);
+
+		for(int height = 0; height < LUTsize.Y; height++)
+		{
+			for(int width = 0; width < LUTsize.X; width++)
+			{
+				int r = (height/(LUTsize.Y - 1)) * 255;
+				int g = ((height % 8)/7.) * 255;
+				int b = ((width % 64)/63.) * 255;
+				color PrePal = color(255, r, g, b);
+				color PostPal = GetFriendlyColor(PrePal);
+				LUTcv.Clear(width+1, height+1, width, height, PostPal, -1);
+			}
+		}
+	}
+
+	color GetFriendlyColor(color PrePal)
+	{
+		color ClosestColor;
+		double ClosestDist;
+		for(int i = 0; i < BigPaletteRed.Size(); i++)
+		{
+			color LoopColor = Color(255, BigPaletteRed[i], BigPaletteGreen[i], BigPaletteBlue[i]);
+			vector3 v = (LoopColor.R - PrePal.R, LoopColor.G - PrePal.G, LoopColor.B - PrePal.B);
+			double dist = ((v.X * v.X) + (v.Y * v.Y) + (v.Z * v.Z))/3;
+			if(ClosestDist > dist || !i)
+			{
+				ClosestDist = dist;
+				ClosestColor = LoopColor;
+			}
+		}
+		return ClosestColor;
+	}
+}
+
+class PNG_Helper : Object
+{
+	static int HexByteToInt(string str, int offset, int NumBytes)
+	{
+		string IntStr;
+		for(int i = 0; i < NumBytes; i++)
+			IntStr.AppendFormat("%02X", str.ByteAt(offset + i));
+		return IntStr.ToInt(16);
+	}
+
+	Static string, string PNGLoader(string lump = "PlayPalPlus")
+	{
+		string AnEntirePNG = Wads.ReadLump(Wads.CheckNumForFullName(string.format("shaders/%s.png", lump)));
+		if(AnEntirePNG.IndexOf("\x89PNG\r\n\x1a\n") != -1)
+			AnEntirePNG.Replace("\x89PNG\r\n\x1a\n", "");
+		else
+		{
+			console.printf("this is NOT a valid PNG!");
+			return "", "";
+		}
 		
+		string ihdrChunk;
+		string idatChunk;
+		string palChunk;
+		int offset;
+
+		while (offset < AnEntirePNG.Length())
+        {
+            // Read the chunk length
+            int Length = PNG_Helper.HexByteToInt(AnEntirePNG, offset, 4);//convert that hex number to an int
+            offset += 4;
+
+            // Read the chunk type
+            string chunkType = AnEntirePNG.Mid(offset, 4);
+            offset += 4;
+
+            // Read the chunk data
+            string chunkData = AnEntirePNG.Mid(offset, Length);
+            offset += Length;
+
+            // Read the CRC
+            string crc = AnEntirePNG.Mid(offset, 4);
+            offset += 4;
+
+            // Handle IHDR and IDAT chunks
+            if (chunkType == "IHDR")  // IHDR
+                ihdrChunk = chunkData;
+			else if (chunkType == "PLTE")  // IHDR
+                palChunk = chunkData;
+            else if (chunkType == "IDAT")  // IDAT
+                idatChunk.AppendFormat(chunkData);  // Concatenate IDAT data chunks
+        }
+
+		if (ihdrChunk.Length() == 0)
+		{
+			Console.printf("No IHDR chunk found");
+			return "", "";
+		}
+		if(PNG_Helper.HexByteToInt(ihdrChunk, 9, 1) == 3 && PNG_Helper.HexByteToInt(ihdrChunk, 8, 1) <= 8)
+		{
+			if(palChunk.Length() < 0)
+			{
+				console.printf("this is an indexed PNG but the palette is missing");
+				return "", "";
+			}
+			return ihdrChunk, palChunk;
+		}
+		return ihdrChunk, idatChunk;
 	}
 }

@@ -2,7 +2,8 @@ HardwareShader PostProcess Scene
 {
 	Name "ExtendedPalLUT"
 	shader "shaders/tonesmaps.fp" 330
-	Texture LUT "shaders/LUT.PNG"
+	//Texture LUT "skp_LUT"
+	Texture LUT "shaders/LUT_purple.png"
 	//Enabled
 }
 
