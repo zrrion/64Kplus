@@ -1,4 +1,4 @@
-version "4.5"
+version "4.7.1"
 //I wish #include could just include entire directories instead of only individual files
 
 #include "zscript/events/level preprocess.zs"
@@ -30,6 +30,7 @@ version "4.5"
 #include "zscript/switches/sector actions.zsc"
 #include "zscript/switches/caco.zsc"
 #include "zscript/switches/spawner.zsc"
+#include "zscript/switches/shootswitch.zsc"
 
 #include "zscript/weapons/base.zsc"
 #include "zscript/weapons/unmaker.zsc"
@@ -98,9 +99,12 @@ version "4.5"
 #include "zscript/items/keys/SingleUse.zs"
 #include "zscript/items/keys/PurpleCard.zs"
 #include "zscript/items/keys/GreenSkull.zs"
+#include "zscript/items/keys/retail.zs"
 #include "zscript/items/Thrifty.zsc"
 
 #include "zscript/behavior trees/base.zs"
+#include "zscript/friends/retail/health station.zs"
+#include "zscript/menu/base.zs"
 
 //everything that replaces something in the base game goes here:
 //starting with items you can pick up
@@ -169,10 +173,10 @@ version "4.5"
 #include "zscript/enemies/retail/zombie.zsc"
 #include "zscript/enemies/retail/ghoul.zsc"
 #include "zscript/enemies/retail/soul.zsc"
+#include "zscript/enemies/retail/wolfss.zsc"
 #include "zscript/enemies/retail/DeadThings.zsc"//these are used as props, but I have modified them so they can be raised and they now make more sense here
 //friends ===
 #include "zscript/friends/retail/keen.zsc"
-#include "zscript/friends/retail/health station.zs"
 
 //some basic stuff
 class skp_BulletPuff_XDeath : BulletPuff
