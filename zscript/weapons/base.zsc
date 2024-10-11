@@ -256,7 +256,7 @@ class skp_Weapon : Weapon
 			}
 		}
 
-		if (lifesteal && !t.linetarget.bDontDrain)
+		if (lifesteal && !t.linetarget.bDontDrain && (t.linetarget.bISMONSTER || t.linetarget is "PlayerPawn"))
 		{
 			if (flags & SF_STEALARMOR)
 			{
@@ -311,7 +311,7 @@ class skp_Weapon : Weapon
 		if (!(flags & SF_NOPULLIN))
 			bJustAttacked = true;
 
-		if(t.linetarget)
+		if(t.linetarget && (t.linetarget.bISMONSTER || t.linetarget is "PlayerPawn"))
 			return true;
 		return false;
 	}
