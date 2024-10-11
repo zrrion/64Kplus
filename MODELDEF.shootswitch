@@ -1,0 +1,29 @@
+Model ShootSwitch
+{
+	Model 0 "models/ShootSwitchA.obj"
+	skin 0 "textures/SHOTSKIN.png"
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.0 1.0 1.2//whoever decided gzdoom should stretch the scene and not the canvas and that models would be the only exception to this stretching is a bastard with a thousand fathers who are all bastards as well
+	FrameIndex WLLS A 0 0
+}
+
+Model ShootSwitch
+{
+	Model 0 "models/ShootSwitchB.obj"
+	skin 0 "textures/SHOTSKIN.png"
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.0 1.0 1.2
+	FrameIndex WLLS B 0 0
+}
+
+Model ShootSwitch
+{
+	Model 0 "models/ShootSwitchC.obj"
+	skin 0 "textures/SHOTSKIN.png"
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.0 1.0 1.2
+	FrameIndex WLLS C 0 0
+}
