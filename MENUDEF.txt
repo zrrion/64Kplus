@@ -43,3 +43,8 @@ OptionMenu "64KMenu"
 	//StaticText 			"Physics Options"				, 1
 	//Option				"Less Slipery Player Movement"	, "arg_PlayerSlide"    , "DisabledEnabled"
 }
+
+OptionMenu "VendSpawnerMenu"
+{
+	Class "VendSpawnerMenu"
+}
