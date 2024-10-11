@@ -1,0 +1,68 @@
+Class ShootSwitch : Actor
+{
+	bool user_NoRepeat;
+	Default
+	{
+		Radius 4;
+		Height 32;
+		Health 1;
+		+BUDDHA;
+		+SHOOTABLE;
+		+NOTARGET;
+		+DONTTHRUST;
+		+NOGRAVITY;
+		+NOBLOOD;
+		+NOBLOODDECALS;
+		+NORADIUSDMG;
+		ActiveSound "switches/normbutn";
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_SetPitch(90);
+		A_SetPitch(0);
+		A_SetSize(24, self.height);
+	}
+	Override void Tick()
+	{
+		super.Tick();
+		if(CurSector.lightlevel < 160 && frame == 0)
+			self.LightLevel = 160;
+		else
+			self.LightLevel = CurSector.lightlevel;
+	}
+	int damageAge;
+	Override int DamageMobj(Actor inflictor, Actor source, int damage, name mod, int flags, double angle)
+	{
+		if(damageAge == GetAge())
+			return 0;
+		if((inflictor is "PlayerPawn") || (source is "PlayerPawn"))
+		{
+			damageAge = GetAge();
+			A_CallSpecial(special, args[0], args[1], args[2], args[3], args[4]);
+			A_StartSound(ActiveSound,CHAN_AUTO);
+			if(user_NoRepeat)
+			{
+				SetStateLabel("Flipped");
+				bSHOOTABLE = false;
+			}
+			else if(frame == 0)
+				SetStateLabel("Reset");
+			else
+				SetStateLabel("Spawn");
+		}
+		return 0;
+	}
+	States
+	{
+		Spawn:
+			WLLS A -1;
+			Stop;
+		Flipped:
+			WLLS C -1;
+			Stop;
+		Reset: 
+			WLLS B 70;
+			Goto Spawn;
+	}
+}
