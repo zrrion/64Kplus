@@ -267,3 +267,216 @@ class skp_ItemSpawner : skp_EnemySpawner
 			wait;
 	}
 }
+
+class skp_SpawnVend : actor
+{
+	default
+	{
+		//$Category Switches
+		radius 24;
+		height 56;
+		+SOLID;
+		+USESPECIAL;
+		Activation THINGSPEC_Switch;
+		ActiveSound "switches/normbutn";
+	}
+	DropItem di;
+	Override void PostBeginPlay()
+	{
+		special = 0;
+		Super.PostBeginPlay();
+	}
+	string, int GetManifest()
+	{
+		string ManName;
+		int ManType;
+
+		if(!di)
+			di = self.GetDropItems();
+		if(di)
+		{
+			if(di.next)
+			{
+				ManName = di.name;
+				ManType = di.Probability;
+			}
+			else
+			{
+				ManName = "NULL";
+				ManType = VEND_NONE;
+			}
+			di = di.next;
+		}
+		return ManName, ManType;
+	}
+
+	string GetManifestByType(int ManCheck = 0)
+	{
+		string ManName;
+		int ManType;
+		[ManName, ManType] = GetManifest();
+		if(ManCheck == 0 || ManType == VEND_NONE)
+			return ManName;
+		while(ManType != ManCheck)
+			[ManName, ManType] = GetManifest();
+		return ManName;
+	}
+	Override void Activate(Actor activator)
+	{
+		if(!activator)
+			return;
+		string ManName;
+		int ManType;
+		[ManName, ManType] = GetManifest();
+		//activator.A_Print(string.format("245\r%i - %s", ManType, ManName));
+		Menu.SetMenu('VendSpawnerMenu');
+	}
+	Override void Deactivate (Actor activator)
+	{
+		if(!activator)
+			return;
+		Activate(activator);
+	}
+	Override void Tick()
+	{
+		super.Tick();
+		if(CurSector.lightlevel < 160)
+			self.LightLevel = 160;
+		else
+			self.LightLevel = CurSector.lightlevel;
+	}
+	States
+	{
+		Spawn:
+			SVND A -1;
+			Stop;
+	}
+}
+
+enum VendTypes
+{
+	VEND_RETAIL_AMMO = -1,
+	VEND_RETAIL_HEALTH = -2,
+	VEND_RETAIL_ARMOR = -3,
+	VEND_RETAIL_POWERUP = -4,
+	VEND_RETAIL_KEYS = -5,
+	VEND_LOR_ITEM = -6,
+    VEND_SKP_ITEM = -7,
+	VEND_RETAIL_WEAPON = -8,
+	VEND_LOR_WEAPON = -9,
+	VEND_SKP_WEAPON = -10,
+	VEND_RETAIL_ENEMY = -11,
+	VEND_LOR_ENEMY = -12,
+	VEND_SKP_ENEMY = -13,
+	VEND_MISC = -14,
+	VEND_NONE = -40000,
+	VEND_DESC = -40001
+}
+
+extend class skp_SpawnVend
+{
+	Default
+	{
+		DropItem "SKP_JumpBoots_Perm", VEND_SKP_ITEM;
+		DropItem "SKP_JumpBoots", VEND_SKP_ITEM;
+		DropItem "PurpleCard", VEND_SKP_ITEM;
+		DropItem "skp_GreenSkull", VEND_SKP_ITEM;
+		DropItem "skp_SawFuel", VEND_SKP_ITEM;
+		DropItem "SKP_RedArmor", VEND_SKP_ITEM;
+		DropItem "SKP_GreenBoots", VEND_SKP_ITEM;//armor
+		DropItem "MiniStimpack", VEND_SKP_ITEM;//health
+		DropItem "SKP_HealthMegaBonus", VEND_SKP_ITEM;
+
+		DropItem "skp_unmaker", VEND_SKP_WEAPON;
+
+		DropItem "skp_HeatBlade", VEND_LOR_WEAPON;
+		DropItem "skp_Incinerator", VEND_LOR_WEAPON;
+
+		DropItem "SKP_JumpBoots_Perm", VEND_RETAIL_POWERUP;
+		DropItem "SKP_JumpBoots", VEND_RETAIL_POWERUP;
+		DropItem "skp_RadSuit", VEND_RETAIL_POWERUP;
+		DropItem "skp_Infrared", VEND_RETAIL_POWERUP;
+		DropItem "skp_Berserk", VEND_RETAIL_POWERUP;
+		DropItem "skp_Allmap", VEND_RETAIL_POWERUP;
+		DropItem "skp_SoulSphere", VEND_RETAIL_POWERUP;
+		DropItem "skp_Megasphere", VEND_RETAIL_POWERUP;
+		DropItem "skp_InvulnerabilitySphere", VEND_RETAIL_POWERUP;
+		DropItem "skp_BlurSphere", VEND_RETAIL_POWERUP;
+
+		DropItem "skp_GreenSkull", VEND_RETAIL_KEYS;//keys
+		DropItem "skp_YellowSkull", VEND_RETAIL_KEYS;
+		DropItem "skp_RedSkull", VEND_RETAIL_KEYS;
+		DropItem "skp_BlueSkull", VEND_RETAIL_KEYS;
+		DropItem "PurpleCard", VEND_RETAIL_KEYS;
+		DropItem "skp_YellowCard", VEND_RETAIL_KEYS;
+		DropItem "skp_RedCard", VEND_RETAIL_KEYS;
+		DropItem "skp_BlueCard", VEND_RETAIL_KEYS;//keys
+
+		DropItem "skp_unmaker", VEND_RETAIL_WEAPON;
+		DropItem "skp_HeatBlade", VEND_RETAIL_WEAPON;
+		DropItem "skp_BFG9000", VEND_RETAIL_WEAPON;
+		DropItem "skp_Incinerator", VEND_RETAIL_WEAPON;
+		DropItem "skp_PlasmaRifle", VEND_RETAIL_WEAPON;
+		DropItem "skp_RocketLauncher", VEND_RETAIL_WEAPON;
+		DropItem "skp_Chaingun", VEND_RETAIL_WEAPON;
+		DropItem "skp_SuperShotgun", VEND_RETAIL_WEAPON;
+		DropItem "skp_Shotgun", VEND_RETAIL_WEAPON;
+		DropItem "skp_Pistol", VEND_RETAIL_WEAPON;
+		DropItem "skp_Chainsaw", VEND_RETAIL_WEAPON;//weapons
+
+		DropItem "ThriftyBackpack", VEND_RETAIL_AMMO;
+		DropItem "skp_SawFuel", VEND_RETAIL_AMMO;//ammo
+		DropItem "skp_CellPack", VEND_RETAIL_AMMO;
+		DropItem "skp_Cell", VEND_RETAIL_AMMO;
+		DropItem "skp_RocketBox", VEND_RETAIL_AMMO;
+		DropItem "skp_RocketAmmo", VEND_RETAIL_AMMO;
+		DropItem "skp_ShellBox", VEND_RETAIL_AMMO;
+		DropItem "skp_Shell", VEND_RETAIL_AMMO;
+		DropItem "skp_ClipBox", VEND_RETAIL_AMMO;
+		DropItem "skp_Clip", VEND_RETAIL_AMMO;//ammo
+
+		DropItem "SKP_RedArmor", VEND_RETAIL_ARMOR;
+		DropItem "skpBlueArmor", VEND_RETAIL_ARMOR;
+		DropItem "skpGreenArmor", VEND_RETAIL_ARMOR;
+		DropItem "SKP_GreenBoots", VEND_RETAIL_ARMOR;//armor
+		DropItem "skpArmorBonus", VEND_RETAIL_ARMOR;//armor
+
+		DropItem "skp_Megasphere", VEND_RETAIL_HEALTH;
+		DropItem "skp_SoulSphere", VEND_RETAIL_HEALTH;
+		DropItem "skp_Berserk", VEND_RETAIL_HEALTH;
+		DropItem "skp_Medikit", VEND_RETAIL_HEALTH;
+		DropItem "skp_Stimpack", VEND_RETAIL_HEALTH;
+		DropItem "MiniStimpack", VEND_RETAIL_HEALTH;//health
+		DropItem "SKP_HealthMegaBonus", VEND_RETAIL_HEALTH;
+		DropItem "skp_HealthBonus", VEND_RETAIL_HEALTH;//health
+		//misc
+		DropItem "skp_ExplosiveBarrel", VEND_MISC;
+		//skp enemies
+		DropItem "GoreNest", VEND_MISC;
+		DropItem "Cacomera", VEND_SKP_ENEMY;
+		DropItem "ZombieSS", VEND_SKP_ENEMY;
+		DropItem "Shadow", VEND_SKP_ENEMY;
+		DropItem "DemonDog", VEND_SKP_ENEMY;
+		//LoR enemies
+		DropItem "skp_Ghoul", VEND_LOR_ENEMY;
+		//retail enemies
+		DropItem "SKP_WolfensteinSS", VEND_RETAIL_ENEMY;
+		DropItem "skp_SpiderMastermind", VEND_RETAIL_ENEMY;
+		DropItem "skp_Cyberdemon", VEND_RETAIL_ENEMY;
+		DropItem "skp_BaronOfHell", VEND_RETAIL_ENEMY;
+		DropItem "skp_Knight", VEND_RETAIL_ENEMY;
+		DropItem "skp_Archvile", VEND_RETAIL_ENEMY;
+		DropItem "skp_Arachnotron", VEND_RETAIL_ENEMY;
+		DropItem "skp_mancubus", VEND_RETAIL_ENEMY;
+		DropItem "skp_Revenant", VEND_RETAIL_ENEMY;
+		DropItem "skp_PainElemental", VEND_RETAIL_ENEMY;
+		DropItem "skp_Cacodemon", VEND_RETAIL_ENEMY;
+		DropItem "skp_ChaingunGuy", VEND_RETAIL_ENEMY;
+		DropItem "skp_LostSoul", VEND_RETAIL_ENEMY;
+		DropItem "skp_Spectre", VEND_RETAIL_ENEMY;
+		DropItem "skp_Demon", VEND_RETAIL_ENEMY;
+		DropItem "skp_DoomImp", VEND_RETAIL_ENEMY;
+		DropItem "skp_ShotgunGuy", VEND_RETAIL_ENEMY;
+		DropItem "skp_ZombieMan", VEND_RETAIL_ENEMY;
+	}
+}
