@@ -21,6 +21,7 @@ class skp_BFG9000 : skp_Weapon replaces BFG9000
 		Inventory.PickupMessage "$GOTBFG9000";
 		Tag "$TAG_BFG9000";
 		DropItem "UnloadedBFG";
+		Dropitem "$vend_BFG", VEND_DESC;
 	}
 	States
 	{

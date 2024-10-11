@@ -20,6 +20,7 @@ class skp_SuperShotgun : skp_Weapon replaces SuperShotgun
 		Obituary "$OB_MPSSHOTGUN";
 		Tag "$TAG_SUPERSHOTGUN";
 		DropItem "UnloadedSuperShotgun";
+		Dropitem "$vend_SSG", VEND_DESC;
 	}
 	States
 	{

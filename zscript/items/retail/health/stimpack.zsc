@@ -3,6 +3,8 @@ class skp_Stimpack : Stimpack replaces Stimpack
 	default
 	{
 		DropItem "EmptyStimpack";
+		Tag "Stimpack";
+		Dropitem "$vend_stim", VEND_DESC;
 	}
 	Override void PostBeginPlay()
 	{

@@ -4,6 +4,8 @@ class skp_ExplosiveBarrel : ExplosiveBarrel replaces ExplosiveBarrel
 	{
 		+EXTREMEDEATH
 		+DROPOFF
+		Tag "Explosive Barrel";
+		Dropitem "$vend_barrel", VEND_DESC;
 	}
 	States
 	{

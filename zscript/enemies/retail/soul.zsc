@@ -5,6 +5,7 @@ class skp_LostSoul : LostSoul replaces LostSoul
 	int oldframe;
 	Default
 	{
+		Dropitem "$vend_lostsoul", VEND_DESC;
 		//$title "Lost Soul"
 	}
 	States

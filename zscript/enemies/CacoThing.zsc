@@ -39,6 +39,8 @@ class Cacomera : Cacodemon
 		DropItem "Archvile", MERA_HIDE;
 		DropItem "BaronOfHell", MERA_HIDE;
 		DropItem "Crush", MERA_HIDE;
+
+		Dropitem "$VEND_CACOMERA", VEND_DESC;
 	}
 	
 	Override void tick()

@@ -1,5 +1,9 @@
 class skp_Clip : Clip replaces Clip
 {
+	Default
+	{
+		Dropitem "$vend_clip", VEND_DESC;
+	}
 	States
 	{
 	Spawn:
@@ -34,6 +38,8 @@ class skp_ClipBox : ClipBox replaces ClipBox
 	default
 	{
 		DropItem "EmptyClipBox";
+		Dropitem "$vend_clip2", VEND_DESC;
+		Tag "Box of bullets";
 	}
 	States
 	{

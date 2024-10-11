@@ -3,6 +3,8 @@ class skp_Allmap : Allmap replaces Allmap
 	Default
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
+		Tag "Area map";
+		Dropitem "$vend_map", VEND_DESC;
 	}
 	States
 	{

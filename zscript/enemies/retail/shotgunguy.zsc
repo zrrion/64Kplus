@@ -5,6 +5,7 @@ class skp_ShotgunGuy : ShotgunGuy replaces ShotgunGuy
 	Default
 	{
 		//$title "Shotgun Guy"
+		Dropitem "$vend_shotgunguy", VEND_DESC;
 	}
 	States
 	{

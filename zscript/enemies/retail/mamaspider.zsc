@@ -6,6 +6,7 @@ class skp_SpiderMastermind : SpiderMastermind replaces SpiderMastermind
 	{
 		//$title "Spider Mastermind"
 		//Damagefactor "Unmaker", 0.5;
+		Dropitem "$vend_mastermind", VEND_DESC;
 	}
 	States
 	{

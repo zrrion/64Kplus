@@ -24,6 +24,7 @@ class skp_unmaker : skp_Weapon
 		Inventory.Pickupmessage "What the !@#%* is this!";
 		Tag "Unmaykr";
 		DropItem "UnloadedUnmaker";
+		Dropitem "$vend_unmake", VEND_DESC;
 	}
 	States
 	{

@@ -5,6 +5,7 @@ class skp_Mancubus : Fatso replaces Fatso
 	Default
 	{
 		//$title "Mancubus"
+		Dropitem "$vend_man", VEND_DESC;
 	}
 	States
 	{

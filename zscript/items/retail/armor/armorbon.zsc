@@ -2,6 +2,11 @@
 {
 	
 	mixin BerserkHoover;
+	default
+	{
+		Dropitem "$vend_armorbonus", VEND_DESC;
+		Tag "Armor bonus";
+	}
 	
 	States
 	{
@@ -32,28 +37,4 @@
 			bWALLSPRITE = FALSE;
 		Super.Tick();
 	}
-	
-	/*Override bool TryPickup (in out Actor toucher)
-	{
-		let T = skp_DoomPlayer(toucher);
-		let Armor = BasicArmor(T.FindInventory("BasicArmor"));
-		int ToucherAmount = Armor.Amount;
-		int ToucherMax = Armor.MaxAmount;;
-		int ToucherFuel = Toucher.CountInv("SKP_SawFuel");
-		bool result = super.TryPickup(toucher);
-		
-		if(ToucherFuel < 5  && result)
-		{
-			if(ToucherAmount >= ToucherMax)
-				T.FuelRegen += 2;
-			else
-				T.FuelRegen += 1;
-			if(T.FuelRegen >= 25)
-			{
-				Toucher.A_GiveInventory("SKP_SawFuel",1);
-				T.FuelRegen %= 25;
-			}
-		}
-		Return result;
-	}*/
 }

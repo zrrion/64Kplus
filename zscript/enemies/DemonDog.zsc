@@ -26,6 +26,9 @@ class DemonDog : actor
 		ActiveSound "dog/active";
 		AttackSound "dog/attack";
 		Obituary "%o was mauled by a Rottweiler.";
+		Tag "Deomo dog";
+
+		Dropitem "$VEND_DEMONDOG", VEND_DESC;
 	}
 	States
 	{

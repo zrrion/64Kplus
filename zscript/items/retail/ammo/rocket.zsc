@@ -1,5 +1,9 @@
 class skp_RocketAmmo : RocketAmmo replaces RocketAmmo
 {
+	Default
+	{
+		Dropitem "$vend_rocket", VEND_DESC;
+	}
 	States
 	{
 	Spawn:
@@ -34,6 +38,8 @@ class skp_RocketBox : RocketBox replaces RocketBox
 	default
 	{
 		DropItem "EmptyRocketBox", -1;
+		Dropitem "$vend_rocket2", VEND_DESC;
+		Tag "Box of rockets";
 	}
 	States
 	{

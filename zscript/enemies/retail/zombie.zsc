@@ -4,6 +4,7 @@ class skp_Zombieman : Zombieman replaces Zombieman
 	
 	Default
 	{
+		Dropitem "$vend_zombie", VEND_DESC;
 		//$title "Zombie"
 	}
 	States

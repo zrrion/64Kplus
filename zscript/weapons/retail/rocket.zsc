@@ -20,6 +20,7 @@ class skp_RocketLauncher : skp_Weapon replaces RocketLauncher
 		Inventory.PickupMessage "$GOTLAUNCHER";
 		Tag "$TAG_ROCKETLAUNCHER";
 		DropItem "UnloadedRocketLauncher";
+		Dropitem "$vend_rocketlauncher", VEND_DESC;
 	}
 	States
 	{

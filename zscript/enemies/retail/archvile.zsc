@@ -5,6 +5,7 @@ class skp_Archvile : Archvile replaces Archvile
 	Default
 	{
 		//$title "Archvile"
+		Dropitem "$vend_vile", VEND_DESC;
 	}
 	States
 	{

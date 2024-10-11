@@ -1,0 +1,7 @@
+class skp_WolfensteinSS : WolfensteinSS replaces WolfensteinSS
+{
+	Default
+	{
+		Dropitem "$vend_ss", VEND_DESC;
+	}
+}

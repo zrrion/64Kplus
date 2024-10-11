@@ -10,6 +10,9 @@ class GoreNest : ExplosiveBarrel
 		BloodColor "blue";
 		DeathSound "world/barrelx";
  		Obituary "How did the gore nest eeven kill you?";
+		Tag "Gore Nest";
+
+		Dropitem "$vend_gorenest", VEND_DESC;
 	}
 	States
 	{

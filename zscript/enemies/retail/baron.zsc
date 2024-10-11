@@ -5,6 +5,7 @@ class skp_BaronOfHell : BaronOfHell replaces BaronOfHell
 	Default
 	{
 		//$title "Arachnotron"
+		Dropitem "$vend_baron", VEND_DESC;
 		Bloodcolor "329E32";
 	}
 	States

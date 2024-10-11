@@ -24,6 +24,7 @@ class skp_Chainsaw : skp_Weapon replaces Chainsaw
 		Weapon.AmmoType2 "SKP_SawFuel";
 		+WEAPON.ALT_AMMO_OPTIONAL;
 		DropItem "UnloadedChainsaw";
+		Dropitem "$vend_chainsaw", VEND_DESC;
 	}
 	States
 	{

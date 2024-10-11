@@ -3,6 +3,8 @@ class SKPBlueArmor : BlueArmor replaces BlueArmor
 	Default
 	{
 		+SYNCHRONIZED;
+		Tag "combat armor";
+		Dropitem "$vend_bluearmor", VEND_DESC;
 	}
 	States
 	{
@@ -14,7 +16,7 @@ class SKPBlueArmor : BlueArmor replaces BlueArmor
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

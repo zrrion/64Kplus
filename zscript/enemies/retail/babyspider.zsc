@@ -5,6 +5,7 @@ class skp_Arachnotron : Arachnotron replaces Arachnotron
 	Default
 	{
 		//$title "Arachnotron"
+		Dropitem "$vend_arachnotron", VEND_DESC;
 	}
 	States
 	{

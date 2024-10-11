@@ -5,6 +5,7 @@ class skp_Cacodemon : Cacodemon replaces Cacodemon
 	Default
 	{
 		//$title "Cacodemon"
+		Dropitem "$vend_caco", VEND_DESC;
 		Bloodcolor "Blue";
 		Mass 600;
 	}

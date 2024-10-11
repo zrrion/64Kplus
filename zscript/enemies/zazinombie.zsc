@@ -21,6 +21,8 @@ class ZombieSS : WolfensteinSS
 		Obituary "%o was killed by a retro zombie";
 		Tag "Retro Zombie";
 		Dropitem "Clip";
+
+		Dropitem "$vend_retrozombie", VEND_DESC;
 	}
 	States
 	{

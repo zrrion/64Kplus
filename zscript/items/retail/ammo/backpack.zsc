@@ -3,6 +3,9 @@ class ThriftyBackpack : Backpack replaces Backpack
 	Default
 	{
 		Inventory.PickupSound "misc/i_pkup";
+		Tag "Backpack";
+
+		Dropitem "$vend_pack", VEND_DESC;
 	}
 	States
 	{

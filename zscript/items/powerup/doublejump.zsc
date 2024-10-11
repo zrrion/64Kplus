@@ -15,11 +15,14 @@ class SKP_JumpBoots : Inventory
 		Inventory.PickupMessage "You picked up the double jump boots";
 		Inventory.PickupSound "misc/p_pkup";
 		SKP_JumpBoots.shine "SKP_JumpBoots_SFX";
+		Tag "Jump Boots (temp)";
+
+		Dropitem "$vend_jumptemp", VEND_DESC;
 	}
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Inventory.Tick();
@@ -83,6 +86,9 @@ class SKP_JumpBoots_Perm : SKP_JumpBoots//same as the normal jump boots but they
 		+INVENTORY.PERSISTENTPOWER;
 		Inventory.InterHubAmount 1;
 		SKP_JumpBoots.shine "SKP_JumpBoots_Perm_SFX";
+		Tag "Jump Boots";
+
+		Dropitem "$vend_jump", VEND_DESC;
 	}
 	States
 	{

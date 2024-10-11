@@ -6,11 +6,14 @@ class SKP_GreenBoots : BasicArmorBonus
 		Radius 20;
 		Height 16;
 		Inventory.Pickupmessage "Picked up the green armor boots.";
+		Tag "Armor boots";
 		Inventory.Icon "GBTSA0";
 		Armor.Saveamount 10;
 		Armor.Maxsaveamount 200;
 		+COUNTITEM;
 		+SYNCHRONIZED;
+
+		Dropitem "$vend_armorboot", VEND_DESC;
 	}
 //====
 	States
@@ -24,7 +27,7 @@ class SKP_GreenBoots : BasicArmorBonus
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

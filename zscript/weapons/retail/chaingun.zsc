@@ -20,6 +20,7 @@ class skp_Chaingun : skp_Weapon replaces Chaingun
 		Obituary "$OB_MPCHAINGUN";
 		Tag "$TAG_CHAINGUN";
 		DropItem "UnloadedChaingun";
+		Dropitem "$vend_chaingun", VEND_DESC;
 	}
 	States
 	{

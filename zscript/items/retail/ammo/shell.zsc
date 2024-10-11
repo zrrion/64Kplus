@@ -2,6 +2,7 @@ class skp_Shell : Shell replaces Shell
 {
 	default
 	{
+		Dropitem "$vend_shell", VEND_DESC;
 		Inventory.PickupMessage "Picked up some shotgun shells.";
 	}
 	States
@@ -40,6 +41,8 @@ class skp_ShellBox : ShellBox replaces ShellBox
 	default
 	{
 		DropItem "EmptyShellBox";
+		Dropitem "$vend_shell2", VEND_DESC;
+		Tag "Box of shells";
 	}
 	States
 	{

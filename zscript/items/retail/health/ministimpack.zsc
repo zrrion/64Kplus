@@ -4,6 +4,8 @@ class MiniStimpack : Health//I know it isn't retail but it is needed by the reta
 	{
 		Inventory.Amount 5;
 		Inventory.PickupMessage "You picked up a small aid kit.";
+		Tag "Small aid kit";
+		Dropitem "$vend_minipack", VEND_DESC;
 	}
 	States
 	{

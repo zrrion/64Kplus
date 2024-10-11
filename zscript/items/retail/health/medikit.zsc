@@ -3,6 +3,8 @@ class skp_Medikit : Medikit replaces Medikit
 	default
 	{
 		DropItem "EmptyMedikit";
+		Dropitem "$vend_medikit", VEND_DESC;
+		Tag "Medikit";
 	}
 	Override void PostBeginPlay()
 	{

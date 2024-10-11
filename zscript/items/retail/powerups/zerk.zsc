@@ -4,11 +4,13 @@ class skp_Berserk : Berserk replaces Berserk//make this heal to max health, inst
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
 		+SYNCHRONIZED;
+		Tag "Berserk pack";
+		Dropitem "$vend_zerk", VEND_DESC;
 	}
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

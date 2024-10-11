@@ -6,6 +6,9 @@ class PurpleCard : SingelUseKeyBase
         //$Title "Purple key card"
 		Inventory.Pickupmessage "You picked up a purple key card.";
 		Inventory.Icon "STKEYSP";
+		Tag "Purple key card";
+
+		Dropitem "$vend_purplecard", VEND_DESC;
 	}
 	States
 	{

@@ -5,6 +5,7 @@ class skp_DoomImp : DoomImp  replaces DoomImp
 	Default
 	{
 		//$title "Imp"
+		Dropitem "$vend_imp", VEND_DESC;
 	}
 	States
 	{

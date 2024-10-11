@@ -2,6 +2,11 @@ class skp_HealthBonus : HealthBonus replaces HealthBonus
 {
 	
 	mixin BerserkHoover;
+	default
+	{
+		Tag "Health bonus";
+		Dropitem "$vend_healthbonus", VEND_DESC;
+	}
 	
 	Override void PostBeginPlay()
 	{

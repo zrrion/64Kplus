@@ -3,6 +3,8 @@ class SKPGreenArmor : GreenArmor replaces GreenArmor
 	Default
 	{
 		+SYNCHRONIZED;
+		Tag "security armor";
+		Dropitem "$vend_greenarmor", VEND_DESC;
 	}
 	States
 	{
@@ -14,7 +16,7 @@ class SKPGreenArmor : GreenArmor replaces GreenArmor
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

@@ -6,13 +6,13 @@ class skp_Infrared : Infrared replaces Infrared
 		Inventory.RespawnTics 2450;
 		+INVENTORY.ALWAYSRESPAWN;
 		+SYNCHRONIZED;
+		Tag "Infrared goggles";
+		Dropitem "$vend_goggle", VEND_DESC;
 	}
-	int age;
-	bool oldbright;
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

@@ -21,6 +21,8 @@ class Shadow : actor
 		DeathSound "Shadow/death";
 		ActiveSound "Shadow/active";
 		Obituary "%o was assassinated by a shadow.";
+
+		Dropitem "$vend_shadow", VEND_DESC;
 	}
 	States
 	{

@@ -6,6 +6,9 @@ class skp_GreenSkull : SingelUseKeyBase
         //$Title "Green skull key"
 		Inventory.Pickupmessage "You picked up a green skull key.";
 		Inventory.Icon "STKEYSG";
+		Tag "Green skull key";
+
+		Dropitem "$vend_greenskull", VEND_DESC;
 	}
 	States
 	{

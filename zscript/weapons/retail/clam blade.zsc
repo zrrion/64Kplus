@@ -22,6 +22,7 @@ class skp_HeatBlade : skp_Weapon
 		Inventory.Pickupmessage "You got the calamity blade!  Hot damn!";
 		Tag "Calamity Blade";
 		DropItem "UnloadedClamBlade";
+		Dropitem "$vend_clam", VEND_DESC;
 	}
 	action void A_FireHeatWave(double charge = 1)
 	{

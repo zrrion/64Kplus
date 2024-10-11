@@ -7,6 +7,7 @@ class skp_Cyberdemon : Cyberdemon replaces Cyberdemon
 	{
 		//$title "Cyberdemon"
 		//Damagefactor "Unmaker", 0.5;
+		Dropitem "$vend_cyber", VEND_DESC;
 	}
 	States
 	{

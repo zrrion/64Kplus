@@ -1,5 +1,9 @@
 class skp_Cell : Cell replaces Cell
 {
+	Default
+	{
+		Dropitem "$vend_cell", VEND_DESC;
+	}
 	States
 	{
 	Spawn:
@@ -34,6 +38,8 @@ class skp_CellPack : CellPack replaces CellPack
 	default
 	{
 		DropItem "EmptyCellPack";
+		Dropitem "$vend_cell2", VEND_DESC;
+		Tag "Energy Cell Pack";
 	}
 	States
 	{

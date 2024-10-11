@@ -5,6 +5,7 @@ class skp_Demon : Demon  replaces Demon
 	Default
 	{
 		//$title "Pinkey Demon"
+		Dropitem "$vend_demon", VEND_DESC;
 	}
 	States
 	{
@@ -46,6 +47,7 @@ class skp_Spectre : skp_Demon replaces Spectre
 		Obituary "$OB_SPECTREHIT";
 		Tag "$FN_SPECTRE";
 		BloodType "skp_SpectreBlood";
+		Dropitem "$vend_spectre", VEND_DESC;
 	}
 }
 

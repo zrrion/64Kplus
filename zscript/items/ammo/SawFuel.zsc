@@ -9,6 +9,9 @@ class skp_SawFuel : Ammo
 		Ammo.BackpackAmount 1;
 		Ammo.BackpackMaxAmount 5;
 		Inventory.Icon "SAWFA0";//the conister is yellow to match the body of the saw and because the thing runs on diesel, not gas
+		Tag "Chainsaw fuel";
+
+		Dropitem "$vend_fuel", VEND_DESC;
 	}
 	States
 	{

@@ -21,6 +21,7 @@ class skp_Pistol : skp_Weapon replaces Pistol
 		Inventory.Pickupmessage "$PICKUP_PISTOL_DROPPED";
 		Tag "$TAG_PISTOL";
 		DropItem "UnloadedPistol";
+		Dropitem "$vend_pistol", VEND_DESC;
 	}
 	States
 	{

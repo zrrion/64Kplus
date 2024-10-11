@@ -3,6 +3,8 @@ class skp_Soulsphere : Soulsphere replaces Soulsphere
 	Default
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
+		Tag "Soulsphere";
+		Dropitem "$vend_soul", VEND_DESC;
 	}
 	Override void Tick()
 	{

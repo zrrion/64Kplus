@@ -23,6 +23,9 @@ class skp_Ghoul : actor replaces DEH_Actor_150
 		ActiveSound "ghoul/active";
 		PainSound "ghoul/pain";
 		DeathSound "ghoul/death";
+		tag "Ghoul";
+
+		Dropitem "$vend_ghoul", VEND_DESC;
 	}
 	States
 	{

@@ -4,6 +4,8 @@ class skp_InvulnerabilitySphere : InvulnerabilitySphere replaces Invulnerability
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
 		Powerup.Color "GreenMap";
+		Tag "InvulnSphere";
+		Dropitem "$vend_god", VEND_DESC;
 	}
 	Override void Tick()
 	{

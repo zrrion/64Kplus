@@ -19,6 +19,7 @@ class skp_PlasmaRifle  : skp_Weapon replaces PlasmaRifle
 		Inventory.PickupMessage "$GOTPLASMA";
 		Tag "$TAG_PLASMARIFLE";
 		DropItem "UnloadedPlasmaRifle";
+		Dropitem "$vend_plasma", VEND_DESC;
 		//Weapon.SisterWeapon "skp_Incinerator";
 	}
 	States

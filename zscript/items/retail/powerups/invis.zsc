@@ -3,6 +3,8 @@ class skp_BlurSphere : BlurSphere replaces BlurSphere
 	Default
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
+		Tag "BlurSphere";
+		Dropitem "$vend_blur", VEND_DESC;
 	}
 	Override void PostBeginPlay()
 	{

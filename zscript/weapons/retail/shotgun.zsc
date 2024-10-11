@@ -20,6 +20,7 @@ class skp_Shotgun : skp_Weapon replaces Shotgun
 		Obituary "$OB_MPSHOTGUN";
 		Tag "$TAG_SHOTGUN";
 		DropItem "UnloadedShotgun";
+		Dropitem "$vend_shotgun", VEND_DESC;
 	}
 	States
 	{

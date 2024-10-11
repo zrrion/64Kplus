@@ -3,6 +3,8 @@ class skp_Megasphere : Megasphere replaces Megasphere
 	Default
 	{
 		Inventory.PickupFlash "skp_PickupFlash";
+		Tag "Megasphere";
+		Dropitem "$vend_mega", VEND_DESC;
 	}
 	Override void Tick()
 	{

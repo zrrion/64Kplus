@@ -6,8 +6,11 @@ class SKP_HealthMegaBonus : HealthBonus
 		Radius 20;
 		Height 16;
 		Inventory.Pickupmessage "Picked up a large health bonus.";
+		Tag "Large health bonus";
 		Inventory.Icon "BON1G0";
 		Inventory.Amount 10;
+
+		Dropitem "$vend_megabonus", VEND_DESC;
 	}
 //====
 	States

@@ -6,11 +6,13 @@ class skp_RadSuit : RadSuit replaces RadSuit
 		Inventory.RespawnTics 2450;//respawns 10 sec or so after the boots run out
 		+INVENTORY.ALWAYSRESPAWN;
 		+SYNCHRONIZED;
+		Tag "Radiation suit";
+		Dropitem "$vend_suit", VEND_DESC;
 	}
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();

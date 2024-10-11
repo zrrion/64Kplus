@@ -18,6 +18,7 @@ class skp_Incinerator  : skp_Weapon
 		Inventory.PickupMessage "You got the incinerator!";
 		Tag "Incinerator";
 		DropItem "UnloadedIncinerator";
+		Dropitem "$vend_flame", VEND_DESC;
 
 		//+WEAPON.POWERED_UP;
 		//Weapon.SisterWeapon "skp_PlasmaRifle";

@@ -9,7 +9,10 @@ class SKP_RedArmor : CustomCustomInventory
 		//$Category Health and Armor
 		Inventory.Pickupmessage "";
 		Inventory.Icon "RARMA0";
+		Tag "Elite armor";
 		+SYNCHRONIZED;
+
+		Dropitem "$vend_redarmor", VEND_DESC;
 	}
 //====	
 	States
@@ -26,7 +29,7 @@ class SKP_RedArmor : CustomCustomInventory
 	Override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
-		if(level.time)
+		if(!owner && level.time)
 		{
 			if(!curstate.tics)
 				Tick();
