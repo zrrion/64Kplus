@@ -1,0 +1,8 @@
+Model skp_SpawnVend
+{
+	Model 0 "models/SpawnVend.obj"
+	FORCECULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	FrameIndex SVND A 0 0
+}
