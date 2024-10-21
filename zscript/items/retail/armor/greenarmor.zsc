@@ -32,7 +32,7 @@ class SKPGreenArmor : GreenArmor replaces GreenArmor
 	{
 		if(isFrozen())
 			return;
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		if(bDROPPED && Cvar.FindCVar("arg_ItemRotation").GetBool())
 		{
 			bWALLSPRITE = TRUE;
 			self.angle += fRandom(3.0,4.0);

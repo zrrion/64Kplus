@@ -45,7 +45,7 @@ class skp_CacodemonBall : CacodemonBall replaces CacodemonBall
 	Spawn:
 		BAL2 AABB 2 BRIGHT
 		{
-			if(CallACS("CVarCheck",2))
+			if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 				{
 					A_SetRoll(Random(0,359));
 				}
@@ -92,7 +92,7 @@ class skp_CacoBallTrail : actor
 	{
 		if(isFrozen())
 			return;
-		if(oldframe == frame && CallACS("CVarCheck",2))
+		if(oldframe == frame && Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		super.Tick();
 	}

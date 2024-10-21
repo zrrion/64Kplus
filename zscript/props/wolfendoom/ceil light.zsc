@@ -142,10 +142,20 @@ Class WolfLampLight : Actor
 	{
 		super.Tick();
 		self.SetOrigin(GetFloorPos() + (0, 0, self.height), TRUE);
-		if(CurSector.lightlevel < 128 || (master && (self.pos-master.pos).length() > 128))
+		if(master && Abs(self.pos.Z-master.pos.Z) > 192)
+		{
+			self.binvisible = true;
+		}
+		else if(CurSector.lightlevel < 128)
+		{
+			self.binvisible = false;
 			self.Alpha = 0.125/2;
+		}
 		else
+		{
+			self.binvisible = false;
 			self.Alpha = 0.125;
+		}
 	}
 	States
 	{
@@ -175,7 +185,21 @@ Class WolfLampCeilingLight : WolfLampLight
 	}
 	Override void Tick()
 	{
-		super.Tick();
+		actor.Tick();
 		self.SetOrigin(GetCeilingPos() - (0, 0, self.height), TRUE);
+		if(master && Abs(self.pos.Z-master.pos.Z) > 192)
+		{
+			self.binvisible = true;
+		}
+		else if(CurSector.lightlevel < 128)
+		{
+			self.binvisible = false;
+			self.Alpha = 0.125/2;
+		}
+		else
+		{
+			self.binvisible = false;
+			self.Alpha = 0.125;
+		}
 	}
 }

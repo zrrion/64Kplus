@@ -13,7 +13,7 @@ class skp_PickupFlash : PickupFlash replaces PickupFlash
 	}
 	Override void PostBeginPlay()
 	{
-		bROLLSPRITE = ACS_ScriptCall("CVarCheck",2) ? TRUE : FALSE;
+		bROLLSPRITE = Cvar.FindCVar("arg_GoreRotation").GetBool() ? TRUE : FALSE;
 		bROLLCENTER = bROLLSPRITE;
 		Self.Roll  += bROLLSPRITE ? Random(0,360) : 0;
 		A_SetTranslucent(666,2);

@@ -178,7 +178,7 @@ class skp_DoomPlayer : DoomPlayer
 				player.jumpTics = -1 * JumpHangCounter/2;
 				if (!(player.cheats & CF_PREDICTING))
 				{
-					A_StartSound("player/doublejump", CHAN_BODY, CHAN_NOSTOP);
+					A_StartSound("player/doublejump", CHAN_BODY);
 					CurPO += JumpOffset;
 					A_SetPitch(self.pitch - JumpOffset, SPF_INTERPOLATE);
 				}

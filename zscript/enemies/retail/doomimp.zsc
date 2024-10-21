@@ -115,7 +115,7 @@ class skp_ImpBallTrail : actor
 		TNT1 A 2;
 		IBAL ABCD 1 Bright
 		{
-			if(CallACS("CVarCheck",2))
+			if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			{
 				A_SetRoll(Random(0,359));
 			}

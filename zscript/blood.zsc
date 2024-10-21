@@ -19,7 +19,7 @@ class skp_Blood : Blood replaces Blood
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		for(int i = 0; i < 3; i++)
 		{
@@ -56,7 +56,7 @@ States
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		Super.PostBeginPlay();
 	}
@@ -76,7 +76,7 @@ class skp_BloodTrail : skp_BloodSpurt
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		Super.PostBeginPlay();
 	}
@@ -115,7 +115,7 @@ class skp_BloodMist : actor
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 
 		scale.x = frandom(0.5, 0.75);
@@ -141,7 +141,7 @@ class skp_BloodMist : actor
 	}
 	/*Override void Tick()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			self.roll += bXFLIP ? -1 : 1;
 		super.Tick();
 	}*/
@@ -151,7 +151,7 @@ class skp_BloodMist2 : skp_BloodMist
 {
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 
 		//scale.x = frandom(0.5, 0.75);

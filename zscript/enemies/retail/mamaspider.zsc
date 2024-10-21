@@ -45,7 +45,7 @@ class skp_SpiderMastermind : SpiderMastermind replaces SpiderMastermind
 		}
 		SPID K 5 Bright
 		{
-			if (CallACS("CVarCheck",6))
+			if (Cvar.FindCVar("arg_EnemyDrops").GetBool())
 				{
 					A_DropItem("Chaingun");
 				}
@@ -73,7 +73,7 @@ extend class skp_SpiderMastermind
 {
 	Void A_SposAttackUseAtkSound()
 	{
-		if(CallACS("CVarCheck",4))
+		if(Cvar.FindCVar("arg_EnemyChanges").GetBool())
 		{
 			A_StartSound("spider/attack", CHAN_WEAPON);
 			A_SpawnProjectile("ArachnotronPlasma",(height/2)-4,2,frandom(0,8));

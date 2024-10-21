@@ -23,7 +23,7 @@ class skp_Cyberdemon : Cyberdemon replaces Cyberdemon
 			{
 				SetStateLabel("Missile");
 			}
-			else if(CallACS("CVarCheck",4) && Random(0,2) == 0)
+			else if(Cvar.FindCVar("arg_EnemyChanges").GetBool() && Random(0,2) == 0)
 			{
 				RocketCounter = 0;
 				SetStateLabel("Missile");
@@ -55,7 +55,7 @@ class skp_Cyberdemon : Cyberdemon replaces Cyberdemon
 		CYBR HH 5 BRIGHT A_SpawnItemEx("RocketSmokeTrail",fRandom(1,-1)*Radius,fRandom(1,-1)*Radius,2*(height/3),0,0,fRandom(1,2));
 		CYBR I 5 BRIGHT
 		{
-			if (CallACS("CVarCheck",6))
+			if (Cvar.FindCVar("arg_EnemyDrops").GetBool())
 				{
 					A_DropItem("RocketLauncher");
 				}

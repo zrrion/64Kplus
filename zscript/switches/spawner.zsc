@@ -286,49 +286,12 @@ class skp_SpawnVend : actor
 		special = 0;
 		Super.PostBeginPlay();
 	}
-	string, int GetManifest()
-	{
-		string ManName;
-		int ManType;
-
-		if(!di)
-			di = self.GetDropItems();
-		if(di)
-		{
-			if(di.next)
-			{
-				ManName = di.name;
-				ManType = di.Probability;
-			}
-			else
-			{
-				ManName = "NULL";
-				ManType = VEND_NONE;
-			}
-			di = di.next;
-		}
-		return ManName, ManType;
-	}
-
-	string GetManifestByType(int ManCheck = 0)
-	{
-		string ManName;
-		int ManType;
-		[ManName, ManType] = GetManifest();
-		if(ManCheck == 0 || ManType == VEND_NONE)
-			return ManName;
-		while(ManType != ManCheck)
-			[ManName, ManType] = GetManifest();
-		return ManName;
-	}
 	Override void Activate(Actor activator)
 	{
 		if(!activator)
 			return;
-		string ManName;
-		int ManType;
-		[ManName, ManType] = GetManifest();
-		//activator.A_Print(string.format("245\r%i - %s", ManType, ManName));
+		if(activator is "skp_DoomPlayer")
+			skp_DoomPlayer(activator).LastVend = self;
 		Menu.SetMenu('VendSpawnerMenu');
 	}
 	Override void Deactivate (Actor activator)
@@ -345,12 +308,32 @@ class skp_SpawnVend : actor
 		else
 			self.LightLevel = CurSector.lightlevel;
 	}
+	void VendSpawn(name WhatToSpawn)
+	{
+		ActorIterator it = level.CreateActorIterator(self.args[0]);
+		Actor mo;
+		do
+		{
+			mo = it.Next();
+			if(mo)
+			{
+				actor.Spawn(WhatToSpawn, mo.pos);
+				actor.Spawn("TeleportFog", mo.pos);
+			}
+		}
+		while(mo)
+	}
 	States
 	{
 		Spawn:
 			SVND A -1;
 			Stop;
 	}
+}
+
+extend class skp_DoomPlayer
+{
+	skp_SpawnVend LastVend;
 }
 
 enum VendTypes

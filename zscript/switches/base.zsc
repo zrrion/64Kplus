@@ -98,7 +98,22 @@ class SwitchBase : SwitchableDecoration abstract
 	{
 		A_StartSound(ActiveSound,CHAN_AUTO);
 
-		bool haskey = user_MarkerType ? activator.CountInv(Key.GetType(user_MarkerType)) > 0 : true;
+		bool haskey;
+		if(user_MarkerType)
+		{
+			let k = activator.inv;
+			while(k)
+			{
+				if(k is Key.GetType(user_MarkerType))
+					haskey = true;
+				else if(k.species == Key.GetType(user_MarkerType))
+					haskey = true;
+				k = k.inv;
+			}
+
+		}
+		else
+			haskey = true;
 		bool doflip = haskey ? DoCallSpecial(activator) : false;
 
 		if(doflip && user_NoRepeat)
@@ -287,7 +302,9 @@ class ButtonAction : SwitchableDecoration
 	{
 		//$Category Actions
 		+INVISIBLE;
-		+USESPECIAL;
+		+NOSECTOR;
+		+NOINTERACTION;
+		+NOGRAVITY;
 		Activation THINGSPEC_Switch;
 	}
 	override void PostBeginPlay()

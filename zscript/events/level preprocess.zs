@@ -185,6 +185,33 @@ class WeaponReplacer : EventHandler
     }
 }
 
+class VendSpawner : EventHandler
+{
+	override void NetworkProcess(ConsoleEvent e)
+    {
+		string WhatToSpawn = e.name;
+		if (WhatToSpawn.IndexOf("\r") != -1)
+        {
+			WhatToSpawn.Replace("\r", "");
+			if(skp_DoomPlayer(players[e.player].mo))
+			{
+				skp_SpawnVend Vend = skp_DoomPlayer(players[e.player].mo).LastVend;
+				if(Vend)
+				{
+					ActorIterator it = level.CreateActorIterator(Vend.args[e.args[0]]);
+					Actor mo = it.Next();
+					while(mo)
+					{
+						vector3 SpawnPos = (mo.pos.X + random( -mo.radius, mo.radius), mo.pos.y + random( -mo.radius, mo.radius), mo.pos.z);
+						Vend.Spawn(WhatToSpawn, SpawnPos);
+						Vend.Spawn("teleportfog", SpawnPos);
+						mo = it.Next();
+					}
+				}
+			}
+        }
+	}
+}
 
 class skp_Tonemap : StaticEventHandler
 {	

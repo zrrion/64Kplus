@@ -8,7 +8,7 @@ class skp_Medikit : Medikit replaces Medikit
 	}
 	Override void PostBeginPlay()
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		if(bDROPPED && Cvar.FindCVar("arg_ItemRotation").GetBool())
 			bWALLSPRITE = TRUE;
 		A_SetAngle(Random(0,360));
 	Super.PostBeginPlay();
@@ -18,7 +18,7 @@ class skp_Medikit : Medikit replaces Medikit
 	{
 		if(isFrozen())
 			return;
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		if(bDROPPED && Cvar.FindCVar("arg_ItemRotation").GetBool())
 		{
 			bWALLSPRITE = TRUE;
 			self.angle += fRandom(3.0,4.0);

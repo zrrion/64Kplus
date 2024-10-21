@@ -6,6 +6,7 @@ class skp_ChaingunGuy : ChaingunGuy  replaces ChaingunGuy
 	{
 		//$title "Chaingun Guy"
 		Dropitem "$vend_chaingunguy", VEND_DESC;
+		Dropitem "Chaingun";
 	}
 	States
 	{

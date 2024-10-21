@@ -88,7 +88,7 @@ Default
 	}
 	Override Void PostBeginPlay()
 	{
-		if(ACS_ScriptCall("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		A_SetScale(frandom(0.9,1.1));
 		Super.PostBeginPlay();

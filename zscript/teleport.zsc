@@ -10,7 +10,7 @@ class SKP_TeleportFog : TeleportFog replaces TeleportFog
 	override void PostBeginPlay ()
 	{
 		HeightOffset = 0;
-		switch (CallACS("CVarCheck",5))
+		switch (Cvar.FindCVar("arg_Teleporter").GetInt())
 		{
 			default:
 			case 0:
@@ -94,7 +94,7 @@ class SKP_ItemFog : ItemFog replaces ItemFog
 	}
 	override void PostBeginPlay ()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 				{
 					bROLLSPRITE = TRUE;
 					bROLLCENTER = TRUE;

@@ -34,11 +34,7 @@ class SKP_PurpleBubble : actor
 	}
 	action bool A_CheckPurp(Actor mo)//if your purp isn't checked you already know what happens
 	{
-		string texture = "PRP_";
-		int t = texture.length();
-		string tex = Texman.GetName(mo.floorpic);
-		tex.Truncate(t);
-		return texture ~== tex;
+		return (GetFloorTerrain().TerrainName == "RAS_Glue");
 	}
 	
 	States

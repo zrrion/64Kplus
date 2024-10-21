@@ -54,7 +54,7 @@ class skp_ArachnotronPlasma : ArachnotronPlasma replaces ArachnotronPlasma
 		}
 		APBX ABCDE 5 BRIGHT
 			{
-				if(CallACS("CVarCheck",2))
+				if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 				{
 					A_SetRoll(Random(0,359));
 				}

@@ -288,14 +288,14 @@ class CacomeraBall : skp_ArachnotronPlasma
 		}
 		CDME A 5 BRIGHT
 		{
-			if(CallACS("CVarCheck",2))
+			if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			{
 				A_SetRoll(Random(0,359));
 			}
 		}
 		APBX BCDE 5 BRIGHT
 		{
-			if(CallACS("CVarCheck",2))
+			if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			{
 				A_SetRoll(Random(0,359));
 			}

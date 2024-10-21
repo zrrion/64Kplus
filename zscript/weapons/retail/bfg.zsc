@@ -148,7 +148,7 @@ class skp_BFGBall : BFGBall replaces BFGBall
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 		{
 			A_SetRoll(Random(0,359));
 		}
@@ -182,7 +182,7 @@ States
 	Spawn:
 		TPFX ABCDEFGH 2
 			{
-				if(CallACS("CVarCheck",2))
+				if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 				{
 					A_SetRoll(Random(0,359));
 					A_SetTics(Random(2,4));
@@ -235,7 +235,7 @@ class skp_BFGExtra : BFGExtra replaces BFGExtra
 	Spawn:
 		BFE2 ABCD 8 Bright
 			{
-				if(CallACS("CVarCheck",2))
+				if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 				{
 					A_SetRoll(Random(0,359));
 				}

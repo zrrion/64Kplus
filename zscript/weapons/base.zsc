@@ -361,7 +361,7 @@ class skp_Weapon : Weapon
 	}
 	Override void PostBeginPlay()
 	{
-		if(bDROPPED && ACS_ScriptCall("CVarCheck",1))
+		if(bDROPPED && Cvar.FindCVar("arg_ItemRotation").GetBool())
 		{
 			bWALLSPRITE = TRUE;
 			A_SetAngle(Random(0,360));
@@ -387,7 +387,7 @@ Class skp_BulletPuff : BulletPuff replaces BulletPuff
 	}
 	Override Void PostBeginPlay()
 	{
-		if(ACS_ScriptCall("CVarCheck",2))
+		if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		A_SetScale(frandom(0.9,1.1));
 		Super.PostBeginPlay();
@@ -425,9 +425,9 @@ class skp_RocketSmokeTrail : RocketSmokeTrail replaces RocketSmokeTrail
 	}
 	Override void PostBeginPlay()
 	{
-		if(CallACS("CVarCheck",3) <= 1)
+		if(Cvar.FindCVar("cl_rockettrails").GetInt() <= 1)
 			ResolveState("Death");
-		else if(CallACS("CVarCheck",2))
+		else if(Cvar.FindCVar("arg_GoreRotation").GetBool())
 			A_SetRoll(Random(0,359));
 		super.PostBeginPlay();
 	}

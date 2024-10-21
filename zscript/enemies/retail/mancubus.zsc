@@ -33,7 +33,7 @@ extend class skp_Mancubus
 {
 	void A_FatAttack1()
 	{
-		bool b = CallACS("CVarCheck",4);
+		bool b = Cvar.FindCVar("arg_EnemyChanges").GetBool();
 		
 		if(Random(0,2) == 0 && b)
 			super.A_FatAttack3();
@@ -44,7 +44,7 @@ extend class skp_Mancubus
 	}
 	void A_FatAttack2()
 	{
-		bool b = CallACS("CVarCheck",4);
+		bool b = Cvar.FindCVar("arg_EnemyChanges").GetBool();
 		
 		if(Random(0,2) == 0 && b)
 			super.A_FatAttack3();
@@ -55,7 +55,7 @@ extend class skp_Mancubus
 	}
 	void A_FatAttack3()
 	{
-		bool b = CallACS("CVarCheck",4);
+		bool b = Cvar.FindCVar("arg_EnemyChanges").GetBool();
 		
 		if(Random(0,2) == 0 && b)
 			super.A_FatAttack1();
