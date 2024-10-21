@@ -4,5 +4,5 @@ GameInfo
 	StatusbarClass = "SKP_HUD"
 	borderflat = "hudflat"
 	border = HereticBorder
-	AddEventHandlers = "PropsReplacer", "MonsterReplacer", "WeaponReplacer", "skp_Tonemap"
+	AddEventHandlers = "PropsReplacer", "MonsterReplacer", "WeaponReplacer", "VendSpawner", "skp_Tonemap"
 }

@@ -13,6 +13,7 @@ class VendSpawnerMenu : OptionMenu
 
 	override void Init(Menu parent, OptionMenuDescriptor desc)
 	{
+		menuactive = Menu.OnNoPause;
 		MenuSound("switches/normbutn");
 		di = GetDefaultByType("skp_SpawnVend").GetDropItems();
 		CurType = 1;
@@ -21,7 +22,7 @@ class VendSpawnerMenu : OptionMenu
 		fnt = Font.GetFont("tinyfont");
 		FntHeight = fnt.GetHeight();
 
-		menubg = TexMan.CheckForTexture("graphics/HUD/Vending Machine/background4.png", TexMan.Type_MiscPatch);
+		menubg = TexMan.CheckForTexture("graphics/HUD/Vending Machine/background5.png", TexMan.Type_MiscPatch);
 		menuselect = TexMan.CheckForTexture("graphics/HUD/Vending Machine/selection.png", TexMan.Type_MiscPatch);
 
 		super.Init(parent,desc);
@@ -55,6 +56,11 @@ class VendSpawnerMenu : OptionMenu
 				MenuSound("plats/pt1_mid");
 				SelectChange++;
 				break;
+			case 6:
+				MenuSound("switches/normbutn");
+				SpawnSelected();
+				break;
+
 		}
 		if(SelectChange != 0)
 		{
@@ -93,14 +99,31 @@ class VendSpawnerMenu : OptionMenu
 			di = di.next;
 		}
 	}
+
+	void SpawnSelected()
+	{
+		string SpawnName = "\r";
+		int Spot;
+		for(int i = 0; i < List.Size(); i++)
+			if(i == CurSelect)
+			{
+				DropItem di = List[i];
+				class<Actor> mo = di.name;
+				if(mo && GetDefaultByType(mo).bSHOOTABLE == false)
+					Spot = 1;
+				SpawnName.AppendFormat("%s", di.Name);
+			}
+		EventHandler.SendNetworkEvent(SpawnName, Spot, 0, 0);
+	}
 	
 	override void Drawer () 
 	{
 			int NormalColor = Font.CR_OLIVE;
 			int SelectColor = Font.CR_GREEN;
+			int LineHeight = fnt.GetHeight() + 1;
 			vector2 InfoFramePos = (132, 35);
 			vector2 InfoFrameXY = (148, 130);
-			vector2 SpritePos = (InfoFramePos.X + (InfoFrameXY.X /2), InfoFramePos.Y + (InfoFrameXY.Y -16));
+			vector2 SpritePos = (InfoFramePos.X + (InfoFrameXY.X /2), InfoFramePos.Y + (InfoFrameXY.Y -(LineHeight*3) -3));
 			[InfoFramePos, InfoFrameXY] = screen.VirtualToRealCoords(InfoFramePos, InfoFrameXY, (320, 200));
 
 			if(TypeList[CurType].IndexOf("LoR") != -1)
@@ -112,6 +135,7 @@ class VendSpawnerMenu : OptionMenu
 			screen.DrawText(fnt, NormalColor, 42, 36, "<", DTA_320x200, 1);
 			screen.DrawText(fnt, SelectColor, 42 + fnt.StringWidth("<"), 36, TypeList[CurType], DTA_320x200, 1);
 			screen.DrawText(fnt, NormalColor, 120, 36, ">", DTA_320x200, 1);
+			screen.DrawText(fnt, Font.CR_BLACK, 133, 36, "Press ENTER to spawn", DTA_320x200, 1);
 			for(int i = 0; i < List.Size(); i++)
 			{
 				class<Actor> Lclass = List[i].Name;
@@ -142,13 +166,13 @@ class VendSpawnerMenu : OptionMenu
 					}
 					if(Description == "")
 						Description = "Spawn one and find out :3c";
+					DescriptionDi = NULL;
 					
 
 					BrokenLines lines = fnt.BreakLines(Description, 146);
 					Description = "";
-					int LineHeight = fnt.GetHeight() + 1;
 					int LineCount = lines.Count();
-					vector2 DesPos = (133, 164);
+					vector2 DesPos = (133, 165);
         			for (int i = 0; i < LineCount; i++)
 						Description.AppendFormat("%s\n", lines.stringAt(i));
 					lines.destroy();
