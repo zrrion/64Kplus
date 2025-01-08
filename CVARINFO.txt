@@ -5,4 +5,4 @@ server bool arg_EnemyDrops = True;
 server bool arg_PlayerSlide = True;
 server int arg_Teleporter = 0;
 server bool LorWeapons = false;
-user bool arg_tone = false;
+user int arg_tone = 0;

@@ -19,6 +19,14 @@ OptionValue "TeleporterOption"
 	4, "Strife"
 	5, "HACX"
 }
+
+OptionValue "LUToption"
+{
+	0, "No Palette"
+	1, "Half Palette"
+	2, "Palette + Purple"
+	3, "Full Palette"
+}
 /*
 server bool arg_GoreRotation = True;
 server bool arg_ItemRotation = True;
@@ -29,7 +37,7 @@ OptionMenu "64KMenu"
 	StaticText 				""
 	StaticTextSwitchable	"Display Options", "Disable the Tonemap for these options to work correctly." , gl_tonemap, 1
 	Option					"$GLPREFMNU_TONEMAP"			, gl_tonemap			, "TonemapModes"
-	Option     				"Expanded palette tonemap"		, "arg_tone"    , "DisabledEnabled"
+	Option     				"64k+ Tonemap"					, "arg_tone"			, "LUToption"
 	StaticText 				"Special Effects Options"		, 1
 	Option      			"Sprite Rotation"				, "arg_GoreRotation"    , "DisabledEnabled"
 	Option      			"Dropped Item Rotation"			, "arg_ItemRotation"    , "DisabledEnabled"
