@@ -23,6 +23,19 @@ class skp_Incinerator  : skp_Weapon
 		//+WEAPON.POWERED_UP;
 		//Weapon.SisterWeapon "skp_PlasmaRifle";
 	}
+	Override bool TryPickup (in out Actor toucher)
+	{
+		if(toucher && !LorWeapons && !self.GetAge())
+		{
+			inventory Inc = inventory(Spawn("skp_PlasmaRifle", self.pos));
+			if(Inc)
+				Inc.TryPickup(toucher);
+			self.destroy();
+			return false;
+		}
+		else
+			return super.TryPickup(toucher);
+	}
 	States
 	{
 	Ready:

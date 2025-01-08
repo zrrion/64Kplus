@@ -22,6 +22,19 @@ class skp_PlasmaRifle  : skp_Weapon replaces PlasmaRifle
 		Dropitem "$vend_plasma", VEND_DESC;
 		//Weapon.SisterWeapon "skp_Incinerator";
 	}
+	Override bool TryPickup (in out Actor toucher)
+	{
+		if(toucher && LorWeapons && !self.GetAge())
+		{
+			inventory Inc = inventory(Spawn("skp_Incinerator", self.pos));
+			if(Inc)
+				Inc.TryPickup(toucher);
+			self.destroy();
+			return false;
+		}
+		else
+			return super.TryPickup(toucher);
+	}
 	States
 	{
 	Ready:

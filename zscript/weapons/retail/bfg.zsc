@@ -23,6 +23,19 @@ class skp_BFG9000 : skp_Weapon replaces BFG9000
 		DropItem "UnloadedBFG";
 		Dropitem "$vend_BFG", VEND_DESC;
 	}
+	Override bool TryPickup (in out Actor toucher)
+	{
+		if(toucher && LorWeapons && !self.GetAge())
+		{
+			inventory Inc = inventory(Spawn("skp_HeatBlade", self.pos));
+			if(Inc)
+				Inc.TryPickup(toucher);
+			self.destroy();
+			return false;
+		}
+		else
+			return super.TryPickup(toucher);
+	}
 	States
 	{
 	Ready:

@@ -24,6 +24,19 @@ class skp_HeatBlade : skp_Weapon
 		DropItem "UnloadedClamBlade";
 		Dropitem "$vend_clam", VEND_DESC;
 	}
+	Override bool TryPickup (in out Actor toucher)
+	{
+		if(!toucher && LorWeapons && !self.GetAge())
+		{
+			inventory Inc = inventory(Spawn("skp_BFG9000", self.pos));
+			if(Inc)
+				Inc.TryPickup(toucher);
+			self.destroy();
+			return false;
+		}
+		else
+			return super.TryPickup(toucher);
+	}
 	action void A_FireHeatWave(double charge = 1)
 	{
 		A_StartSound("clam/fire", CHAN_WEAPON);
