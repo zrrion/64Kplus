@@ -1,0 +1,54 @@
+class WolfCheese : WolfChair
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "Cheese"
+        //$Arg0 "Cheese sprite"
+        //$Arg0Type 11
+        //$Arg0Enum { 0 = "Several pieces"; 1 = "Big piece"; 2 = "small pieces";}
+        //$Arg0Default 0
+	}
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		bXFLIP = random(0,1);
+		frame = args[0];
+	}
+	States
+	{
+		Spawn:
+			WCHS ABC -1;
+			Stop;
+	}
+}
+
+class WolfTypewriter : WolfChair
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "Typewriter"
+	}
+	States
+	{
+		Spawn:
+			WTYP A -1;
+			Stop;
+	}
+}
+
+class WolfPottedPlant : WolfChair
+{
+	Default
+	{
+		//$Category Wolfendoom
+		//$title "Potted plant"
+	}
+	States
+	{
+		Spawn:
+			WPLT A -1;
+			Stop;
+	}
+}
