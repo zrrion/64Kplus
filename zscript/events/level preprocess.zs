@@ -213,14 +213,14 @@ class VendSpawner : EventHandler
 	}
 }
 
-class skp_Tonemap : StaticEventHandler
+class skp_Tonemap : EventHandler
 {	
 	PlayerInfo p;
 	array<int> BigPaletteRed;
 	array<int> BigPaletteGreen;
 	array<int> BigPaletteBlue;
 	//ui int OldTone;
-	override void OnEngineInitialize()
+	override void OnRegister()
 	{
 		/*
 		step 1: import png as lump
@@ -234,12 +234,14 @@ class skp_Tonemap : StaticEventHandler
 
 	override void UiTick()
 	{
-		bool DoShade = CVar.GetCvar("arg_tone", p).GetBool();
+		int DoShade = CVar.GetCvar("arg_tone", p).GetInt();
 		if(p)
 		{
 			//OldTone = CVar.GetCVar("gl_tonemap", p).GetInt();
 			//CVar.GetCVar("gl_tonemap", p).SetInt(0);
-			PPShader.SetEnabled("ExtendedPalLUT", DoShade);
+			PPShader.SetEnabled("HalfPalTonemap", (DoShade == 1));
+			PPShader.SetEnabled("ExtendedPalTonemap", (DoShade == 2));
+			PPShader.SetEnabled("FullPalTonemap", (DoShade == 3));
 			//PPShader.SetEnabled("tonemap", false);
 		}
 		/*else if(OldTone)
