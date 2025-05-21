@@ -280,7 +280,6 @@ class skp_SpawnVend : actor
 		Activation THINGSPEC_Switch;
 		ActiveSound "switches/normbutn";
 	}
-	DropItem di;
 	Override void PostBeginPlay()
 	{
 		special = 0;
