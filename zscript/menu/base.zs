@@ -1,7 +1,7 @@
 class VendSpawnerMenu : OptionMenu
 {	
 	DropItem di;
-	array<DropItem> List;
+	array<string> List;
 	static const string TypeList[] = { "", "Ammo", "Health", "Armor", "Powerups", "Keys", "LoR Items", "64K+ Items", "Weapons", "LoR Weapons", "64K+ Weapons", "Enemies", "LoR Enemies", "64K+ Enemies", "Misc"	};
 	int CurType;
 	int CurSelect;
@@ -88,13 +88,13 @@ class VendSpawnerMenu : OptionMenu
 	}
 	void ChangeType(int type = -1)
 	{
-		list.Clear();
+		List.Clear();
 		di = GetDefaultByType("skp_SpawnVend").GetDropItems();
 		while(di)
 		{
 			if(di.Probability == -1 * abs(Type))
 			{
-				List.Push(di);
+				List.Push(di.Name);
 			}
 			di = di.next;
 		}
@@ -107,11 +107,10 @@ class VendSpawnerMenu : OptionMenu
 		for(int i = 0; i < List.Size(); i++)
 			if(i == CurSelect)
 			{
-				DropItem di = List[i];
-				class<Actor> mo = di.name;
+				class<Actor> mo = List[i];
 				if(mo && GetDefaultByType(mo).bSHOOTABLE == false)
 					Spot = 1;
-				SpawnName.AppendFormat("%s", di.Name);
+				SpawnName.AppendFormat("%s", List[i]);
 			}
 		EventHandler.SendNetworkEvent(SpawnName, Spot, 0, 0);
 	}
@@ -138,7 +137,7 @@ class VendSpawnerMenu : OptionMenu
 			screen.DrawText(fnt, Font.CR_BLACK, 133, 36, "Press ENTER to spawn", DTA_320x200, 1);
 			for(int i = 0; i < List.Size(); i++)
 			{
-				class<Actor> Lclass = List[i].Name;
+				class<Actor> Lclass = List[i];
 
 				if(i == CurSelect)
 				{
