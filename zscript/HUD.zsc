@@ -55,7 +55,7 @@ class SKP_HUD : BaseStatusBar
 		mALPHAFONTBlue = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
 		fnt = "ALPHAFONTGreen";
 		mALPHAFONTGreen = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
-		fnt = "ChainsawFuel";
+		fnt = "ChainsawFuel";//htis is a funny way to do this. Don't tell anyone.
 		mChainsawFuel = HUDFont.Create(fnt, fnt.GetCharWidth("X"), Mono_CellLeft);
 		fnt = "tinyfont";
 		mSmolFont = HUDFont.Create(fnt, fnt.GetCharWidth("A")+1, true);
@@ -94,18 +94,9 @@ class SKP_HUD : BaseStatusBar
 		HealthBlender.update(players[consoleplayer].health);
 		ArmorBlender.update(GetArmorAmount());
 		if(Toast)
-		{
-			/*if(players[consoleplayer].health < HealthBlender.GetValue())
-			{
-				if(skp_DoomPlayer(CPlayer.mo))
-					skp_DoomPlayer(CPlayer.mo).LastSign = NULL;
-				Toast.Reset();
-			}
-			else*/
-				Toast.Update();
-		}
+			Toast.Update();
 	}
-	protected void DrawSKP_Alpha ()
+	protected void DrawSKP_Alpha()
 	{
 
 		vector2 Lpos = (-214,0);
