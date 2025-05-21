@@ -203,7 +203,8 @@ class VendSpawner : EventHandler
 					while(mo)
 					{
 						vector3 SpawnPos = (mo.pos.X + random( -mo.radius, mo.radius), mo.pos.y + random( -mo.radius, mo.radius), mo.pos.z);
-						Vend.Spawn(WhatToSpawn, SpawnPos);
+						if(WhatToSpawn != "")
+							Vend.Spawn(WhatToSpawn, SpawnPos);
 						Vend.Spawn("teleportfog", SpawnPos);
 						mo = it.Next();
 					}
