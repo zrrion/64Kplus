@@ -307,17 +307,20 @@ class skp_SpawnVend : actor
 		else
 			self.LightLevel = CurSector.lightlevel;
 	}
-	void VendSpawn(name WhatToSpawn)
+	virtual void VendSpawn(name WhatToSpawn, int spot = 0, name WhatToCost = "", int amount = 0)
 	{
-		ActorIterator it = level.CreateActorIterator(self.args[0]);
+		ActorIterator it = level.CreateActorIterator(self.args[spot]);
 		Actor mo;
 		do
 		{
 			mo = it.Next();
 			if(mo)
 			{
-				actor.Spawn(WhatToSpawn, mo.pos);
-				actor.Spawn("TeleportFog", mo.pos);
+				vector3 VendPos = mo.pos;
+				VendPos.X += random(-mo.radius, mo.radius);
+				VendPos.Y += random(-mo.radius, mo.radius);
+				actor.Spawn(WhatToSpawn, VendPos);
+				actor.Spawn("TeleportFog", VendPos);
 			}
 		}
 		while(mo)
@@ -460,5 +463,52 @@ extend class skp_SpawnVend
 		DropItem "skp_DoomImp", VEND_RETAIL_ENEMY;
 		DropItem "skp_ShotgunGuy", VEND_RETAIL_ENEMY;
 		DropItem "skp_ZombieMan", VEND_RETAIL_ENEMY;
+	}
+}
+
+class skp_VendingMachine : skp_SpawnVend
+{
+	static const string TypeList[] = { "", "Ammo", "Health", "Armor", "Powerups", "Keys", "LoR Items", "64K+ Items", "Weapons", "LoR Weapons", "64K+ Weapons", "Enemies", "LoR Enemies", "64K+ Enemies", "Misc"	};
+	default
+	{
+		//$Category Switches
+	}
+	Override void PostBeginPlay()
+	{
+		special = 0;
+		Super.PostBeginPlay();
+	}
+	Override void Activate(Actor activator)
+	{
+		if(!activator)
+			return;
+		if(activator is "skp_DoomPlayer")
+			skp_DoomPlayer(activator).LastVend = self;
+		Menu.SetMenu('VendingMenu');
+	}
+	Override void VendSpawn(name WhatToSpawn, int spot, name WhatToCost, int amount)
+	{
+		console.printf("we're doing something else!");
+	}
+	States
+	{
+		Spawn:
+			SVND A -1;
+			Stop;
+	}
+}
+
+extend class skp_VendingMachine
+{
+	Default
+	{
+		DropItem "skp_Megasphere";
+		DropItem "skp_SoulSphere";
+		DropItem "skp_Berserk";
+		DropItem "skp_Medikit";
+		DropItem "skp_Stimpack";
+		DropItem "MiniStimpack";
+		DropItem "SKP_HealthMegaBonus";
+		DropItem "skp_HealthBonus";
 	}
 }

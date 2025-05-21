@@ -86,7 +86,7 @@ class VendSpawnerMenu : OptionMenu
 
 		return Super.MenuEvent(mkey, fromcontroller);
 	}
-	void ChangeType(int type = -1)
+	virtual void ChangeType(int type = -1)
 	{
 		List.Clear();
 		di = GetDefaultByType("skp_SpawnVend").GetDropItems();
@@ -183,5 +183,68 @@ class VendSpawnerMenu : OptionMenu
 				screen.DrawText(fnt, i == CurSelect ? SelectColor : NormalColor, 42, 51 + i * (FntHeight + 1), string.Format(" %s", (StringTable.Localize(GetDefaultByType(Lclass).GetTag()))), DTA_320x200, 1);
 			}
 			OptionMenu.Drawer();
+	}
+}
+
+class VendingMenu : VendSpawnerMenu
+{
+	override void Init(Menu parent, OptionMenuDescriptor desc)
+	{
+		menuactive = Menu.OnNoPause;
+		MenuSound("switches/normbutn");
+		di = GetDefaultByType("skp_VendingMachine").GetDropItems();
+		CurType = 1;
+		ChangeType(CurType);
+
+		fnt = Font.GetFont("tinyfont");
+		FntHeight = fnt.GetHeight();
+
+		menubg = TexMan.CheckForTexture("graphics/HUD/Vending Machine/background5.png", TexMan.Type_MiscPatch);
+		menuselect = TexMan.CheckForTexture("graphics/HUD/Vending Machine/selection.png", TexMan.Type_MiscPatch);
+
+		OptionMenu.Init(parent,desc);
+	}
+
+	override void ChangeType(int type)
+	{
+		List.Clear();
+		di = GetDefaultByType("skp_VendingMachine").GetDropItems();
+		while(di)
+		{
+			List.Push(di.Name);
+			di = di.next;
+		}
+	}
+
+	override bool MenuEvent(int mkey, bool fromcontroller)
+	{
+		int SelectChange;
+		switch(mkey)
+		{
+			case 2:
+			case 3:
+				break;
+			case 0:
+				MenuSound("plats/pt1_mid");
+				SelectChange--;
+				break;
+			case 1:
+				MenuSound("plats/pt1_mid");
+				SelectChange++;
+				break;
+			case 6:
+				MenuSound("switches/normbutn");
+				SpawnSelected();
+				break;
+
+		}
+		if(SelectChange != 0)
+		{
+			CurSelect += SelectChange;
+			CurSelect %= List.Size();
+			if(CurSelect < 0)
+				CurSelect += List.Size();
+		}
+		return OptionMenu.MenuEvent(mkey, fromcontroller);
 	}
 }

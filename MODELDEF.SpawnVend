@@ -6,3 +6,12 @@ Model skp_SpawnVend
 	USEACTORROLL
 	FrameIndex SVND A 0 0
 }
+
+Model skp_VendingMachine
+{
+	Model 0 "models/SpawnVend.obj"
+	FORCECULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	FrameIndex SVND A 0 0
+}

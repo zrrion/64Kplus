@@ -56,3 +56,8 @@ OptionMenu "VendSpawnerMenu"
 {
 	Class "VendSpawnerMenu"
 }
+
+OptionMenu "VendingMenu"
+{
+	Class "VendingMenu"
+}
