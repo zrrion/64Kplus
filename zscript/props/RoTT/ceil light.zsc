@@ -5,6 +5,8 @@ class RoTTCeilingLight_Yellow : WolfCeilingLight
 		//$Category RoTT
 		//$title "RoTT lamp orange"
 		WolfCeilingLight.shine "RoTTBigLampLight";
+		WolfCeilingLight.OnFrame 0;
+		WolfCeilingLight.OffFrame 1;
 		height 30;
 		radius 24;
 	}
@@ -22,26 +24,14 @@ class RoTTCeilingLight_Orange : WolfCeilingLight
 	{
 		//$Category RoTT
 		//$title "RoTT lamp orange"
+		WolfCeilingLight.OnFrame 2;
+		WolfCeilingLight.OffFrame 3;
 		height 17;
-	}
-	override void Tick()
-	{
-		super.Tick();
-		if(self.LightLevel == 160)
-		{
-			target.binvisible = true;
-			frame = 2;
-		}
-		else
-		{
-			target.binvisible = false;
-			frame = 1;
-		}
 	}
 	States
 	{
 		Spawn:
-			RLMP B -1;
+			RLMP C -1;
 			Stop;
 	}
 }

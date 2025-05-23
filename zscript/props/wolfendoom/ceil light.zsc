@@ -3,12 +3,18 @@ class WolfCeilingLight : Actor
 	mixin SurfaceFinder;
 	class<actor> shine;
 	property shine:shine;
+	int OnFrame;
+	int OffFrame;
+	property OnFrame:OnFrame;
+	property OffFrame:OffFrame;
 	int ceilingOffset;
 	Default
 	{
 		//$Category Wolfendoom
 		//$title "wolf lamp green"
 		WolfCeilingLight.shine "WolfLampLight";
+		WolfCeilingLight.OnFrame 0;
+		WolfCeilingLight.OffFrame 1;
 		+SPAWNCEILING
 		+MOVEWITHSECTOR
 		+NOGRAVITY
@@ -42,6 +48,17 @@ class WolfCeilingLight : Actor
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
+
+		if(self.LightLevel == 160)
+		{
+			target.binvisible = true;
+			frame = self.OffFrame;
+		}
+		else
+		{
+			target.binvisible = false;
+			frame = self.OnFrame;
+		}
 	}
 }
 
@@ -51,11 +68,13 @@ class WolfCeilingLight_Red : WolfCeilingLight
 	{
 		//$Category Wolfendoom
 		//$title "wolf lamp red"
+		WolfCeilingLight.OnFrame 2;
+		WolfCeilingLight.OffFrame 3;
 	}
 	States
 	{
 		Spawn:
-			WLMP B -1;
+			WLMP C -1;
 			Stop;
 	}
 }
@@ -65,11 +84,17 @@ class WolfFloorLight : Actor
 	mixin SurfaceFinder;
 	class<actor> shine;
 	property shine:shine;
+	int OnFrame;
+	int OffFrame;
+	property OnFrame:OnFrame;
+	property OffFrame:OffFrame;
 	Default
 	{
 		//$Category Wolfendoom
 		//$title "wolf floor lamp green"
 		WolfFloorLight.shine "WolfLampCeilingLight";
+		WolfFloorLight.OnFrame 0;
+		WolfFloorLight.OffFrame 1;
 		+SOLID
 		radius 16;
 		height 42;
@@ -97,6 +122,17 @@ class WolfFloorLight : Actor
 			self.LightLevel = 160;
 		else
 			self.LightLevel = 256;
+
+		if(self.LightLevel == 160)
+		{
+			target.binvisible = true;
+			frame = self.OffFrame;
+		}
+		else
+		{
+			target.binvisible = false;
+			frame = self.OnFrame;
+		}
 	}
 }
 
@@ -106,11 +142,13 @@ class WolfFloorLight_Red : WolfFloorLight
 	{
 		//$Category Wolfendoom
 		//$title "wolf floor lamp red"
+		WolfFloorLight.OnFrame 2;
+		WolfFloorLight.OffFrame 3;
 	}
 	States
 	{
 		Spawn:
-			WFLP B -1;
+			WFLP C -1;
 			Stop;
 	}
 }
@@ -143,14 +181,9 @@ Class WolfLampLight : Actor
 		super.Tick();
 		self.SetOrigin(GetFloorPos() + (0, 0, self.height), TRUE);
 		if(master && Abs(self.pos.Z-master.pos.Z) > 192)
-		{
 			self.binvisible = true;
-		}
 		else if(CurSector.lightlevel < 128)
-		{
-			self.binvisible = false;
-			self.Alpha = 0.125/2;
-		}
+			self.binvisible = true;
 		else
 		{
 			self.binvisible = false;
@@ -160,8 +193,7 @@ Class WolfLampLight : Actor
 	States
 	{
 		Spawn:
-			//WLMP B -1;
-			WLMP C -1;
+			WLMP Z -1;
 			Stop;
 	}
 }
