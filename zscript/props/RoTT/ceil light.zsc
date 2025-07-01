@@ -36,8 +36,30 @@ class RoTTCeilingLight_Orange : WolfCeilingLight
 	}
 }
 
+class RoTTCeilingLight_id : RoTTCeilingLight_Yellow
+{
+	Default
+	{
+		//$Category RoTT
+		//$title "RoTT lamp id"
+		WolfCeilingLight.OnFrame 4;
+		WolfCeilingLight.OffFrame 5;
+	}
+	States
+	{
+		Spawn:
+			RLMP E -1;
+			Stop;
+	}
+}
+
 Class RoTTBigLampLight : WolfLampLight
 {
+	Override void PostBeginPlay()
+	{
+		super.PostBeginPlay();
+		console.printf("%i", self.lightlevel);
+	}
 	States
 	{
 		Spawn:
