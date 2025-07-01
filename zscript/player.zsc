@@ -6,6 +6,79 @@ enum ECheckSolidFootingFlags
     CSF_ALL = CSF_SOLIDGROUND|CSF_SOLIDACTORS,
 }
 
+// adapted from nashmove.pk3
+//
+class Z_NashMove : CustomInventory
+{
+	Default
+	{
+		Inventory.MaxAmount 1;
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.AUTOACTIVATE
+	}
+
+	// How much to reduce the slippery movement.
+	// Lower number = less slippery.
+	const DECEL_MULT = 0.9;
+
+	bool bIsOnFloor(void)
+	{
+		return (Owner.Pos.Z == Owner.FloorZ) || (Owner.bOnMObj) || (PlayerPawn(Owner).player.onGround);
+	}
+
+	bool bIsInPain(void)
+	{
+		State PainState = Owner.FindState('Pain');
+		if (PainState != NULL && Owner.InStateSequence(Owner.CurState, PainState))
+		{
+			return true;
+		}
+		return false;
+	}
+	double GetVelocity (void)
+	{
+		return Owner.Vel.Length();
+	}
+	override void Tick(void)
+	{
+		if (Owner && Owner is "PlayerPawn")
+		{
+			let Yer = PlayerPawn(Owner).player.cmd;
+			if(bIsOnFloor())
+			{
+				Yer.ForwardMove *= 2.8f;
+				Yer.SideMove *= 2.8f;
+				if(!bIsInPain() && !(Yer.forwardmove||-Yer.sidemove))
+				{
+					owner.vel.xy *= DECEL_MULT;
+					PlayerPawn(Owner).ViewBob = DECEL_MULT;
+				}
+				else
+					owner.vel.xy *= 1.0;
+				
+				Yer.ForwardMove = 1.0;
+				Yer.SideMove = 1.0;	
+			}
+			else
+				owner.vel.xy *= 1.0;
+		}
+		Super.Tick();
+	}
+	States
+	{
+	Use:
+		TNT1 A 0;
+		Fail;
+	Pickup:
+		TNT1 A 0
+		{
+			return true;
+		}
+		Stop;
+	}
+}
+
 class skp_DoomPlayer : DoomPlayer
 {
 	bool DoubleJump, CanBobReset;
@@ -13,7 +86,8 @@ class skp_DoomPlayer : DoomPlayer
 	double OldPitch, CurPO, JumpOffset, LandOffset, HardLandOffset, Ang, AngOld, AngVeryOld, ScaleOld, ScaleVeryOld, Oldvelz;
 	Default
 	{
-	DropItem "skp_Pistol", 255, 1;//this is startitem lol
+	DropItem "Z_NashMove", 255, 1;//this is startitem lol
+	DropItem "skp_Pistol", 255, 1;
 	DropItem "skp_Fist", 255, 1;
 	DropItem "Clip", 255, 50;
 	//Player.ForwardMove 1.0;
@@ -60,14 +134,6 @@ class skp_DoomPlayer : DoomPlayer
 			return;
 		}
 		
-		if(level.time == 0)
-		{
-			if(CountInv("skp_Chainsaw") >= 1 && CountInv("SKP_SawFuel") == 0)
-			{
-				A_GiveInventory("SKP_SawFuel",1);
-			}
-		}
-		
 		if(CurPO != 0)
 		{
 			float d = (CurPO/abs(CurPO))/4;
@@ -110,36 +176,13 @@ class skp_DoomPlayer : DoomPlayer
 		super.Tick();
 	}
 
-	override void MovePlayer ()
-	{
-		super.MovePlayer();
-		CVar SlipSlide = CVar.FindCVar('arg_PlayerSlide');
-		if(!SlipSlide.GetBool() || bSCROLLMOVE)//if the anti-slide setting is false or the sector is moving the player then just do the normal movement code
-			return;
-		if(player.onground)
-			StaticFrictionHandler();
-	}	
-
-	void StaticFrictionHandler()
-	{
-		let player = self.player;
-		UserCmd cmd = player.cmd;
-
-		let LessSlip = 0xE800/73744.;//magic numbers are really cool
-		let DefaultSlip = 0xE800/59392.;
-		if(cmd.forwardmove | cmd.sidemove)//if the player is trying to move don't apply any extra friction
-		{
-			self.friction = DefaultSlip;
-			LastMoveTic = level.time;
-		}
-		else if(level.time < LastMoveTic + 16)//if the player isn't trying to move now but they recently were trying to move apply more friction
-			self.friction = LessSlip;
-		else//if the player isn't trying to move and wasn't recently trying to move don't apply any extra friction
-			self.friction = DefaultSlip;
-	}
-
 	Override void CheckJump()
 	{
+		if(waterlevel > 1)
+		{
+			super.CheckJump();
+			return;
+		}
 		let player = self.player;
 		
 		int GlueFactor = (GetFloorTerrain().TerrainName == 'RAS_Glue' && pos.z <= floorz) ? 8 : 1;
@@ -197,10 +240,10 @@ class skp_DoomPlayer : DoomPlayer
 			if (player.jumpTics > 0 && player.jumpTics < JumpHangCounter && !(player.cmd.buttons & BT_JUMP))//player can only double jump if they are not holding the button
 				DoubleJump = True;
 				
-			if (player.onground && player.JumpTics < 0)
+			if ((player.onground || waterlevel > 0) && player.JumpTics < 0)
 				player.jumpTics++;
 				
-			if (player.onground && player.JumpTics > 0)
+			if ((player.onground || waterlevel > 0) && player.JumpTics > 0)
 				player.jumpTics--;
 		}
 		Super.PlayerThink();
