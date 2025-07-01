@@ -425,6 +425,12 @@ class skp_RocketSmokeTrail : RocketSmokeTrail replaces RocketSmokeTrail
 	}
 	Override void PostBeginPlay()
 	{
+		if(waterlevel > 0)
+		{
+			self.destroy();
+			return;
+		}
+
 		if(Cvar.FindCVar("cl_rockettrails").GetInt() <= 1)
 			ResolveState("Death");
 		else if(Cvar.FindCVar("arg_GoreRotation").GetBool())
