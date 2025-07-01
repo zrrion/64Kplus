@@ -6,9 +6,12 @@ class skp_SawFuel : Ammo
 		Inventory.PickupMessage "Picked up some chainsaw fuel";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 5;
+
+		+INVENTORY.KEEPDEPLETED;
+
 		Ammo.BackpackAmount 1;
 		Ammo.BackpackMaxAmount 5;
-		Inventory.Icon "SAWFA0";//the conister is yellow to match the body of the saw and because the thing runs on diesel, not gas
+		Inventory.Icon "SAWFA0";//the can is yellow to match the body of the saw and because the thing runs on diesel, not gas
 		Tag "Chainsaw fuel";
 
 		Dropitem "$vend_fuel", VEND_DESC;
@@ -38,5 +41,24 @@ class skp_SawFuel : Ammo
 		else
 			bWALLSPRITE = FALSE;
 		Super.Tick();
+	}
+	int OldCluster;
+	string OldMapName;
+	bool OldMapHub;
+	Override void Pretravelled()
+	{
+		OldCluster = level.Cluster;
+		OldMapName = level.MapName;
+		OldMapHub = (Level.clusterflags & Level.CLUSTER_HUB);
+	}
+	Override void Travelled()
+	{
+		if(self.Amount)
+			return;
+
+		if(OldCluster != level.Cluster)//if the cluster numbers are different then the maps for sure aren't part of a HUB
+			self.Amount++;
+		else if(!OldMapHub || !(Level.clusterflags & Level.CLUSTER_HUB))//if they're the same but at least one of them isn't part of a HUB then we're still good to go
+			self.Amount++;
 	}
 }
